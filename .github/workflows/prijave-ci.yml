@@ -19,7 +19,7 @@ jobs:
           architecture: 'x64'
 
       - name: Build with Maven
-        run: mvn -B package --file IzvorniKod/backend/prijava/pom.xml
+        run: mvn -B package --file progiProjekt/IzvorniKod/backend/prijava/pom.xml
 
       - name: Run tests
-        run: mvn verify --file IzvorniKod/backend/prijava/pom.xml
+        run: mvn verify --file progiProjekt/IzvorniKod/backend/prijava/pom.xml

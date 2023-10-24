@@ -1,5 +1,7 @@
 # CestaFix
 
+Web aplikacija koja omogućava korisnicima da prijave štetu na nekoj javnoj površini. 
+
 - cilj aplikacije je olakšati proces prijave oštećenja javnih površina i cesta u gradovima i dobivanja povratnih informacija
 - svaka prijava sadrži naziv, opis, geografske koordinate i opcionalno fotografije oštećenja
 - svako oštećenje se klasificira u određenu skupinu
@@ -14,6 +16,6 @@
 - korisnicima i administratorima se mora osigurati adekvatna zaštita i sigurnost podataka te je posebnu pozornost potrebno posvetiti korisničkom iskustvu (edited)
 
 trenutna podjela tima: 
-  2 frontend - Leon, Jan
-  2 backend - Vedran, Ante
-  2 dokumentacija - Mateo, Sara
+2 frontend - Leon, Jan
+2 backend - Vedran, Ante
+2 dokumentacija - Mateo, Sara

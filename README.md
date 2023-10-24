@@ -15,5 +15,5 @@
 
 trenutna podjela tima: 
   2 frontend - Leon, Jan
-  2 backednd - Vedran, Ante
+  2 backend - Vedran, Ante
   2 dokumentacija - Mateo, Sara

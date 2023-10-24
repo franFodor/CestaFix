@@ -1,4 +1,4 @@
-# progiProjekt
+# CestaFix
 
 - cilj aplikacije je olakšati proces prijave oštećenja javnih površina i cesta u gradovima i dobivanja povratnih informacija
 - svaka prijava sadrži naziv, opis, geografske koordinate i opcionalno fotografije oštećenja

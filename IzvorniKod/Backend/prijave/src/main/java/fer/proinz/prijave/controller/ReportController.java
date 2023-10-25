@@ -18,7 +18,7 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
-    @GetMapping( "/getAll")
+    @GetMapping( "/getAllReports")
     public ResponseEntity<List<Report>> getAllReports() {
         List<Report> reportList = reportService.getAllReports();
         return ResponseEntity.ok(reportList);

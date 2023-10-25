@@ -26,7 +26,7 @@ public class Report implements Serializable {
     private Timestamp reportTime;
     private String status;
 
-    public Report(){}
+    public Report() {}
 
     public static class builder {
         private long reportId;

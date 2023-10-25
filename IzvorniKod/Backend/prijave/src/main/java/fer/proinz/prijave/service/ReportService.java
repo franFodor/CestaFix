@@ -41,7 +41,7 @@ public class ReportService {
         }
     }
 
-    public Report updateReport(int reportId,Report report) {
+    public Report updateReport(int reportId, Report report) {
         report.setReportId(reportId);
         return reportRepository.save(report);
     }

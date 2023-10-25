@@ -2,7 +2,7 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.model.Report;
-import org.flywaydb.core.internal.jdbc.JdbcTemplate;
+import fer.proinz.prijave.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -31,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-public class ReportsIT {
+public class UsersIT {
 
     @Autowired
     private DataSource dataSource;
@@ -54,29 +52,25 @@ public class ReportsIT {
     }
 
     @BeforeEach
-    void setUpReport() {
+    void setUpUser() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "INSERT INTO Reports (report_id, title, description, location_coordinates, address, report_time, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Users (user_id, name, email, password, is_admin) " +
+                    "VALUES (?, ?, ?, ?, ?)";
 
-            Report report = new Report.builder()
-                    .reportId(15L)
-                    .title("Pukotina na cesti")
-                    .description("kwerwoirwsnfsffowefsg")
-                    .locationCoordinates("194702742235")
-                    .address("Ulica grada Vukovara 3")
-                    .reportTime(Timestamp.from(Instant.now()))
-                    .status("Osteceno")
+            User user = User.builder()
+                    .userId(2)
+                    .name("John Doe")
+                    .email("john.doe@gmail.com")
+                    .password("wjs82jas72nw")
+                    .isAdmin(false)
                     .build();
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, report.getReportId());
-            preparedStatement.setString(2, report.getTitle());
-            preparedStatement.setString(3, report.getDescription());
-            preparedStatement.setString(4, report.getLocationCoordinates());
-            preparedStatement.setString(5, report.getAddress());
-            preparedStatement.setTimestamp(6, report.getReportTime());
-            preparedStatement.setString(7, report.getStatus());
+            preparedStatement.setLong(1, user.getUserId());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getEmail());
+            preparedStatement.setString(4, user.getPassword());
+            preparedStatement.setBoolean(5, user.isAdmin());
 
             preparedStatement.executeUpdate();
         } catch (Exception e) {
@@ -87,9 +81,9 @@ public class ReportsIT {
     @AfterEach
     void tearDownReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "DELETE FROM Reports WHERE report_id = ?";
+            String sql = "DELETE FROM Users WHERE user_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, 15L);
+            preparedStatement.setInt(1, 2);
             preparedStatement.executeUpdate();
 
         } catch (Exception e) {
@@ -97,73 +91,68 @@ public class ReportsIT {
         }
     }
 
-
-
     @Test
-    public void getAllReportsAndExpect200OK() throws Exception {
+    public void getAllUsersAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/report/getAllReports"))
+                        get("/user/getAllUsers"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getReportByIdAndExpect200OK() throws Exception {
+    public void getUserByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/report/get/15"))
+                .perform(get("/user/get/2"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void createNewReportAndExpect200OK() throws Exception {
-        Report report = new Report.builder()
-                .reportId(15L)
-                .title("Pukotina na cesti")
-                .description("kwerwoirwsnfsffowefsg")
-                .locationCoordinates("194702742235")
-                .address("Ulica grada Vukovara 3")
-                .reportTime(Timestamp.from(Instant.now()))
-                .status("Osteceno")
+    public void createNewUserAndExpect200OK() throws Exception {
+        User user = User.builder()
+                .userId(2)
+                .name("John Doe")
+                .email("john.doe@gmail.com")
+                .password("wjs82jas72nw")
+                .isAdmin(false)
                 .build();
 
-        String jsonReport = objectMapper.writeValueAsString(report);
+        String jsonReport = objectMapper.writeValueAsString(user);
 
         mockMvc
-                .perform(post("/report")
+                .perform(post("/user")
+                        .contentType("application/json")
+                        .content(jsonReport))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void updateUserAndExpect200OK() throws Exception {
+
+        User user = User.builder()
+                .userId(2)
+                .name("John Doe")
+                .email("john.doe@gmail.com")
+                .password("wjs82jas72nw")
+                .isAdmin(false)
+                .build();
+
+
+        String jsonReport = objectMapper.writeValueAsString(user);
+
+        mockMvc
+                .perform(
+                        put("/user/" + user.getUserId())
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void updateReportAndExpect200OK() throws Exception {
-
-        Report report = new Report.builder()
-                .reportId(15L)
-                .title("Pukotina na cesti")
-                .description("kwerwoirwsnfsffowefsg")
-                .locationCoordinates("194702742235")
-                .address("Ulica grada Vukovara 3")
-                .reportTime(Timestamp.from(Instant.now()))
-                .status("Osteceno")
-                .build();
-
-
-        String jsonReport = objectMapper.writeValueAsString(report);
-
+    public void deleteUserAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        put("/report/" + report.getReportId())
-                                .contentType("application/json")
-                                .content(jsonReport))
+                        delete("/user/2"))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    public void deleteReportAndExpect200OK() throws Exception {
-        mockMvc
-                .perform(
-                        delete("/report/15"))
-                .andExpect(status().isOk());
-    }
 }

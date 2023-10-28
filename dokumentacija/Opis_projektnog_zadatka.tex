@@ -17,102 +17,16 @@
 			\eject
 		}
 		
+		Cilj ovog projekta napraviti je web aplikaciju za dojavu oštećenja i drugih problema na cestama, parkovima, javnim ustanovama i drugim javnim mjestima u svrhu olakšavanja dojave, kategorizacije te u konačnici rješenja prijavljenih problema.
 		
-		\section{Primjeri u \LaTeX u}
+		Jedinstveni sustav za praćenje problema uvelike olakšava građanima da prijavljuju probleme na koje naiđu. S obzirom na velik broj javih ustanova i njihovih odjeljaka koji se bave različitim problemima, teško je pratiti tko je nadležan za koju vrstu problema i nad kojim područjem. Sustav za dojavu problema bi automatski odredio nadležno tijelo prema kategoriji prijave i drugim parametrima te proslijedio prijavu na obradu. Ključno je da proces prijave bude jednostavan i brz kako ne bi upao u istu zamku komplicirane birokracije trenutnog sustava.
 		
-		\textit{Ovo potpoglavlje izbrisati.}\\
-
-		U nastavku se nalaze različiti primjeri kako koristiti osnovne funkcionalnosti \LaTeX a koje su potrebne za izradu dokumentacije. Za dodatnu pomoć obratiti se asistentu na projektu ili potražiti upute na sljedećim web sjedištima:
-		\begin{itemize}
-			\item Upute za izradu diplomskog rada u \LaTeX u - \url{https://www.fer.unizg.hr/_download/repository/LaTeX-upute.pdf}
-			\item \LaTeX\ projekt - \url{https://www.latex-project.org/help/}
-			\item StackExchange za Tex - \url{https://tex.stackexchange.com/}\\
+		Naš sustav će omogućiti građanima da lako prijave razne vrste komunalnih i drugih problema. Prikaz liste i prikaz na karti daju jasan pregled prijavljenih problema i uz njih priloženih slika i opisa te trenutni status obrade. U slučaju da je za isti problem podneseno više prijava, sustav pita korisnika želi li grupirati svoju prijavu s drugom koja je lokacijski i vremenski bliska. U svrhu dodatnog olakšavanja podnošenja prijave, od građana se ne zahtjeva da su prijavljeni na (niti da posjeduju) korisnički račun za podnošenje prijave. U tom slučaju status prijave mogu pratiti jedinstvenim identifikatorom prijave ili pronalaženjem prijave na web aplikaciji.
 		
-		\end{itemize} 	
-
-
+		Nakon što sustav proslijedi prijavu u nadležni gradski ured, službenik tog ureda može izabrati problem i krenuti raditi na rješenju. U aplikaciji može promijeniti status problema i vidjeti informacije iz poslanih prijava.
 		
-		\noindent \underbar{podcrtani tekst}, \textbf{podebljani tekst}, 	\textit{nagnuti tekst}\\
-		\noindent \normalsize primjer \large primjer \Large primjer \LARGE {primjer} \huge {primjer} \Huge primjer \normalsize
-				
-		\begin{packed_item}
-			
-			\item  primjer
-			\item  primjer
-			\item  primjer
-			\item[] \begin{packed_enum}
-				\item primjer
-				\item[] \begin{packed_enum}
-					\item[1.a] primjer
-					\item[b] primjer
-				\end{packed_enum}
-				\item primjer
-			\end{packed_enum}
-			
-		\end{packed_item}
-		
-		\noindent primjer url-a: \url{https://www.fer.unizg.hr/predmet/proinz/projekt}
-		
-		\noindent posebni znakovi: \# \$ \% \& \{ \} \_ 
-		$|$ $<$ $>$ 
-		\^{} 
-		\~{} 
-		$\backslash$ 
+		Jedan primjer takvog sustava koji se aktivno upotrebljava u Hrvatskoj je "Gradsko Oko". Projekt je pokrenut u kolovozu 2017. godine u svrhu prijave komunalnih problema na području grada Bjelovara, a od tad se proširio na još 11 gradova i općina te na prijavu problema na moru. Taj je projekt vrlo sličan našem, ali razlikuje se u nekoliko točaka: ne dozvoljava anonimne prijave, ne sadrži mogućnost pregleda statistike, ne provjerava sličnost vremenski bliskih prijava u svrhu grupiranja.
 		
 		
-		\begin{longtblr}[
-			label=none,
-			entry=none
-			]{
-				width = \textwidth,
-				colspec={|X[8,l]|X[8, l]|X[16, l]|}, 
-				rowhead = 1,
-			} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-			\hline \SetCell[c=3]{c}{\textbf{naslov unutar tablice}}	 \\ \hline[3pt]
-			\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-			korisnickoIme	& VARCHAR &   	\\ \hline 
-			email & VARCHAR &   \\ \hline 
-			ime & VARCHAR	&  		\\ \hline 
-			\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
-		\end{longtblr}
-		
-
-		\begin{longtblr}[
-				caption = {Naslov s referencom izvan tablice},
-				entry = {Short Caption},
-			]{
-				width = \textwidth, 
-				colspec = {|X[8,l]|X[8,l]|X[16,l]|}, 
-				rowhead = 1,
-			}
-			\hline
-			\SetCell{LightGreen}IDKorisnik & INT	&  	Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod  	\\ \hline
-			korisnickoIme	& VARCHAR &   	\\ \hline 
-			email & VARCHAR &   \\ \hline 
-			ime & VARCHAR	&  		\\ \hline 
-			\SetCell{LightBlue} primjer	& VARCHAR &   	\\ \hline 
-		\end{longtblr}
-	
-
-
-		
-		
-		%unos slike
-		\begin{figure}[H]
-			 %veličina slike u odnosu na originalnu datoteku i pozicija slike
-			\centering
-			\caption{Primjer slike s potpisom}
-			\label{fig:promjene}
-		\end{figure}
-		
-		\begin{figure}[H]
-		 %veličina u odnosu na širinu linije
-			\caption{Primjer slike s potpisom 2}
-			\label{fig:promjene2} %label mora biti drugaciji za svaku sliku
-		\end{figure}
-		
-		Referenciranje slike \ref{fig:promjene2} u tekstu.
-		
-		\eject
 		
 	

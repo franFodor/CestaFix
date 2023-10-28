@@ -1,0 +1,9 @@
+main {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center; /* Center the text horizontally */
+  background-color: #f0f0f0; /* Set the background color */
+  padding: 20px;
+}

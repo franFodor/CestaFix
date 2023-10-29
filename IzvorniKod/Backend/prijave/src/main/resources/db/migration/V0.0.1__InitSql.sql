@@ -16,7 +16,5 @@ CREATE TABLE Reports (
     photo BYTEA,
     report_time TIMESTAMP NOT NULL,
     status VARCHAR(50) NOT NULL,
-    related_report_id INT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
-    FOREIGN KEY (related_report_id) REFERENCES Reports(report_id)
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
 );

@@ -2,7 +2,6 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.model.Report;
-import org.flywaydb.core.internal.jdbc.JdbcTemplate;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.com.github.dockerjava.core.MediaType;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -59,7 +56,7 @@ public class ReportsIT {
             String sql = "INSERT INTO Reports (report_id, title, description, location_coordinates, address, report_time, status) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-            Report report = new Report.builder()
+            Report report = Report.builder()
                     .reportId(15L)
                     .title("Pukotina na cesti")
                     .description("kwerwoirwsnfsffowefsg")
@@ -116,7 +113,7 @@ public class ReportsIT {
 
     @Test
     public void createNewReportAndExpect200OK() throws Exception {
-        Report report = new Report.builder()
+        Report report = Report.builder()
                 .reportId(15L)
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
@@ -138,7 +135,7 @@ public class ReportsIT {
     @Test
     public void updateReportAndExpect200OK() throws Exception {
 
-        Report report = new Report.builder()
+        Report report = Report.builder()
                 .reportId(15L)
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")

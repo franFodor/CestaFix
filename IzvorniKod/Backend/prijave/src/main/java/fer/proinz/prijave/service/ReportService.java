@@ -18,11 +18,6 @@ public class ReportService {
         return reportRepository.findAll();
     }
 
-    /**
-     *
-     * @param reportId
-     * @return
-     */
     public Optional<Report> getReportById(int reportId) {
         return reportRepository.findById(reportId);
     }

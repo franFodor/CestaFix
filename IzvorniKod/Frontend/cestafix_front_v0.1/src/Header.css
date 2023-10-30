@@ -34,7 +34,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100; /* Ensures the popup is on top of other content */
+    z-index: 10000; /* Ensures the popup is on top of other content */
   }
   
   .popup-content {

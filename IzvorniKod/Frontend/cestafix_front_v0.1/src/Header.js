@@ -8,9 +8,9 @@ import './Header.css';
 
 
 const Header = () => {
-
   const handleNovaPrijava = () => {
     //////TODO: Implementirati Unos Nove prijave; ovisi o login/non-login
+    console.log("tvoja")
   };
 
   const handleCheckStatus = () => {
@@ -143,8 +143,6 @@ const Header = () => {
           </div>
         </div>
       )}
-
-
 
     </header>
   );

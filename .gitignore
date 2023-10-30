@@ -3,6 +3,6 @@
 /dokumentacija/*.log
 /dokumentacija/*.lot
 /dokumentacija/*.out
-/dokumentacija/*.pdf
+# /dokumentacija/*.pdf isključeno na zahtjev demosa
 /dokumentacija/*.synctex.gz
 /dokumentacija/*.toc

@@ -22,23 +22,36 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public void addNewUser(User user) {
-        userRepository.save(user);
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
-    public void deleteUser(int userId) {
+    public User updateUser(int userId, User updatedUser) {
+        return userRepository.findById(userId)
+                .map(user -> {
+                    if (updatedUser.getName() != null) {
+                        user.setName(updatedUser.getName());
+                    }
+                    if (updatedUser.getEmail() != null) {
+                        user.setEmail(updatedUser.getEmail());
+                    }
+                    if (updatedUser.getPassword() != null) {
+                        user.setPassword(updatedUser.getPassword());
+                    }
+                    return userRepository.save(user);
+                })
+                .orElseThrow(RuntimeException::new);
+    }
+
+    public Optional<User> deleteUser(int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if(userOptional.isPresent()) {
             userRepository.deleteById(userId);
+            return userOptional;
         } else {
             throw new RuntimeException("user with id " + userId + " does not exists!");
         }
-    }
-
-    public User updateUser(int userId, User user) {
-        user.setUserId(userId);
-        return userRepository.save(user);
     }
 
 }

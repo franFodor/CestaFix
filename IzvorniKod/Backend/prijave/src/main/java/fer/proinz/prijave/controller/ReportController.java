@@ -4,8 +4,10 @@ import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +19,8 @@ public class ReportController {
     private ReportService reportService;
 
     @GetMapping( "/getAllReports")
-    public ResponseEntity<List<Report>> getAllReports() {
-        List<Report> reportList = reportService.getAllReports();
-        return ResponseEntity.ok(reportList);
+    public List<Report> getAllReports() {
+        return reportService.getAllReports();
     }
 
     @GetMapping( "/get/{reportId}")
@@ -33,22 +34,27 @@ public class ReportController {
 
     }
 
-    @PostMapping()
-    public ResponseEntity<String> createNewReport(@RequestBody Report report) {
-        reportService.addNewReport(report);
-        return ResponseEntity.ok("Prijavili ste prijavu!");
+    @PostMapping("")
+    public ResponseEntity<Report> createReport(@RequestBody Report report) {
+        Report saved = reportService.createReport(report);
+        return ResponseEntity
+                .created(URI.create("/report/" + saved.getReportId()))
+                .body(saved);
     }
 
-    @PutMapping(path = "/{reportId}")
-    public ResponseEntity<String> updateReport(
-            @PathVariable("reportId") int reportId, @RequestBody Report report)  {
-        return null;
+    @Secured("ADMIN")
+    @PutMapping("/{reportId}")
+    public Report updateReport(
+            @PathVariable("reportId") int reportId,
+            @RequestBody Report updatedReport
+        ) {
+        return reportService.updateReport(reportId, updatedReport);
     }
 
-    @DeleteMapping(path = "/{reportId}")
-    public ResponseEntity<String> deleteReport(@PathVariable("reportId") int reportId) {
-        reportService.deleteReport(reportId);
-        return ResponseEntity.ok("Izbrisali ste prijavu!");
+    @Secured("ADMIN")
+    @DeleteMapping("/{reportId}")
+    public Optional<Report> deleteReport(@PathVariable("reportId") int reportId) {
+        return reportService.deleteReport(reportId);
     }
 
 }

@@ -4,8 +4,12 @@ import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +21,8 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/getAllUsers")
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> userList = userService.getAllUsers();
-        return ResponseEntity.ok(userList);
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
     @GetMapping("/get/{userId}")
@@ -32,22 +35,28 @@ public class UserController {
         }
     }
 
-    @PostMapping()
-    public ResponseEntity<String> createNewUser(@RequestBody User user) {
-        userService.addNewUser(user);
-        return ResponseEntity.ok("Dodan je novi korisnik");
+    @Secured("ADMIN")
+    @PostMapping("")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User saved = userService.createUser(user);
+        return ResponseEntity
+                .created(URI.create("/user/" + saved.getUserId()))
+                .body(saved);
     }
 
+    @Secured("ADMIN")
     @PutMapping("/{userId}")
-    public ResponseEntity<String> updateUser(
-            @PathVariable("userId") int userId, @RequestBody User user) {
-        return null;
+    public User updateUser(
+            @PathVariable("userId") int userId,
+            @RequestBody User updatedUser
+        ) {
+        return userService.updateUser(userId, updatedUser);
     }
 
+    @Secured("ADMIN")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") int userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.ok("Izbrisali ste korisnika sa id=" + userId);
+    public Optional<User> deleteUser(@PathVariable("userId") int userId) {
+        return userService.deleteUser(userId);
     }
 
 }

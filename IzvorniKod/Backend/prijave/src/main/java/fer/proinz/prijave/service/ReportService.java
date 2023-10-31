@@ -22,23 +22,33 @@ public class ReportService {
         return reportRepository.findById(reportId);
     }
 
-    public void addNewReport(Report report) {
-        reportRepository.save(report);
+    public Report createReport(Report report) {
+        return reportRepository.save(report);
     }
 
-    public void deleteReport(int reportId) {
+    public Report updateReport(int reportId, Report updatedReport) {
+        return reportRepository.findById(reportId)
+                .map(report -> {
+                    if (updatedReport.getTitle() != null) {
+                        report.setTitle(updatedReport.getTitle());
+                    }
+                    if (updatedReport.getDescription() != null) {
+                        report.setDescription(updatedReport.getDescription());
+                    }
+                    return reportRepository.save(report);
+                })
+                .orElseThrow(RuntimeException::new);
+    }
+
+    public Optional<Report> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
 
         if(reportOptional.isPresent()) {
             reportRepository.deleteById(reportId);
+            return reportOptional;
         } else {
             throw new RuntimeException("report with id " + reportId + " does not exists!");
         }
-    }
-
-    public Report updateReport(int reportId, Report report) {
-        report.setReportId(reportId);
-        return reportRepository.save(report);
     }
 
 }

@@ -21,12 +21,23 @@ public class Report implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reportId;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     private String title;
+
     private String description;
+
     private String locationCoordinates;
+
     private String address;
+
+    @Lob
     private byte[] photo;
+
     private Timestamp reportTime;
+
     private String status;
 
 }

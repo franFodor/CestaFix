@@ -59,7 +59,7 @@ public class UsersIT {
                     .name("John Doe")
                     .email("john.doe@gmail.com")
                     .password("wjs82jas72nw")
-                    .isAdmin(false)
+                    .role("USER")
                     .build();
 
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -67,7 +67,7 @@ public class UsersIT {
             preparedStatement.setString(2, user.getName());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setBoolean(5, user.isAdmin());
+            preparedStatement.setString(5, user.getRole());
 
             preparedStatement.executeUpdate();
         } catch (Exception e) {
@@ -104,13 +104,13 @@ public class UsersIT {
     }
 
     @Test
-    public void createNewUserAndExpect200OK() throws Exception {
+    public void createUserAndExpect200OK() throws Exception {
         User user = User.builder()
                 .userId(2)
                 .name("John Doe")
                 .email("john.doe@gmail.com")
                 .password("wjs82jas72nw")
-                .isAdmin(false)
+                .role("USER")
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(user);
@@ -130,7 +130,7 @@ public class UsersIT {
                 .name("John Doe")
                 .email("john.doe@gmail.com")
                 .password("wjs82jas72nw")
-                .isAdmin(false)
+                .role("USER")
                 .build();
 
 

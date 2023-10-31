@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Data
 @Builder
@@ -20,6 +23,5 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private boolean isAdmin;
-
+    private String role;
 }

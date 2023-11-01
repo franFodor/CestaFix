@@ -12,10 +12,17 @@
 
 	\item Neregistrirani korisnik
 	\item Registrirani korisnik
-	\item Gradski uredi - službenici
+	\begin{packed_enum}
+		\item Građanin
+		\item Službenik gradskog ureda
+	\end{packed_enum}
 	\item Administrator
 	\item Razvojni tim
-	\item Asistenti
+	\item Suradnici
+	\begin{packed_enum}
+		\item Nastavnik
+		\item Demonstrator
+	\end{packed_enum}
 
 \end{packed_enum}
 
@@ -28,34 +35,36 @@
 	\begin{packed_enum}
 
 		\item podnositi anonimne prijave
-		\item pratitit prijave jedinstvenim kodom
-		\item imati u postojeće prijave
-		\item prijaviti se u korisnički račun
-		\item registrirati korisničkoi računa
+		\item pratiti status prijave jedinstvenim brojem prijave
+		\item imati uvid u postojeće prijave
+		\item imati uvid u statistiku statusa prijava
+		\item registrirati korisnički računa
 
 
 	\end{packed_enum}
 
-	\item  \underbar{Registrirani korisnik (inicijator) može:}
+	\item  \underbar{Građanin (inicijator) može:}
 
 	\begin{packed_enum}
 
-		\item podnositi prijave pod vlastitim profilom
-		\item pratiti vlastite prijave
+		\item prijaviti se na korisnički račun
+		\item odjaviti se s korisničkog računa
+		\item pratiti status vlastitih prijava
 		\item imati uvid u postojeće prijave
-		\item izmjeniti podatke korisničkih računa
-		\item pregledavati profile drugih korisnika
+		\item imati uvid u statistiku statusa prijava
+		\item izmjeniti podatke korisničkog računa
 
 	\end{packed_enum}
 
-	\item \underbar{Gradski uredi - službenici (inicijator) može:}
+	\item \underbar{Službenik gradskog ureda (inicijator) može:}
 
 	\begin{packed_enum}
 
 		\item obrađivati podnesene prijave
-		\item objediniti nepovezane prijave na istoj lokaciji
-		\item promijeniti status prijava
+		\item objediniti nepovezane prijave po temi i lokaciji
+		\item promijeniti status prijave
 		\item pratiti i analizirati probleme u stvarnom vremenu
+		\item izmjeniti podatke korisničkog računa
 
 	\end{packed_enum}
 
@@ -63,10 +72,10 @@
 
 	\begin{packed_enum}
 
-		\item dodati, mijenjati i brisati korisničke račune
+		\item uređivati i brisati korisničke račune
 		\item pristupiti bazi podataka
-		\item dodijeliti administratorska prava drugim korisnicima
-		\item dodijeliti prava službenika drugim korisnicima
+		\item kreirati gradski ured
+		\item dodijeliti registriranom korisniku ulogu službenika gradskog ureda
 
 	\end{packed_enum}
 
@@ -74,12 +83,14 @@
 
 	\begin{packed_enum}
 
-		\item pohraniti sve podatke o korisnicima i njihovim ovalstima
-		\item pohraniti sve podatke o podnesenim prijavama, njihovim lokacijama i opisima
+		\item pohraniti sve podatke o korisnicima i njihovim ulogama
+		\item pohraniti sve podatke o prijavljenim oštećenjima
+		\item pohraniti sve podatke o kategorijama problema i gradskim uredima za njihovo obrađivanje
 
 	\end{packed_enum}
 
 \end{packed_enum}
+
 
 \eject
 

@@ -1,28 +1,3 @@
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #333; 
-    color: #fff;
-  }
-  
-  .left {
-    display: flex;
-  }
-  
-  .button {
-    margin-right: 10px;
-  }
-  
-  .right {
-    order: 1;
-  }
-  
-  .logo {
-    max-width: 100px; 
-  }
-
 /*------------------POPUP I FORM ZA LOGIN I REGISTER CSS-------------------*/
   .popup {
     position: fixed;

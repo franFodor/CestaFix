@@ -1,12 +1,11 @@
 import React from 'react';
-import './Footer.css';
 
 const Footer = () => {
     const today = new Date();
 
     return (
-        <footer>
-            <p>CestaFIX Copyright Free &copy; {today.getFullYear()}</p>
+        <footer className='w-full flex justify-center px-3 py-2 bg-zinc-700'>
+            <p className='text-white font-semibold'>CestaFIX Copyright Free &copy; {today.getFullYear()}</p>
         </footer>
     )
 }

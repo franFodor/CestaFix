@@ -120,32 +120,33 @@ const Header = () => {
   );
   //-----------------------------------------------------------
   //-----------------------------------------------------------
+  
   return (
-    <header className="header">
-
-      <div className="left">
-        <img src="logo.png" alt="Logo" className="logo" />
-        <h1>CestaFIX</h1>
-      </div>
-
-      <div className="right">
-        <button className="button" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
-        <button className="button" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
-        <button className="button" onClick={handleAccount}>Prijavi se!</button>
-      </div>
-
-
-      {/*Popup za Login/Register*/}
-      {showPopup && (
-        <div className="popup">
-          <div className="popup-content">
-            {popupContent}
-          </div>
+      <nav className='flex-none grid grid-cols-4 gap-4 px-3 py-3 bg-zinc-700'>
+        <div class="justify-start text-3xl font-bold items-center text-white">
+          <a href="#">CestaFIX</a>
         </div>
-      )}
+        <ul class="col-span-3 gap-4 flex justify-end items-center">
+          <li><button class="bg-gray-50 hover:bg-gray-300 py-1 px-2 text-md text-black font-semibold rounded"
+          onClick={handleNovaPrijava}>Prijavi štetu</button></li>
+          <li><button class="bg-gray-50 hover:bg-gray-300 py-1 px-2 text-md text-black font-semibold rounded"
+          onClick={handleCheckStatus}>Provjeri status prijave</button></li>
+          <li><button class="bg-blue-500 hover:bg-blue-700 py-1 px-2 text-md text-white font-bold rounded"
+          onClick={handleAccount}>Prijavi se</button></li>
+        </ul>
 
-    </header>
+        {/*Popup za Login/Register*/}
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              {popupContent}
+            </div>
+          </div>
+        )}
+
+      </nav>
   );
+
 };
 
 export default Header;

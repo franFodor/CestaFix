@@ -39,5 +39,8 @@
   "description": "React.JS / NPM\r Stranica se pokreće sa ```npm start``` na ```http://localhost:3000/```  dok si pozicioniran u ovaj direktorij.",
   "main": "index.js",
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "tailwindcss": "^3.1.4"
+  }
 }

@@ -104,6 +104,83 @@
 \textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
 
 
+\noindent \underbar{\textbf{UC01 - Registracija korisničkog računa}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Neregistrirani korisnik
+	\item  \textbf{Cilj:} Stvoriti korisnički račun za pristup sustavu
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} -
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prijavu
+		\item Korisnik odabire opciju da nema korisnički račun
+		\item Korisnik unosi potrebne podatke i potvrđuje unos
+		\item Korisnik se upisuje u bazu podataka i preusmjerava na početnu stranicu
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[3.a] Odabir već zauzetog korisničkog imena i/ili e-mail adrese, unos korisničkog podatka u neispravnom formatu, nepodudaranje lozinki
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za registraciju
+			\item Korisnik mijenja potrebne podatke te završava unos ili odustaje od registracije
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+\noindent \underbar{\textbf{UC02 - Prijava na korisnički račun}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Dobivanje pristupa korisničkom sučelju
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je obavio registraciju i njegovi podaci se nalaze u bazi podataka
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prijavu
+		\item Korisnik unosi korisničko ime i lozinku te potvrđuje unos
+		\item Korisnik se preuspjerava na početnu stranicu
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[2.a] Neispravni unos korisničkog imena i/ili lozinke
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za prijavu
+			\item Korisnik unosi ispravne podatke te završava unos ili odustaje od prijave
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+\noindent \underbar{\textbf{UC03 - Odjava s korisničkog računa}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Izlazak iz korisničkog sučelja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je obavio prijavu na korisnički račun
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za odjavu
+		\item Korisnik se preusmjerava na početnu stranicu
+	\end{packed_enum}
+\end{packed_item}
+
 \noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$ime obrasca$>$}}
 \begin{packed_item}
 

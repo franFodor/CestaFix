@@ -2,6 +2,7 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.model.Report;
+import fer.proinz.prijave.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,8 +55,8 @@ public class ReportsIT {
     @BeforeEach
     void setUpReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "INSERT INTO Reports (report_id, title, description, location_coordinates, address, report_time, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sqlReport = "INSERT INTO Reports (report_id, title, description, location_coordinates, address, photo, report_time, status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             Report report = Report.builder()
                     .reportId(15L)
@@ -62,20 +64,44 @@ public class ReportsIT {
                     .description("kwerwoirwsnfsffowefsg")
                     .locationCoordinates("194702742235")
                     .address("Ulica grada Vukovara 3")
+                    .photo(null)
                     .reportTime(Timestamp.from(Instant.now()))
                     .status("Osteceno")
                     .build();
 
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, report.getReportId());
-            preparedStatement.setString(2, report.getTitle());
-            preparedStatement.setString(3, report.getDescription());
-            preparedStatement.setString(4, report.getLocationCoordinates());
-            preparedStatement.setString(5, report.getAddress());
-            preparedStatement.setTimestamp(6, report.getReportTime());
-            preparedStatement.setString(7, report.getStatus());
+            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
+            preparedStatementReport.setLong(1, report.getReportId());
+            preparedStatementReport.setString(2, report.getTitle());
+            preparedStatementReport.setString(3, report.getDescription());
+            preparedStatementReport.setString(4, report.getLocationCoordinates());
+            preparedStatementReport.setString(5, report.getAddress());
+            preparedStatementReport.setBytes(6, report.getPhoto());
+            preparedStatementReport.setTimestamp(7, report.getReportTime());
+            preparedStatementReport.setString(8, report.getStatus());
 
-            preparedStatement.executeUpdate();
+            preparedStatementReport.executeUpdate();
+
+            String sqlUser = "INSERT INTO Users (user_id, name, email, password, role) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+
+            User user = User.builder()
+                    .userId(2)
+                    .name("John Doe")
+                    .email("john.doe@gmail.com")
+                    .password("wjs82jas72nw")
+                    .role("USER")
+                    .build();
+
+            PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
+            preparedStatementUser.setLong(1, user.getUserId());
+            preparedStatementUser.setString(2, user.getName());
+            preparedStatementUser.setString(3, user.getEmail());
+            preparedStatementUser.setString(4, user.getPassword());
+            preparedStatementUser.setString(5, user.getRole());
+
+            preparedStatementUser.executeUpdate();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,10 +110,15 @@ public class ReportsIT {
     @AfterEach
     void tearDownReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "DELETE FROM Reports WHERE report_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, 15L);
-            preparedStatement.executeUpdate();
+            String sqlReport = "DELETE FROM Reports WHERE report_id = ?";
+            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
+            preparedStatementReport.setLong(1, 15L);
+            preparedStatementReport.executeUpdate();
+
+            String sqlUser = "DELETE FROM Users WHERE user_id = ?";
+            PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
+            preparedStatementUser.setInt(1, 2);
+            preparedStatementUser.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,13 +143,18 @@ public class ReportsIT {
     }
 
     @Test
-    public void createNewReportAndExpect200OK() throws Exception {
+    public void createReportAndExpect201OK() throws Exception {
+        User testUser = new User();
+        testUser.setUserId(2);
+
         Report report = Report.builder()
                 .reportId(15L)
+                .user(testUser)
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .locationCoordinates("194702742235")
                 .address("Ulica grada Vukovara 3")
+                .photo(null)
                 .reportTime(Timestamp.from(Instant.now()))
                 .status("Osteceno")
                 .build();
@@ -129,7 +165,7 @@ public class ReportsIT {
                 .perform(post("/report")
                                 .contentType("application/json")
                                 .content(jsonReport))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -141,6 +177,7 @@ public class ReportsIT {
                 .description("kwerwoirwsnfsffowefsg")
                 .locationCoordinates("194702742235")
                 .address("Ulica grada Vukovara 3")
+                .photo(null)
                 .reportTime(Timestamp.from(Instant.now()))
                 .status("Osteceno")
                 .build();
@@ -151,6 +188,7 @@ public class ReportsIT {
         mockMvc
                 .perform(
                         put("/report/" + report.getReportId())
+                                .with(user("admin").roles("ADMIN"))
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isOk());
@@ -160,7 +198,8 @@ public class ReportsIT {
     public void deleteReportAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/report/15"))
+                        delete("/report/15")
+                                .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }
 }

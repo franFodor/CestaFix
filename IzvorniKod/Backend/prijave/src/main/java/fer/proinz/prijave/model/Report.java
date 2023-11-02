@@ -33,7 +33,6 @@ public class Report implements Serializable {
 
     private String address;
 
-    @Lob
     private byte[] photo;
 
     private Timestamp reportTime;

@@ -22,6 +22,7 @@ import java.sql.SQLException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 
 @SpringBootTest
 @Testcontainers
@@ -51,7 +52,7 @@ public class UsersIT {
     @BeforeEach
     void setUpUser() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "INSERT INTO Users (user_id, name, email, password, is_admin) " +
+            String sql = "INSERT INTO Users (user_id, name, email, password, role) " +
                     "VALUES (?, ?, ?, ?, ?)";
 
             User user = User.builder()
@@ -104,7 +105,7 @@ public class UsersIT {
     }
 
     @Test
-    public void createUserAndExpect200OK() throws Exception {
+    public void createUserAndExpect201OK() throws Exception {
         User user = User.builder()
                 .userId(2)
                 .name("John Doe")
@@ -117,9 +118,10 @@ public class UsersIT {
 
         mockMvc
                 .perform(post("/user")
+                        .with(user("admin").roles("ADMIN"))
                         .contentType("application/json")
                         .content(jsonReport))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
     }
 
     @Test
@@ -139,6 +141,7 @@ public class UsersIT {
         mockMvc
                 .perform(
                         put("/user/" + user.getUserId())
+                                .with(user("admin").roles("ADMIN"))
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isOk());
@@ -148,7 +151,8 @@ public class UsersIT {
     public void deleteUserAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/user/2"))
+                        delete("/user/2")
+                                .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }
 

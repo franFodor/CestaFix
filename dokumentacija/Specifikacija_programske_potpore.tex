@@ -74,7 +74,7 @@
 
 		\item uređivati i brisati korisničke račune
 		\item pristupiti bazi podataka
-		\item kreirati gradski ured
+		\item kreirati i ukloniti gradski ured
 		\item dodijeliti registriranom korisniku ulogu službenika gradskog ureda
 
 	\end{packed_enum}
@@ -108,7 +108,7 @@
 \begin{packed_item}
 
 	\item \textbf{Glavni sudionik: }Neregistrirani korisnik
-	\item  \textbf{Cilj:} Stvoriti korisnički račun za pristup sustavu
+	\item  \textbf{Cilj:} Stvoranje korisničkog račun za pristup sustavu
 	\item  \textbf{Sudionici:} Baza podataka
 	\item  \textbf{Preduvjet:} -
 	\item  \textbf{Opis osnovnog tijeka:}
@@ -118,14 +118,14 @@
 		\item Korisnik odabire opciju za prijavu
 		\item Korisnik odabire opciju da nema korisnički račun
 		\item Korisnik unosi potrebne podatke i potvrđuje unos
-		\item Korisnik se upisuje u bazu podataka i preusmjerava na početnu stranicu
+		\item Korisnik se upisuje u bazu podataka i korisnik se preusmjerava na početnu stranicu
 	\end{packed_enum}
 
 	\item  \textbf{Opis mogućih odstupanja:}
 
 	\item[] \begin{packed_item}
 
-		\item[3.a] Odabir već zauzetog korisničkog imena i/ili e-mail adrese, unos korisničkog podatka u neispravnom formatu, nepodudaranje lozinki
+		\item[3.a] Odabir već zauzetog korisničkog imena i/ili e-mail adrese, unos korisničkih podataka u neispravnom formatu, nepodudaranje lozinki
 		\item[] \begin{packed_enum}
 
 			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za registraciju
@@ -139,7 +139,7 @@
 \begin{packed_item}
 
 	\item \textbf{Glavni sudionik: }Registrirani korisnik
-	\item  \textbf{Cilj:} Dobivanje pristupa korisničkom sučelju
+	\item  \textbf{Cilj:} Dobivanje pristupa korisničkom sučelju s ovlastima registriranog korisnika
 	\item  \textbf{Sudionici:} Baza podataka
 	\item  \textbf{Preduvjet:} Korisnik je obavio registraciju i njegovi podaci se nalaze u bazi podataka
 	\item  \textbf{Opis osnovnog tijeka:}
@@ -181,38 +181,464 @@
 	\end{packed_enum}
 \end{packed_item}
 
-\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$ime obrasca$>$}}
+
+\noindent \underbar{\textbf{UC04 - Kreiranje gradskog ureda}}
 \begin{packed_item}
 
-	\item \textbf{Glavni sudionik: }$<$sudionik$>$
-	\item  \textbf{Cilj:} $<$cilj$>$
-	\item  \textbf{Sudionici:} $<$sudionici$>$
-	\item  \textbf{Preduvjet:} $<$preduvjet$>$
+	\item \textbf{Glavni sudionik: }Administratori
+	\item  \textbf{Cilj:} Kreiranje gradskog ureda
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je prijavljen i ima administrator ovlasti
 	\item  \textbf{Opis osnovnog tijeka:}
 
 	\item[] \begin{packed_enum}
 
-		\item $<$opis korak jedan$>$
-		\item $<$opis korak dva$>$
-		\item $<$opis korak tri$>$
-		\item $<$opis korak četiri$>$
-		\item $<$opis korak pet$>$
+		\item Korisnik otvara padajući izbornik
+		\item Korisnik odabire opciju za kreiranje gradskog ureda
+		\item Korisnik unosi potrebne podatke i potvrđuje unos
+		\item Gradski ured se upisuje u bazu podataka i korisnik se preusmjerava na početnu stranicu
+
 	\end{packed_enum}
 
 	\item  \textbf{Opis mogućih odstupanja:}
 
 	\item[] \begin{packed_item}
 
-		\item[2.a] $<$opis mogućeg scenarija odstupanja u koraku 2$>$
+		\item[3.a] Odabir već zauzetog imena gradskog ureda
 		\item[] \begin{packed_enum}
 
-			\item $<$opis rješenja mogućeg scenarija korak 1$>$
-			\item $<$opis rješenja mogućeg scenarija korak 2$>$
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za kreiranje gradskog ureda
+			\item Korisnik mijenja potrebne podatke te završava unos ili odustaje od kreiranja gradskog ureda
 
 		\end{packed_enum}
-		\item[2.b] $<$opis mogućeg scenarija odstupanja u koraku 2$>$
-		\item[3.a] $<$opis mogućeg scenarija odstupanja  u koraku 3$>$
+		\item[3.b] Nije odabrana nijedna kategorija oštećenja kojom će gradski ured upravljati
+		\item[] \begin{packed_enum}
 
+			\item Sustav obavještava korisnika o obveznom unosu barem jedne kategorije oštećenja kojom će ured upravljati
+			\item Korisnik odabire barem jednu kategoriju oštećenja te završava unos ili odustaje od kreiranja gradskog ureda
+
+		\end{packed_enum}
+
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC05 - Uklanjanje gradskog ureda}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Administrator
+	\item  \textbf{Cilj:} Uklanjanje gradskog ureda
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je prijavljen i ima administrator ovlasti, gradski ured postoji
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik otvara padajući izbornik
+		\item Korisnik odabire opciju za pregled gradskih ureda
+		\item Korisnik odabire gradski ured
+		\item Korisnik odabire opciju za uklanjanje gradskog ureda 
+		\item Gradski ured se uklanja iz baze podataka i korisnik se preusmjerava na stranicu za pregled gradskih ureda
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC06 - Dodjela uloge službenika gradskog ureda}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Administrator
+	\item  \textbf{Cilj:} Dodjeljavanje uloge službenika gradskog ureda registriranom korisniku
+	\item  \textbf{Sudionici:} Baza podataka, Registrirani korisnik
+	\item  \textbf{Preduvjet:} Korisnik je prijavljen i ima administratorske ovlasti, postoji odgovarajući gradski ured za registriranog korisnika
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik otvara padajući izbornik 
+		\item Korisnik odabire opciju za pregled popisa korisničkih računa
+		\item Korisnik odabire korisnički račun
+		\item Korisnik odabire opciju za dodjelu uloge službenika gradskog ureda
+		\item Registrirani korisnik dobiva ulogu službenika gradskog ureda i korisnik se preusmjerava na pregled korisničkog računa
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC07 - Pregled korisničkog računa}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Pregledavanje korisničkog račun
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je obavio prijavu na korisnički račun
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik otvara padajući izbornik
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC08 - Uređivanje podataka korisničkog računa}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Promjena podataka na vlastitom korisničkom računu 
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je obavio prijavu na korisnički račun
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik otvara padajući izbornik
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+		\item Korisnik odabire opciju za uređivanje korisničkih podataka
+		\item Korisnik uređuje korisničke podatke i potvrđuje promjene
+		\item Korisnički podaci se ažuriraju u bazi podataka i korisnik se preusmjerava na pregled vlastitog korisničkog računa
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[4.a] Odabir već zauzetog korisničkog imena i/ili e-mail adrese, unos korisničkog podatka u neispravnom formatu, nepodudaranje lozinki
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na uređivanje korisničkih podataka
+			\item Korisnik mijenja potrebne podatke te završava unos ili odustaje od uređivanja korisničkih podataka
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC09 - Brisanje korisničkog računa}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Uklanjanje vlastitog korisničkog računa
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je obavio prijavu na korisnički račun
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik otvara padajući izbornik
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+		\item Korisnik odabire opciju za brisanje korisničkog računa
+		\item Korisnik povrđuje odluku i korisnik se preusmjerava na početnu stranicu
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC10 - Kreiranje anonimne prijave oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Neregistrirani korisnik
+	\item  \textbf{Cilj:} Prijava oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} -
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prijavu oštećenja
+		\item Korisnik unosi potrebne podatke i potvrđuje unos
+		\item Prijava oštećenja se upisuje u bazu podataka i korisnik dobiva jedinstveni broj prijave
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[3.a] Neuneseni obvezni podaci i/ili podaci uneseni u neispravnom formatu 
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za prijavu oštećenja
+			\item Korisnik mijenja potrebne podatke te završava unos ili odustaje od prijave oštećenja
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC11 - Kreiranje prijave oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Prijava oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je prijavljen
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prijavu oštećenja
+		\item Korisnik unosi potrebne podatke i potvrđuje unos
+		\item Prijava oštećenja se upisuje u bazu podataka i korisnik se preusmjerava na početnu stranicu
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[3.a] Neuneseni obvezni podaci i/ili podaci uneseni u neispravnom formatu 
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za prijavu oštećenja
+			\item Korisnik mijenja potrebne podatke te završava unos ili odustaje od prijave oštećenja
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC12 - Provjera statusa anonimnih prijava oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: } Neregistrirani korisnik
+	\item  \textbf{Cilj:} Provjera statusa anonimne prijave oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Podnesena prijava oštećenja
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za provjeru statusa prijave oštećenja
+		\item Korisnik unosi jedinstveni broj prijave i potvrđuje unos
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[2.a] Jedinstveni broj prijave ne postoji ili je unesen u neispravnom formatu
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za provjeru statusa prijave oštećenja
+			\item Korisnik unosi ispravni jedinstveni broj prijave i završava unos ili odustaje od provjere statusa prijave oštećenja
+
+		\end{packed_enum}
+
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC13 - Provjera statusa prijave oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: } Registrirani korisnik
+	\item  \textbf{Cilj:} Provjera statusa vlastite prijave oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Podnesena prijava oštećenja, korisnik je prijavljen
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za provjeru statusa prijave oštećenja
+		\item Korisnik odabire prijavu oštećenja za koju želi provjeriti status oštećenja
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC14 - Pregled prijave oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: } Registrirani korisnik, Neregistrirani korisnik
+	\item  \textbf{Cilj:} Pregled prijave oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} -
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik na karti odabire oznaku prijave oštećenja
+		\item Korisniku se otvara pregled prijavljeno oštećenje 
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC15 - Promjena statusa prijave oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Službenik gradskog ureda
+	\item  \textbf{Cilj:} Promjena statusa prijave oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Podnesena prijava oštećenja, korisnik ima ulogu službenika gradskog ureda
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prikaz popisa prijavljenih oštećenja
+		\item Korisnik odabire prijavu oštećenja
+		\item Korisnik odabire opciju za promjenu statusa prijave i potvrđuje promjenu
+		\item Status prijave oštećenja se ažurira u bazi podataka i korisnik se preusmjerava na pregled prijave oštećenja
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC16 - Provjera statistike statusa prijave oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: } Neregistrirani korisnik, Registrirani korisnik
+	\item  \textbf{Cilj:} Provjera statistike statusa prijave oštećenja
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} -
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za provjeru statistike statusa prijava oštećenja
+		\item Korisniku se otvara pregled statistike statusa prijava oštećenja
+	\end{packed_enum}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC17 - Objedinjavanje nepovezanih prijava oštećenja}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: } Službenik gradskog ureda
+	\item  \textbf{Cilj:} Objediniti nepovezane prijave oštećenja po temi i lokaciji
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Postoje prijave oštećenja s istom temom i lokacijom, korisnik ima ulogu službenika gradskog ureda
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prikaz prijava oštećenja
+		\item Korisnik odabire dvije ili više prijava oštećenja
+		\item Korisnik odabire da želi objediniti oznaćene prijave i potvrđuje odabir
+		\item Prijave oštećenja se objedinjuju u bazi podataka i korisnik se preusmjerava na početnu stranicu
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[3.a] Korisnik je odabrao manje od dvije prijave oštećenja i pokušao napraviti objedinjavanje
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika o neuspjelom pokušaju objedinjavanja i vraća ga na odabir prijava oštećenja
+			\item Korisnik odabire više od dvije prijave oštećenja i potvrđuje odabir ili odustaje od objedinjavanja prijava oštećenja
+		\end{packed_enum}
+
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC18 - Dodjela kategorije za upravljanje gradskom uredu}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Administrator
+	\item  \textbf{Cilj:} Dodjela kategorije oštećenja kojom će određeni gradski ured upravljati
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Gradski ured postoji, korisnik ima ulogu administratora
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire padajući izbornik
+		\item Korisnik odabire opciju pregleda gradskih ureda
+		\item Korisnik odabire gradski ured
+		\item Korisnik odabire opciju da dodavanje kategorija oštećenja, 
+		\item Korisnik radi odabir kategorija i potvđuje odabir
+		\item Ažurirani popis kategorija oštećenja za koje je zadužen gradski ured se upisuje u bazu podataka i korisnik se preusmjerava na pregled profila gradskog ureda
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[4.a] Gradski ured već upravlja svim kategorijama oštećenja, ne postoji kategorija oštećenja kojom već ne upravlja neki gradski ured u istom mjestu
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika da ne postoji kategorija oštećenja kojom gradski ured već ne upravlja ili da ne postoji kategorija kojom već ne upravlja neki gradski ured u istom mjestu
+			\item Korisnik odustaje od dodjele kategorije za upravljanje gradskom uredu
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC19 - Uklanjanje kategorije za upravljanje iz gradskomg ureda}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Administrator
+	\item  \textbf{Cilj:} Uklanjanje kategorije oštećenja kojom trenutno upravlja gradski ured
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Gradski ured postoji, korisnik ima ulogu administratora
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire padajući izbornik
+		\item Korisnik odabire opciju pregleda gradskih ureda
+		\item Korisnik odabire gradski ured
+		\item Korisnik odabire opciju da uklanjanje kategorija oštećenja
+		\item Korisnik radi odabir kategorija i potvđuje ga
+		\item Ažurirani popis kategorija oštećenja za koje je zadužen gradski ured se upisuje u bazu podataka i korisnik se preusmjerava na pregled profila gradskog ureda
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[5.a] Korisnik je odabrao sve kategorije oštećenja 
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika da je odabrao sve kategorije oštećenja i vraća ga na stranicu za uređivanje gradskog ureda s otvorenom opcijom odabira kategorija
+			\item Korisnik odabire kategorije pazeći da ostavi barem jednu kategoriju i potvrđuje odabir ili odustaje od uklanjanja kategorija oštećenja kojima upravlja gradski ured
+
+		\end{packed_enum}
+	\end{packed_item}
+\end{packed_item}
+
+
+\noindent \underbar{\textbf{UC20 - Ponovno postavljanje zaboravljene lozinke}}
+\begin{packed_item}
+
+	\item \textbf{Glavni sudionik: }Registrirani korisnik
+	\item  \textbf{Cilj:} Stvaranje nove lozinke za registriranog korisnika
+	\item  \textbf{Sudionici:} Baza podataka
+	\item  \textbf{Preduvjet:} Korisnik je registriran i njegovi podaci se nalaze u bazi podataka
+	\item  \textbf{Opis osnovnog tijeka:}
+
+	\item[] \begin{packed_enum}
+
+		\item Korisnik odabire opciju za prijavu
+		\item Korisnik odabire opciju za ponovno postavljanje zaboravljene lozinke
+		\item Korisnik unosi e-mail adresu korisničkog računa i potvrđuje unos
+		\item Korisnik unosi identifikacijski kod koji je dobio na e-mail adresu
+		\item Korisnik unosi novu lozinku i potvrđuje odabir
+		\item Nova lozinka sprema se u bazu podataka i korisnik se preusmjerava na početnu stranicu
+	\end{packed_enum}
+
+	\item  \textbf{Opis mogućih odstupanja:}
+
+	\item[] \begin{packed_item}
+
+		\item[3.a] Unesena e-mail adresa ne postoji ili je u neispravnom formatu
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika da e-mail adresa ne postoji ili je u neispravnom formatu
+			\item Korisnik unosi ispravnu e-mail adresu ili odustaje od ponovnog postavljanja zaboravljene lozinke
+
+		\end{packed_enum}
+		\item[4.a] Uneseni identifikacijski broj ne postoji ili je u neispravnom formatu
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika da identifikacijski broj ne postoji ili je u neispravnom formatu
+			\item Korisnik unosi ispravni identifikacijski broj ili odustaje od ponovnog postavljanja zaboravljene lozinke
+
+		\end{packed_enum}
+		\item[5.a] Unesena lozinka je u neispravnom formatu, lozinke se ne podudaraju
+		\item[] \begin{packed_enum}
+
+			\item Sustav obavještava korisnika da je unesena lozinka u neispravnom formatu ili da se lozinke ne podudaraju
+			\item Korisnik unosi ispravno lozinku ili odustaje od ponovnog postavljanja zaboravljene lozinke
+
+		\end{packed_enum}
 	\end{packed_item}
 \end{packed_item}
 

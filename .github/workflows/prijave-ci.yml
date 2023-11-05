@@ -1,25 +1,48 @@
 name: Java CI with Maven
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
-  build:
-
+  build-and-push-frontend:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the code
+      - name: Checkout Code
         uses: actions/checkout@v3
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          distribution: 'corretto'
-          java-version: '17'
-          architecture: 'x64'
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Build and Push Frontend Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./frontend
+          push: true
+          tags: cestafix/frontend:latest
 
-      - name: Build with Maven
-        run: mvn -B package --file IzvorniKod/Backend/prijave/pom.xml
-
-      - name: Run tests
-        run: mvn verify --file IzvorniKod/Backend/prijave/pom.xml
+  build-and-push-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      - name: Build and Push Backend Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend
+          push: true
+          tags: cestafix/backend:latest

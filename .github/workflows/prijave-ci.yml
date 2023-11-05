@@ -45,7 +45,7 @@ jobs:
 
       - name: Run tests
         run: mvn verify --file IzvorniKod/Backend/prijave/pom.xml
-        
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to Docker Hub
@@ -56,6 +56,6 @@ jobs:
       - name: Build and Push Backend Docker Image
         uses: docker/build-push-action@v3
         with:
-          context: ./backend
+          context: ./IzvorniKod/Backend/prijave
           push: true
           tags: cestafix/backend:latest

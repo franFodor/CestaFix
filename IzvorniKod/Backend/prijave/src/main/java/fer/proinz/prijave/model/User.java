@@ -1,5 +1,6 @@
 package fer.proinz.prijave.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +23,7 @@ public class User {
     private int userId;
     private String name;
     private String email;
+    @JsonIgnore
     private String password;
     private String role;
 }

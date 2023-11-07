@@ -22,7 +22,7 @@
     "build": "yarn install && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start-prod": "npm start"
+    "start-prod": "react-scripts start"
   },
   "eslintConfig": {
     "extends": [

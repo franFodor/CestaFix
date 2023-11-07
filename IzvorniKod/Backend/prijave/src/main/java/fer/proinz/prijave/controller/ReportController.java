@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/report")
+@RequestMapping("/api/report")
 public class ReportController {
 
     @Autowired

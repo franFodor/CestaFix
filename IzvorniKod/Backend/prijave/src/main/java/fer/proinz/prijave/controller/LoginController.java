@@ -27,7 +27,7 @@ public class LoginController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public ResponseEntity<User> authenticateUser(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

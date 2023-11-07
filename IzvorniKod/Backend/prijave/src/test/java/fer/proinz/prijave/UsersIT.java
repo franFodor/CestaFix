@@ -2,12 +2,15 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.model.User;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +37,8 @@ public class UsersIT {
     @Autowired
     private MockMvc mockMvc;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -56,10 +61,10 @@ public class UsersIT {
                     "VALUES (?, ?, ?, ?, ?)";
 
             User user = User.builder()
-                    .userId(2)
+                    .userId(4)
                     .name("John Doe")
                     .email("john.doe@gmail.com")
-                    .password("wjs82jas72nw")
+                    .password("qwertz")
                     .role("USER")
                     .build();
 
@@ -81,7 +86,7 @@ public class UsersIT {
         try (Connection connection = dataSource.getConnection()) {
             String sql = "DELETE FROM Users WHERE user_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, 2);
+            preparedStatement.setInt(1, 4);
             preparedStatement.executeUpdate();
 
         } catch (Exception e) {
@@ -93,31 +98,34 @@ public class UsersIT {
     public void getAllUsersAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/user/getAllUsers"))
+                        get("/api/user/getAllUsers"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getUserByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/user/get/2"))
+                .perform(get("/api/user/get/4"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void createUserAndExpect201OK() throws Exception {
+        String rawPassword = "qwertz";
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
         User user = User.builder()
-                .userId(2)
+                .userId(4)
                 .name("John Doe")
                 .email("john.doe@gmail.com")
-                .password("wjs82jas72nw")
+                .password(encodedPassword)
                 .role("USER")
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(user);
 
         mockMvc
-                .perform(post("/user")
+                .perform(post("/api/user")
                         .with(user("admin").roles("ADMIN"))
                         .contentType("application/json")
                         .content(jsonReport))
@@ -128,7 +136,7 @@ public class UsersIT {
     public void updateUserAndExpect200OK() throws Exception {
 
         User user = User.builder()
-                .userId(2)
+                .userId(4)
                 .name("John Doe")
                 .email("john.doe@gmail.com")
                 .password("wjs82jas72nw")
@@ -140,7 +148,7 @@ public class UsersIT {
 
         mockMvc
                 .perform(
-                        put("/user/" + user.getUserId())
+                        put("/api/user/" + user.getUserId())
                                 .with(user("admin").roles("ADMIN"))
                                 .contentType("application/json")
                                 .content(jsonReport))
@@ -151,7 +159,7 @@ public class UsersIT {
     public void deleteUserAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/user/2")
+                        delete("/api/user/4")
                                 .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }

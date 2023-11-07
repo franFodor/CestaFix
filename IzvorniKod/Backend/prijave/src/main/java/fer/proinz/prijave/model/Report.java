@@ -29,8 +29,6 @@ public class Report implements Serializable {
 
     private String description;
 
-    private String locationCoordinates;
-
     private String address;
 
     private byte[] photo;

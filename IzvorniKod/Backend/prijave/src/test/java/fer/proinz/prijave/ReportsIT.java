@@ -55,14 +55,13 @@ public class ReportsIT {
     @BeforeEach
     void setUpReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlReport = "INSERT INTO Reports (report_id, title, description, location_coordinates, address, photo, report_time, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sqlReport = "INSERT INTO Reports (report_id, title, description, address, photo, report_time, status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             Report report = Report.builder()
                     .reportId(15L)
                     .title("Pukotina na cesti")
                     .description("kwerwoirwsnfsffowefsg")
-                    .locationCoordinates("194702742235")
                     .address("Ulica grada Vukovara 3")
                     .photo(null)
                     .reportTime(Timestamp.from(Instant.now()))
@@ -73,11 +72,10 @@ public class ReportsIT {
             preparedStatementReport.setLong(1, report.getReportId());
             preparedStatementReport.setString(2, report.getTitle());
             preparedStatementReport.setString(3, report.getDescription());
-            preparedStatementReport.setString(4, report.getLocationCoordinates());
-            preparedStatementReport.setString(5, report.getAddress());
-            preparedStatementReport.setBytes(6, report.getPhoto());
-            preparedStatementReport.setTimestamp(7, report.getReportTime());
-            preparedStatementReport.setString(8, report.getStatus());
+            preparedStatementReport.setString(4, report.getAddress());
+            preparedStatementReport.setBytes(5, report.getPhoto());
+            preparedStatementReport.setTimestamp(6, report.getReportTime());
+            preparedStatementReport.setString(7, report.getStatus());
 
             preparedStatementReport.executeUpdate();
 
@@ -131,14 +129,14 @@ public class ReportsIT {
     public void getAllReportsAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/report/getAllReports"))
+                        get("/api/report/getAllReports"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getReportByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/report/get/15"))
+                .perform(get("/api/report/get/15"))
                 .andExpect(status().isOk());
     }
 
@@ -152,7 +150,6 @@ public class ReportsIT {
                 .user(testUser)
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
-                .locationCoordinates("194702742235")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
                 .reportTime(Timestamp.from(Instant.now()))
@@ -162,7 +159,7 @@ public class ReportsIT {
         String jsonReport = objectMapper.writeValueAsString(report);
 
         mockMvc
-                .perform(post("/report")
+                .perform(post("/api/report")
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isCreated());
@@ -175,7 +172,6 @@ public class ReportsIT {
                 .reportId(15L)
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
-                .locationCoordinates("194702742235")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
                 .reportTime(Timestamp.from(Instant.now()))
@@ -187,7 +183,7 @@ public class ReportsIT {
 
         mockMvc
                 .perform(
-                        put("/report/" + report.getReportId())
+                        put("/api/report/" + report.getReportId())
                                 .with(user("admin").roles("ADMIN"))
                                 .contentType("application/json")
                                 .content(jsonReport))
@@ -198,7 +194,7 @@ public class ReportsIT {
     public void deleteReportAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/report/15")
+                        delete("/api/report/15")
                                 .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }

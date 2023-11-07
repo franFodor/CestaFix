@@ -2,14 +2,7 @@
 FROM openjdk:17-alpine AS builder
 
 # Kopiranje izvornog koda u container
-COPY ../../.mvn .mvn
-COPY ../../mvnw .
-COPY ../../pom.xml .
-COPY ../../src src
-RUN chmod +x mvnw
-
-# Pokretanje builda
-RUN ./mvnw clean package
+WORKDIR /app
 
 # Stvaranje containera u kojem ce se vrtiti aplikacija
 FROM openjdk:17-alpine
@@ -19,10 +12,10 @@ FROM openjdk:17-alpine
 #RUN apk install <nesto>
 
 # Kopiranje izvrsnog JAR-a iz build containera u izvrsni container
-COPY --from=builder target/*.jar /prijave.jar
+COPY --from=builder target/*.jar /app/prijave.jar
 
 # Izlaganje porta
 EXPOSE 8080
 
 # Naredba kojom se pokrece aplikacija
-ENTRYPOINT ["java","-jar","/prijave.jar"]
+ENTRYPOINT ["java","-jar","/app/prijave.jar"]

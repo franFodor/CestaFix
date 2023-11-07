@@ -1,14 +1,28 @@
-FROM amazoncorretto:17-alpine-jdk
+# Container za izgradnju (build) aplikacije
+FROM openjdk:17-alpine AS builder
 
-# Set the working directory in the container
-WORKDIR /app
+# Kopiranje izvornog koda u container
+COPY ../../.mvn .mvn
+COPY ../../mvnw .
+COPY ../../pom.xml .
+COPY ../../src src
+RUN chmod +x mvnw
 
-# Add the application JAR file to the container
-#COPY target/prijave.jar /app/prijave.jar
-COPY --from=builder target/*.jar /app/prijave.jar
+# Pokretanje builda
+RUN ./mvnw clean package
 
-# Expose the port that your application runs on
+# Stvaranje containera u kojem ce se vrtiti aplikacija
+FROM openjdk:17-alpine
+
+## Ovdje je moguce instalirati alate potrebne za rad aplikacije. Vjerojatno vam nece trebati, no dobro je znati.
+## Linux distro koji se koristi je Alpine, stoga se kao package manager koristi apk
+#RUN apk install <nesto>
+
+# Kopiranje izvrsnog JAR-a iz build containera u izvrsni container
+COPY --from=builder target/*.jar /prijave.jar
+
+# Izlaganje porta
 EXPOSE 8080
 
-# Specify the command to run the service
-ENTRYPOINT ["java", "-jar", "/app/prijave.jar"]
+# Naredba kojom se pokrece aplikacija
+ENTRYPOINT ["java","-jar","/prijave.jar"]

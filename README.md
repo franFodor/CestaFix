@@ -19,6 +19,7 @@ Ključni obrasci uporabe
 # Tehnologije
 * Frontend - React
 * Backend - Spring
+* Baza podataka - PostgreSQL
 * Deployment - Render
 
 # Instalacija

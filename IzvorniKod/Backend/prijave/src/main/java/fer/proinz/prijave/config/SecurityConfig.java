@@ -32,7 +32,8 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) throws Exception {
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) throws Exception {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder);
         authenticationProvider.setUserDetailsService(userDetailsService);
@@ -42,7 +43,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/login").permitAll()
+                .requestMatchers("/api/login").permitAll()
+                .requestMatchers("/api/user/getAllUsers").permitAll()
+                .requestMatchers("/api/user/get/**").permitAll()
+                .requestMatchers("/api/report/getAllReports").permitAll()
+                .requestMatchers("/api/report/get/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/report").permitAll()
                 .anyRequest().authenticated());
 
         http.csrf(AbstractHttpConfigurer::disable);

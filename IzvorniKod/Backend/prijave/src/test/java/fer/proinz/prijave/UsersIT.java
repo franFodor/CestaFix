@@ -1,6 +1,7 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fer.proinz.prijave.model.CityDepartment;
 import fer.proinz.prijave.model.User;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -57,25 +58,40 @@ public class UsersIT {
     @BeforeEach
     void setUpUser() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "INSERT INTO Users (user_id, name, email, password, role) " +
+            String sqlUser = "INSERT INTO Users (user_id, name, email, password, role) " +
                     "VALUES (?, ?, ?, ?, ?)";
 
             User user = User.builder()
                     .userId(4)
                     .name("John Doe")
                     .email("john.doe@gmail.com")
-                    .password("qwertz")
+                    .password(passwordEncoder.encode("qwertz"))
                     .role("USER")
                     .build();
 
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setLong(1, user.getUserId());
-            preparedStatement.setString(2, user.getName());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setString(5, user.getRole());
+            PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
+            preparedStatementUser.setLong(1, user.getUserId());
+            preparedStatementUser.setString(2, user.getName());
+            preparedStatementUser.setString(3, user.getEmail());
+            preparedStatementUser.setString(4, user.getPassword());
+            preparedStatementUser.setString(5, user.getRole());
 
-            preparedStatement.executeUpdate();
+            preparedStatementUser.executeUpdate();
+
+            String sqlCityDepartment = "INSERT INTO Citydep (citydep_id, citydep_name) " +
+                    "VALUES (?, ?)";
+
+            CityDepartment cityDepartment = CityDepartment.builder()
+                    .citydepId(1)
+                    .citydepName("Ured za obnovu javnih povrsina")
+                    .build();
+
+            PreparedStatement preparedStatementCityDepartment = connection.prepareStatement(sqlCityDepartment);
+            preparedStatementCityDepartment.setLong(1, cityDepartment.getCitydepId());
+            preparedStatementCityDepartment.setString(2, cityDepartment.getCitydepName());
+
+            preparedStatementCityDepartment.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,10 +100,15 @@ public class UsersIT {
     @AfterEach
     void tearDownReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sql = "DELETE FROM Users WHERE user_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, 4);
-            preparedStatement.executeUpdate();
+            String sqlUser = "DELETE FROM Users WHERE user_id = ?";
+            PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
+            preparedStatementUser.setInt(1, 4);
+            preparedStatementUser.executeUpdate();
+
+            String sqlCityDepartment = "DELETE FROM Citydep WHERE citydep_id = ?";
+            PreparedStatement preparedStatementCityDepartment = connection.prepareStatement(sqlCityDepartment);
+            preparedStatementCityDepartment.setInt(1, 1);
+            preparedStatementCityDepartment.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -98,34 +119,35 @@ public class UsersIT {
     public void getAllUsersAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/api/user/getAllUsers"))
+                        get("/user/getAllUsers"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getUserByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/api/user/get/4"))
+                .perform(get("/user/get/4"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void createUserAndExpect201OK() throws Exception {
-        String rawPassword = "qwertz";
-        String encodedPassword = passwordEncoder.encode(rawPassword);
+        CityDepartment testCitydep = new CityDepartment();
+        testCitydep.setCitydepId(1);
 
         User user = User.builder()
                 .userId(4)
                 .name("John Doe")
                 .email("john.doe@gmail.com")
-                .password(encodedPassword)
+                .password(passwordEncoder.encode("qwertz"))
                 .role("USER")
+                .citydep(null)
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(user);
 
         mockMvc
-                .perform(post("/api/user")
+                .perform(post("/user")
                         .with(user("admin").roles("ADMIN"))
                         .contentType("application/json")
                         .content(jsonReport))
@@ -139,7 +161,7 @@ public class UsersIT {
                 .userId(4)
                 .name("John Doe")
                 .email("john.doe@gmail.com")
-                .password("wjs82jas72nw")
+                .password(passwordEncoder.encode("qwertz"))
                 .role("USER")
                 .build();
 
@@ -148,7 +170,7 @@ public class UsersIT {
 
         mockMvc
                 .perform(
-                        put("/api/user/" + user.getUserId())
+                        put("/user/" + user.getUserId())
                                 .with(user("admin").roles("ADMIN"))
                                 .contentType("application/json")
                                 .content(jsonReport))
@@ -159,7 +181,7 @@ public class UsersIT {
     public void deleteUserAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/api/user/4")
+                        delete("/user/4")
                                 .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }

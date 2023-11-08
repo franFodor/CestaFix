@@ -129,14 +129,14 @@ public class ReportsIT {
     public void getAllReportsAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/api/report/getAllReports"))
+                        get("/report/getAllReports"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getReportByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/api/report/get/15"))
+                .perform(get("/report/get/15"))
                 .andExpect(status().isOk());
     }
 
@@ -159,7 +159,7 @@ public class ReportsIT {
         String jsonReport = objectMapper.writeValueAsString(report);
 
         mockMvc
-                .perform(post("/api/report")
+                .perform(post("/report")
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isCreated());
@@ -183,7 +183,7 @@ public class ReportsIT {
 
         mockMvc
                 .perform(
-                        put("/api/report/" + report.getReportId())
+                        put("/report/" + report.getReportId())
                                 .with(user("admin").roles("ADMIN"))
                                 .contentType("application/json")
                                 .content(jsonReport))
@@ -194,7 +194,7 @@ public class ReportsIT {
     public void deleteReportAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/api/report/15")
+                        delete("/report/15")
                                 .with(user("admin").roles("ADMIN")))
                 .andExpect(status().isOk());
     }

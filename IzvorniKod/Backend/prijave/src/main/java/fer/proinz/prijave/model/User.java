@@ -29,5 +29,5 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "citydep_id")
-    private int citydep_id;
+    private CityDepartment citydep;
 }

@@ -43,12 +43,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/login").permitAll()
-                .requestMatchers("/api/user/getAllUsers").permitAll()
-                .requestMatchers("/api/user/get/**").permitAll()
-                .requestMatchers("/api/report/getAllReports").permitAll()
-                .requestMatchers("/api/report/get/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/report").permitAll()
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/user/getAllUsers").permitAll()
+                .requestMatchers("/user/get/**").permitAll()
+                .requestMatchers("/report/getAllReports").permitAll()
+                .requestMatchers("/report/get/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/report").permitAll()
                 .anyRequest().authenticated());
 
         http.csrf(AbstractHttpConfigurer::disable);

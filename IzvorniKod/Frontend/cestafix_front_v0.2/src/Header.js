@@ -3,7 +3,7 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, Component } from 'react';
 import './Header.css' ;
 
 import  {NovaPrijava} from './createReport.js';
@@ -45,6 +45,58 @@ const Header = () => {
     currentForm = 1 - currentForm;
 
   }
+  // Funkciju triggera submit login forme. Salje podatke forme na /api/login
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    const formData = {
+      username: e.target.username.value,
+      password: e.target.password.value,
+      remember: e.target.remember.checked,
+    };
+
+    const formDataJSON = JSON.stringify(formData);
+
+    fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: formDataJSON,
+    }).then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+
+      });
+};
+  // Funkciju triggera submit register forme. Salje podatke forme na /api/register
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    const formData = {
+      username: e.target.username.value,
+      email: e.target.email.value,
+      password: e.target.password.value,
+      remember: e.target.remember.checked,
+    };
+
+    const formDataJSON = JSON.stringify(formData);
+
+    fetch('/api/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: formDataJSON,
+    }).then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+
+      });
+};
+
 
   //Elementi Login Popupa
   const loginForm = (
@@ -54,14 +106,14 @@ const Header = () => {
 
       {/*!!!!!VAŽNO!!!!   Login Form, potrebno dovršiti*/}
       {/*!!!!!VAŽNO!!!!   Login Form, potrebno dovršiti*/}
-      <form action="/user" method="post">
+      <form onSubmit={handleLogin}>
         <div className="container">
-          <label htmlFor="uname"><b>Korisničko ime</b></label>
-          <input type="text" placeholder="Enter Username" name="uname" required />
+          <label htmlFor="username"><b>Korisničko ime</b></label>
+          <input type="text" placeholder="Enter Username" name="username" required />
 
-          <label htmlFor="psw"><b>Lozinka</b></label>
+          <label htmlFor="password"><b>Lozinka</b></label>
           
-          <input type="password" placeholder="Enter Password" name="psw" required />
+          <input type="password" placeholder="Enter Password" name="password" required />
           <label>
             <input type="checkbox" defaultChecked="checked" name="remember" style={{ marginBottom: '15px' }} /> Zapamti me!
           </label>
@@ -85,22 +137,22 @@ const Header = () => {
 
       {/*!!!!!VAŽNO!!!!   Register Form, potrebno dovršiti*/}
       {/*!!!!!VAŽNO!!!!   Register Form, potrebno dovršiti*/}
-      <form action="/registerUser" style={{ border: '1px solid #ccc' }}>
+      <form onSubmit={handleRegister} style={{ border: '1px solid #ccc' }}>
         <div className="container">
-          <label htmlFor="uname">
+          <label htmlFor="username">
             <b>Korisničko ime</b>
           </label>
-          <input type="text" placeholder="Korisničko ime" name="uname" required />
+          <input type="text" placeholder="Korisničko ime" name="username" required />
 
           <label htmlFor="email">
             <b>E-mail</b>
           </label>
           <input type="text" placeholder="Upiši svoj E-mail" name="email" required />
 
-          <label htmlFor="psw">
+          <label htmlFor="password">
             <b>Lozinka</b>
           </label>
-          <input type="password" placeholder="Upiši lozinku" name="psw" required />
+          <input type="password" placeholder="Upiši lozinku" name="password" required />
 
           <label htmlFor="psw-repeat">
             <b>Ponovi Lozinku</b>

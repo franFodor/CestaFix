@@ -26,4 +26,8 @@ public class User {
     //@JsonIgnore
     private String password;
     private String role;
+
+    @ManyToOne
+    @JoinColumn(name = "citydep_id")
+    private int citydep_id;
 }

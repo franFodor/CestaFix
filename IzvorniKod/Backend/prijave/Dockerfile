@@ -1,6 +1,11 @@
 # Container za izgradnju (build) aplikacije
 FROM amazoncorretto:17-alpine-jdk
 
+
+ENV DB_URL=jdbc:postgres://prijava_ostecenja_db_user:9OponSzIox4w8bqGRni1aoEgX77LRBY5@dpg-cl5tb756fh7c73evcb10-a/prijava_ostecenja_db_413x
+ENV DB_USERNAME=prijava_ostecenja_db_user
+ENV DB_PASS=9OponSzIox4w8bqGRni1aoEgX77LRBY5
+ENV DB_DRIVER=org.postgresql.Driver
 # Set the working directory in the container
 WORKDIR /app
 

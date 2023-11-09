@@ -9,8 +9,6 @@ ENV DB_DRIVER=org.postgresql.Driver
 # Set the working directory in the container
 WORKDIR /app
 
-RUN mvn package
-
 # Add the application JAR file to the container
 COPY target/prijave.jar /app/prijave.jar
 

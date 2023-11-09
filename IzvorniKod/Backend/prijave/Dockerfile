@@ -2,9 +2,9 @@
 FROM amazoncorretto:17-alpine-jdk
 
 
-ENV DB_URL=jdbc:postgresql://dpg-cl5tb756fh7c73evcb10-a:5432/prijava_ostecenja_db_413x
+ENV DB_URL=jdbc:postgresql://dpg-cl4krus72pts739i2rvg-a:5432/prijava_ostecenja_db
 ENV DB_USERNAME=prijava_ostecenja_db_user
-ENV DB_PASS=9OponSzIox4w8bqGRni1aoEgX77LRBY5
+ENV DB_PASS=KT9yduovllMpa8qQsZH3PKTn2AAM3t93
 ENV DB_DRIVER=org.postgresql.Driver
 # Set the working directory in the container
 WORKDIR /app

@@ -108,7 +108,7 @@ const Header = () => {
       {/*!!!!!VAŽNO!!!!   Login Form, potrebno dovršiti*/}
       <form onSubmit={handleLogin}>
         <div className="container">
-          <label htmlFor="username"><b>Korisničko ime</b></label>
+          <label htmlFor="username"><b>E-Mail:</b></label>
           <input type="text" placeholder="Enter Username" name="username" required />
 
           <label htmlFor="password"><b>Lozinka</b></label>
@@ -177,20 +177,18 @@ const Header = () => {
   //-----------------------------------------------------------
   
   return (
-      <nav className='flex-none grid grid-cols-4 gap-4 px-3 py-3 bg-zinc-700'>
-        <div class="justify-start text-3xl font-bold items-center text-white">
-          <a href="#">CestaFIX</a>
-        </div>
-        <ul >
-          <li><button class="headerBTN1"
-          onClick={handleNovaPrijava}>Prijavi štetu</button></li>
-          <li><button class="headerBTN1"
-          onClick={handleCheckStatus}>Provjeri status prijave</button></li>
-          <li><button class="HeaderBTN2"
-          onClick={handleAccount}>Prijavi se</button></li>
-        </ul>
+    <header className="header">
+      <div className="right">
+        <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+        <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+        <button className="headerBTN1" onClick={handleAccount}>Login/Register</button>
+      </div>
+      <div className="left">
+        <img src="logo.png" alt="Logo" className="logo" />
+        <h1>CestaFIX</h1>
+      </div>
 
-        {/*Popup za Login/Register*/}
+ {/*Popup za Login/Register*/}
         {showPopup && (
           <div className="popup">
             <div className="popup-content">
@@ -198,8 +196,7 @@ const Header = () => {
             </div>
           </div>
         )}
-
-      </nav>
+    </header>
   );
 
 };

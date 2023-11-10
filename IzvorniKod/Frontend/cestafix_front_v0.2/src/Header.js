@@ -52,7 +52,7 @@ const Header = () => {
     const formData = {
       email: e.target.username.value,
       password: e.target.password.value,
-      remember: e.target.remember.checked,
+      //remember: e.target.remember.checked,
     };
 
     const formDataJSON = JSON.stringify(formData);
@@ -75,7 +75,8 @@ const Header = () => {
     e.preventDefault();
 
     const formData = {
-      email: e.target.username.value,
+      username: e.target.username.value,
+      email: e.target.email.value,
       password: e.target.password.value,
       remember: e.target.remember.checked,
     };

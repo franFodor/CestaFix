@@ -1,4 +1,18 @@
 # Container za izgradnju (build) aplikacije
+FROM openjdk:17-alpine AS builder
+
+# Kopiranje izvornog koda u container
+COPY ../../.mvn .mvn
+COPY ../../mvnw .
+COPY ../../pom.xml .
+COPY ../../src src
+RUN chmod +x mvnw
+
+# Pokretanje builda
+RUN ./mvnw clean package
+
+
+# Container za izgradnju (build) aplikacije
 FROM amazoncorretto:17-alpine-jdk
 
 
@@ -10,7 +24,7 @@ ENV DB_DRIVER=org.postgresql.Driver
 WORKDIR /app
 
 # Add the application JAR file to the container
-COPY target/prijave.jar /app/prijave.jar
+COPY --from=builder target/prijave.jar /app/prijave.jar
 
 # Expose the port that your application runs on
 EXPOSE 8080

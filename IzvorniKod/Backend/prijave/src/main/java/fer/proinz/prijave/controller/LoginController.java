@@ -31,12 +31,12 @@ public class LoginController {
     public ResponseEntity<User> authenticateUser(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginDto.getUsername(),
+                        loginDto.getEmail(),
                         loginDto.getPassword()
                 )
         );
 
-        Optional<User> userOptional = userRepository.findByEmail(loginDto.getUsername());
+        Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
         if (userOptional.isPresent()) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return ResponseEntity.ok(userOptional.get());

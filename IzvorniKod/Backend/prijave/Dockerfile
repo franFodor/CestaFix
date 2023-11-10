@@ -2,9 +2,9 @@
 FROM openjdk:17-alpine AS builder
 
 # Kopiranje izvornog koda u container
-COPY ./.mvn .mvn
-COPY ./mvnw .
-COPY ./pom.xml .
+COPY .mvn .mvn
+COPY mvnw .
+COPY pom.xml .
 #COPY ./src src
 RUN chmod +x mvnw
 
@@ -13,7 +13,7 @@ RUN ./mvnw clean package
 
 
 # Container za izgradnju (build) aplikacije
-FROM openjdk:17-alpine
+FROM amazoncorretto:17-alpine-jdk
 
 
 ENV DB_URL=jdbc:postgresql://dpg-cl4krus72pts739i2rvg-a:5432/prijava_ostecenja_db

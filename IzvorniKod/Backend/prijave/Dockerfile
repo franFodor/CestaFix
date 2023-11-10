@@ -5,7 +5,7 @@ FROM openjdk:17-alpine AS builder
 COPY .mvn .mvn
 COPY mvnw .
 COPY pom.xml .
-COPY ./src src
+COPY src src
 RUN chmod +x mvnw
 
 # Pokretanje builda

@@ -54,6 +54,17 @@ input[type=text], input[type=password] {
   cursor: pointer;
   width: 100%;
 }
+.headerBTN1 { 
+  background-color: transparent;
+  color: white;
+  border: none;
+  margin: 5px;
+  padding: 0;
+  width: calc(100% - 10px); /* subtracting 2 * 5px for left and right margins */
+  height: calc(100% - 10px); /* subtracting 2 * 5px for top and bottom margins */
+  transition: border-color 0.3s ease; /* transition effect for border color */
+}
+.headerBTN1.onHover
 
 button:hover {
   opacity: 0.8;

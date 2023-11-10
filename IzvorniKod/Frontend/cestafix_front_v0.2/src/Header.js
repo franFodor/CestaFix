@@ -50,7 +50,7 @@ const Header = () => {
     e.preventDefault();
 
     const formData = {
-      username: e.target.username.value,
+      email: e.target.username.value,
       password: e.target.password.value,
       remember: e.target.remember.checked,
     };

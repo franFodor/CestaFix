@@ -181,12 +181,12 @@ const Header = () => {
         <div class="justify-start text-3xl font-bold items-center text-white">
           <a href="#">CestaFIX</a>
         </div>
-        <ul class="col-span-3 gap-4 flex justify-end items-center">
-          <li><button class="bg-gray-50 hover:bg-gray-300 py-1 px-2 text-md text-black font-semibold rounded"
+        <ul >
+          <li><button class="headerBTN1"
           onClick={handleNovaPrijava}>Prijavi štetu</button></li>
-          <li><button class="bg-gray-50 hover:bg-gray-300 py-1 px-2 text-md text-black font-semibold rounded"
+          <li><button class="headerBTN1"
           onClick={handleCheckStatus}>Provjeri status prijave</button></li>
-          <li><button class="bg-blue-500 hover:bg-blue-700 py-1 px-2 text-md text-white font-bold rounded"
+          <li><button class="HeaderBTN2"
           onClick={handleAccount}>Prijavi se</button></li>
         </ul>
 

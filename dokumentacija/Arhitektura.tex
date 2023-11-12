@@ -32,14 +32,29 @@
 
 \textbf{\textit{dio 1. revizije}}\\
 
-\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.}
+\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.\\} 
+\noindent Sustav je temeljen na uporabi relacijske baze podataka implementirane u PostgreSQL-u gdje su entiteti modelirani kao tablice koje posjeduju svoje jedinstveno ime i skup atributa.
+Odabir relacijske baze podataka proizlazi iz potrebe za lakšim ostvarenjem naših potreba za upravljanjem podacima pri prijavljivanju oštećenja i njihovoj sanaciji 
+odnosno kako bismo što jednostavnije modelirali sustav prema stvarnom svijetu.
+Ova baza podataka ključna je za sigurnost podataka i brz pristup, pohranu, umetanje, izmjenu te dohvat podataka koje sustav koristi za daljnju obradu.
+Baza podataka ove aplikacija sadrži sljedeće entitete:
+\begin{packed_item}
+	\item \textit{Users}
+	\item \textit{Reports}
+	\item \textit{CityDep}
+	\item \textit{Category}
+	\item \textit{Problems}
+	\item \textit{CitydepCategory}
+\end{packed_item}
+
+
 
 \subsection{Opis tablica}
 
 
 \textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
 
-
+\noindent\textbf{Users} je entitet...
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -48,14 +63,17 @@
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{User}}                                                                    \\ \hline[3pt]
-	\SetCell{LightGreen}user\_id &  & Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod \\ \hline
-	name                         &  &                                                                         \\ \hline
-	email                        &  &                                                                         \\ \hline
-	password                     &  &                                                                         \\ \hline
-	is\_admin                    &  &                                                                         \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
+	\SetCell{LightGreen}user\_id & INT     & Jedinstveni identifikator korisnika      \\ \hline
+	name                         & VARCHAR & ime korisnika                            \\ \hline
+	email                        & VARCHAR & e-mail adresa korisnika                  \\ \hline
+	password                     & VARCHAR & hash lozinke korisnika                   \\ \hline
+	role                         & VARCHAR & uloga korisnika                          \\ \hline
+	citydep\_id                  & INT     & jedinstveni identifikator gradskog ureda \\ \hline
 \end{longtblr}
 
+
+\noindent\textbf{Reports} je entitet...
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -64,19 +82,19 @@
 	colspec={|X[13,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                   \\ \hline[3pt]
-	\SetCell{LightGreen}report\_id &  & Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod \\ \hline
-	\SetCell{LightBlue} user\_id   &  &                                                                         \\ \hline
-	title                          &  &                                                                         \\ \hline
-	description                    &  &                                                                         \\ \hline
-	location\_coordinates          &  &                                                                         \\ \hline
-	address                        &  &                                                                         \\ \hline
-	photo                          &  &                                                                         \\ \hline
-	report\_time                   &  &                                                                         \\ \hline
-	status                         &  &                                                                         \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                \\ \hline[3pt]
+	\SetCell{LightGreen}report\_id  & INT       & jedinstveni identifikator prijave                          \\ \hline
+	\SetCell{LightBlue} user\_id    & INT       & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
+	title                           & VARCHAR   & naziv prijave/oštećenja                                    \\ \hline
+	description                     & TEXT      & opis oštećenja                                             \\ \hline
+	address                         & VARCHAR   & adresa oštećenja                                           \\ \hline
+	photo                           & BYTEA     & slika oštećenja                                            \\ \hline
+	report\_time                    & TIMESTAMP & vrijeme podnošenja prijave                                 \\ \hline
+	status                          & VARCHAR   & status prijave                                             \\ \hline
+	\SetCell{LightBlue} problem\_id & INT       & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 \end{longtblr}
 
-
+\noindent\textbf{Citydep} je entitet...
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -85,12 +103,12 @@
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Citydep}}                                                                    \\ \hline[3pt]
-	\SetCell{LightGreen}citydep\_id &  & Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod \\ \hline
-	status                          &  &                                                                         \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Citydep}}                                            \\ \hline[3pt]
+	\SetCell{LightGreen}citydep\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	citydep\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
 \end{longtblr}
 
-
+\noindent\textbf{Category} je entitet...
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -99,12 +117,12 @@
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Category}}                                                                    \\ \hline[3pt]
-	\SetCell{LightGreen}category\_id &  & Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod \\ \hline
-	category\_name                   &  &                                                                         \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Category}}                                                  \\ \hline[3pt]
+	\SetCell{LightGreen}category\_id & INT     & jedinstveni identifikator kategorije oštećenja \\ \hline
+	category\_name                   & VARCHAR & naziv kategorije oštećenja                     \\ \hline
 \end{longtblr}
 
-
+\noindent\textbf{Problems} je entitet...
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -113,18 +131,28 @@
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Problems}}                                                                    \\ \hline[3pt]
-	\SetCell{LightGreen}problem\_id  &  & Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod \\ \hline
-	longitude                        &  &                                                                         \\ \hline
-	latitude                         &  &                                                                         \\ \hline
-	status                           &  &                                                                         \\ \hline
-	\SetCell{LightBlue} category\_id &  &                                                                         \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Problems}}                                                                           \\ \hline[3pt]
+	\SetCell{LightGreen}problem\_id  & INT     & jedinstveni identifikator oštećenja                                     \\ \hline
+	longitude                        & DOUBLE  & geografska dužina lokacije oštećenja                                    \\ \hline
+	latitude                         & DOUBLE  & geografska širina lokacije oštećenja                                    \\ \hline
+	status                           & VARCHAR & status oštećenja                                                        \\ \hline
+	\SetCell{LightBlue} category\_id & INT     & jedinstveni identifikator kategorije oštećenja  (category.category\_id) \\ \hline
 \end{longtblr}
 
 
-%treba dodati još CitydepCategory?
-
-
+\noindent\textbf{CitydepCategory} je entitet...
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{CitydepCategory}}                                                               \\ \hline[3pt]
+	\SetCell{LightGreen}citydep\_id  & INT & jedinstveni identifikator gradskog ureda (citydep.citydep\_id)         \\ \hline
+	\SetCell{LightGreen}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
+\end{longtblr}
 
 
 

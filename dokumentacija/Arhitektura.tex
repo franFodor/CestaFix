@@ -32,9 +32,9 @@
 
 \textbf{\textit{dio 1. revizije}}\\
 
-\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.\\} 
+\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.\\}
 \noindent Sustav je temeljen na uporabi relacijske baze podataka implementirane u PostgreSQL-u gdje su entiteti modelirani kao tablice koje posjeduju svoje jedinstveno ime i skup atributa.
-Odabir relacijske baze podataka proizlazi iz potrebe za lakšim ostvarenjem naših potreba za upravljanjem podacima pri prijavljivanju oštećenja i njihovoj sanaciji 
+Odabir relacijske baze podataka proizlazi iz potrebe za lakšim ostvarenjem naših potreba za upravljanjem podacima pri prijavljivanju oštećenja i njihovoj sanaciji
 odnosno kako bismo što jednostavnije modelirali sustav prema stvarnom svijetu.
 Ova baza podataka ključna je za sigurnost podataka i brz pristup, pohranu, umetanje, izmjenu te dohvat podataka koje sustav koristi za daljnju obradu.
 Baza podataka ove aplikacija sadrži sljedeće entitete:
@@ -54,7 +54,10 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 
 \textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
 
-\noindent\textbf{Users} je entitet...
+\noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije.Sastoji se od atributa: user\_id, name, email, password i role.
+Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
+
+
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -73,7 +76,8 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 \end{longtblr}
 
 
-\noindent\textbf{Reports} je entitet...
+\noindent\textbf{Reports} je entitet koji sadrži sve bitne informacije o prijavama oštećenja.
+Sastoji se od atributa: report\_id, user\_id, title, description, address, photo, report\_time, status i problem\_id. Povezan je vezom \textit{Many-to-One}  s entitetom Problems preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Users preko atributa user\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -94,7 +98,8 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 	\SetCell{LightBlue} problem\_id & INT       & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Citydep} je entitet...
+\noindent\textbf{Citydep} je entitet koji sadrži sve bitne informacije o gradskim uredima.
+Sastoji se od atributa: citydep\_id i citydep\_name. Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom CityDepCategory preko atributa citydep\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -108,7 +113,7 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 	citydep\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Category} je entitet...
+\noindent\textbf{Category} je entitet koji sadrži sve bitne informacije o kategoriji oštećenja. Sastoji se od atributa: category\_id i category\_name. Povezan je vezom \textit{One-to-Many} s entitetom Problems preko atributa category\_id i vezom \textit{One-to-Many} s entitetom CityDepCategory preko atributa category\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -122,7 +127,7 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 	category\_name                   & VARCHAR & naziv kategorije oštećenja                     \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Problems} je entitet...
+\noindent\textbf{Problems} je entitet koji sadrži sve bitne informacije o prijavljenom oštećenju. Sastoji se od atributa: problem\_id, longitude, latitude, status i category\_id. Povezan je vezom One-to-Many s entitetom Reports preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -140,7 +145,9 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 \end{longtblr}
 
 
-\noindent\textbf{CitydepCategory} je entitet...
+\noindent\textbf{CitydepCategory} je entitet koji sadrži sve bitne informacije vezane uz kategoriju oštećenja kojom se bavi određeni gradski ured.
+Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
+
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -149,9 +156,9 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{CitydepCategory}}                                                               \\ \hline[3pt]
-	\SetCell{LightGreen}citydep\_id  & INT & jedinstveni identifikator gradskog ureda (citydep.citydep\_id)         \\ \hline
-	\SetCell{LightGreen}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{CitydepCategory}}                                                              \\ \hline[3pt]
+	\SetCell{LightBlue}citydep\_id  & INT & jedinstveni identifikator gradskog ureda (citydep.citydep\_id)         \\ \hline
+	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
 \end{longtblr}
 
 

@@ -4,6 +4,7 @@
 
 
 import React, { useState, Component } from 'react';
+import Cookies from 'js-cookie';
 import './Header.css' ;
 
 import  {NovaPrijava} from './createReport.js';
@@ -45,6 +46,21 @@ const Header = () => {
     currentForm = 1 - currentForm;
 
   }
+
+   const handleLogout = (e) => {
+    Cookies.remove('loginData', { path: '/' });
+    fetch('/api/logout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+    }).then(() => {
+        window.location.reload();
+    })
+  }
+
+
+
   // Funkciju triggera submit login forme. Salje podatke forme na /api/login
   const handleLogin = (e) => {
     e.preventDefault();
@@ -63,9 +79,19 @@ const Header = () => {
         'Content-Type': 'application/json',
       },
       body: formDataJSON,
-    }).then((response) => {
-        console.log(response);
-      })
+    }).then((response) => response.text())
+        .then((rawBody) => {
+            const jsonData = JSON.parse(rawBody);
+
+            const myData = {name : jsonData.name,
+                              email : jsonData.email,
+                              citydep : jsonData.citydep,
+                              role : jsonData.role,
+                              userid : jsonData.userid}
+
+            Cookies.set('loginData', JSON.stringify(myData))
+            window.location.reload();
+       })
       .catch((error) => {
 
       });
@@ -90,10 +116,10 @@ const Header = () => {
       },
       body: formDataJSON,
     }).then((response) => {
-        console.log(response);
+
       })
       .catch((error) => {
-
+            console.log("here")
       });
 };
 
@@ -175,13 +201,30 @@ const Header = () => {
   );
   //-----------------------------------------------------------
   //-----------------------------------------------------------
-  
+
+
+  const loginData = Cookies.get('loginData');
+
   return (
+
     <header className="header">
       <div className="right">
-        <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
-        <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
-        <button className="headerBTN1" onClick={handleAccount}>Login/Register</button>
+        {(loginData) ? (
+            <>
+                <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+                <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+                <button className="headerBTN1" onClick={handleLogout}>Logout</button>
+            </>
+            ) : (
+            <>
+                <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+                <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+                <button className="headerBTN1" onClick={handleAccount}>Login/Register</button>
+            </>
+            )
+        }
+
+
       </div>
       <div className="left">
         <img src="logo.png" alt="Logo" className="logo" />

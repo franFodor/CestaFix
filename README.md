@@ -24,7 +24,8 @@ Ključni obrasci uporabe
 * Deployment - Render
 
 # Instalacija
-
+Kako bi se *pokrenula* stranica potrebno je (za sada) ući i na [frontend](https://cestafix-fe.onrender.com) stranicu i na [backend](https://backend-j8o6.onrender.com) stranicu. 
+**Napomena**: Render (platforma preko koje smo deployali stranicu) automatski "spin downa" (ugasi) sve stranice (na free verziji) koje se **ne koriste više od 15 minuta** pa zbog toga ako se samo uđe na frontend stranicu **neće** raditi zahtjevi prema backendu. Također učitavanje backend stranice može potrajati čak do par minuta, samo ju pustite da se učitava dok ne dobijete 404 na stranici. Nakon toga se može uredno koristiti frontend stranica uz funkcionalne API zahtjeve prema backendu.
 
 # Članovi tima 
 * Fran Fodor - voditelj<br/>

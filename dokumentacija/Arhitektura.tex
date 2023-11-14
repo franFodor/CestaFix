@@ -54,7 +54,7 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 
 \textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
 
-\noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije.Sastoji se od atributa: user\_id, name, email, password i role.
+\noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije. Sastoji se od atributa: user\_id, name, email, password i role.
 Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
 
 
@@ -68,7 +68,7 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
 	\SetCell{LightGreen}user\_id & INT     & Jedinstveni identifikator korisnika      \\ \hline
-	name                         & VARCHAR & ime korisnika                            \\ \hline
+	username                     & VARCHAR & ime korisnika                            \\ \hline
 	email                        & VARCHAR & e-mail adresa korisnika                  \\ \hline
 	password                     & VARCHAR & hash lozinke korisnika                   \\ \hline
 	role                         & VARCHAR & uloga korisnika                          \\ \hline
@@ -87,15 +87,15 @@ Sastoji se od atributa: report\_id, user\_id, title, description, address, photo
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                \\ \hline[3pt]
-	\SetCell{LightGreen}report\_id  & INT       & jedinstveni identifikator prijave                          \\ \hline
-	\SetCell{LightBlue} user\_id    & INT       & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
-	title                           & VARCHAR   & naziv prijave/oštećenja                                    \\ \hline
-	description                     & TEXT      & opis oštećenja                                             \\ \hline
-	address                         & VARCHAR   & adresa oštećenja                                           \\ \hline
-	photo                           & BYTEA     & slika oštećenja                                            \\ \hline
-	report\_time                    & TIMESTAMP & vrijeme podnošenja prijave                                 \\ \hline
-	status                          & VARCHAR   & status prijave                                             \\ \hline
-	\SetCell{LightBlue} problem\_id & INT       & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
+	\SetCell{LightGreen}report\_id  & INT        & jedinstveni identifikator prijave                          \\ \hline
+	\SetCell{LightBlue} user\_id    & INT        & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
+	title                           & VARCHAR    & naziv prijave/oštećenja                                    \\ \hline
+	description                     & VARCHAR    & opis oštećenja                                             \\ \hline
+	address                         & VARCHAR    & adresa oštećenja                                           \\ \hline
+	photo                           & BYTEA      & slika oštećenja                                            \\ \hline
+	report\_time                    & TIMESTAMP  & vrijeme podnošenja prijave                                 \\ \hline
+	status                          & VARCHAR    & status prijave                                             \\ \hline
+	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 \end{longtblr}
 
 \noindent\textbf{Citydep} je entitet koji sadrži sve bitne informacije o gradskim uredima.

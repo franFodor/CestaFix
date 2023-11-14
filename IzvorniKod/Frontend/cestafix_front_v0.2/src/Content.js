@@ -12,7 +12,7 @@ const Content = () => {
     }
 
     function fetchMarkers(){
-        return fetch('/api/problem/getAllProblems', {
+        return fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

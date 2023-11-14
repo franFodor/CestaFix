@@ -49,6 +49,7 @@ public class SecurityConfig {
                 .requestMatchers("/report/getAllReports").permitAll()
                 .requestMatchers("/report/get/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/report").permitAll()
+                .requestMatchers("/problems/getAllProblems").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .anyRequest().authenticated());
 

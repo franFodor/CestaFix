@@ -13,7 +13,6 @@ import  {NovaPrijava} from './createReport.js';
 const Header = () => {
   const handleNovaPrijava = () => {
     NovaPrijava();
-    //////TODO: Promptati Korisnika za Šifru prijave i onda renderati deatalje prijave. 
   };
 
   const handleCheckStatus = () => {
@@ -36,7 +35,6 @@ const Header = () => {
   const [popupContent, setPopupContent] = useState('');
   let currentForm = 1;
 
-
   //Zatvara Popup.
   const closePopup = () => { setShowPopup(false); };
 
@@ -47,17 +45,21 @@ const Header = () => {
 
   }
 
-   const handleLogout = (e) => {
-    Cookies.remove('loginData', { path: '/' });
-    fetch('/api/logout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-    }).then(() => {
-        window.location.reload();
-    })
-  }
+const handleLogout = (e) => {
+   Cookies.remove('loginData', { path: '/' });
+   fetch('/api/logout', {
+       method: 'POST',
+       headers: {
+           'Content-Type': 'application/json',
+       }
+   }).then(() => {
+       window.location.reload();
+
+       //If Logout API fails, refresh the page anyway
+   }).catch(() => {
+       window.location.reload();
+   });
+}
 
 
 
@@ -76,25 +78,37 @@ const Header = () => {
     fetch('/api/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+      'Content-Type': 'application/json',
       },
       body: formDataJSON,
-    }).then((response) => response.text())
-        .then((rawBody) => {
-            const jsonData = JSON.parse(rawBody);
+     }).then((response) => {
+      if(!response.ok){throw new Error('Failed Login');}
+      return response.text().then(text => ({text, response}));
+     })
+       .then(({text, response}) => {
+           if(!response.ok){throw new Error('Failed Login');}
+           const jsonData = JSON.parse(text);
+     
+           const myData = {
+               name: jsonData.name,
+               email: jsonData.email,
+               citydep: jsonData.citydep,
+               role: jsonData.role,
+               userid: jsonData.userid
+           }
+     
+           Cookies.set('loginData', JSON.stringify(myData))
+           window.location.reload();
+           document.querySelector('.loginFail').innerText = '';
+           
+      }) .catch((error) => {
+        let divElement = document.querySelector('.loginFail');
+divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
+divElement.style.color = 'red';
 
-            const myData = {name : jsonData.name,
-                              email : jsonData.email,
-                              citydep : jsonData.citydep,
-                              role : jsonData.role,
-                              userid : jsonData.userid}
-
-            Cookies.set('loginData', JSON.stringify(myData))
-            window.location.reload();
-       })
-      .catch((error) => {
-
-      });
+       });
+     
+     
 };
   // Funkciju triggera submit register forme. Salje podatke forme na /api/register
   const handleRegister = (e) => {
@@ -125,13 +139,11 @@ const Header = () => {
 
 
   //Elementi Login Popupa
-  const loginForm = (
+  let loginForm = (
     <div>
       <span className="close" onClick={closePopup}>&times;</span>
       <h1>Prijavi se!</h1>
 
-      {/*!!!!!VAŽNO!!!!   Login Form, potrebno dovršiti*/}
-      {/*!!!!!VAŽNO!!!!   Login Form, potrebno dovršiti*/}
       <form onSubmit={handleLogin}>
         <div className="container">
           <label htmlFor="username"><b>E-Mail:</b></label>
@@ -140,6 +152,7 @@ const Header = () => {
           <label htmlFor="password"><b>Lozinka</b></label>
           
           <input type="password" placeholder="Enter Password" name="password" required />
+         
           <label>
             <input type="checkbox" defaultChecked="checked" name="remember" style={{ marginBottom: '15px' }} /> Zapamti me!
           </label>
@@ -147,8 +160,13 @@ const Header = () => {
           <button type="submit" className="login-button">Login</button>
         </div>
       </form>
+      <div className = "loginFail"></div>
+
       <div onClick={toggleForm} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
         Nemaš račun? Izradi ga!
+      </div>
+      <div  style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
+        Zaboravljena lozinka?
       </div>
     </div>
   );
@@ -196,6 +214,9 @@ const Header = () => {
 
       <div onClick={toggleForm} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
         Već imaš račun? Ulogiraj se!
+      </div>
+      <div  style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
+        Zaboravljena lozinka?
       </div>
     </div>
   );

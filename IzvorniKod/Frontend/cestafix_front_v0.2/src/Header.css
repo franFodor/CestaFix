@@ -18,6 +18,7 @@
 .right {
   order: 1;
   
+  justify-content: space-around;
   display: flex;
 }
 
@@ -81,20 +82,24 @@ input[type=text], input[type=password] {
   cursor: pointer;
   width: 100%;
 }
-.headerBTN1 { 
-  background-color: transparent;
-  color: white;
-  border: none;
-  margin: 5px;
-  padding: 0;
-  width: calc(100% - 10px); /* subtracting 2 * 5px for left and right margins */
-  height: calc(100% - 10px); /* subtracting 2 * 5px for top and bottom margins */
-  transition: border-color 0.3s ease; /* transition effect for border color */
+.right {
+  display: flex;
+  justify-content: space-around;
 }
-.headerBTN1.onHover
+.headerBTN1 {
+  position: relative;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  z-index: 1;
+  transition: color 0.5s, border-color 0.5s; /* Add transition for border-color */
+  border: 2px solid transparent; /* Set initial border color to transparent */
+}
 
-button:hover {
-  opacity: 0.8;
+.headerBTN1:hover {
+  border-color: green; /* Set the border color to green on hover */
 }
 
 

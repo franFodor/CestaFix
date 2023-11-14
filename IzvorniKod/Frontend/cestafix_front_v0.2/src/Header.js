@@ -246,10 +246,9 @@ divElement.style.color = 'red';
         }
 
 
-      </div>
+      </div >
       <div className="left">
-        <img src="logo.png" alt="Logo" className="logo" />
-        <h1>CestaFIX</h1>
+        <h1 className="text-2xl font-bold">CestaFIX</h1>
       </div>
 
  {/*Popup za Login/Register*/}

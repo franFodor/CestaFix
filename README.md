@@ -1,4 +1,8 @@
 # progiProjekt
+
+https://cestafix-fe.onrender.com
+https://backend-j8o6.onrender.com/
+
 ### Postavke baze podataka (Linux)
 Kako bi se aplikacija mogla pokrenut potrebno je imati pokrenutu i ispravno konfiguriranu instancu postgresql servera. Ove naredbe bi radile za Arch linux, ali varijacije na temu bi trebale biti za druge sustave:
 ```

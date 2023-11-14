@@ -7,6 +7,34 @@ import L from 'leaflet';
 import  {NovaPrijava} from './createReport.js';
 
 const Content = () => {
+    const populateMap =() =>{
+
+    }
+
+    function fetchMarkers(){
+        return fetch('/api/problem/getAllProblems', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not OK');
+            }
+            return response.json();
+          })
+          .then(data => {
+            return data;
+          })
+          .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+          });
+          
+
+
+    }
+    
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
         iconSize: [35, 35],
@@ -19,6 +47,11 @@ const Content = () => {
     };
 
     function AddMarker() {
+
+        let dbMarkers =fetchMarkers();
+        dbMarkers.forEach((marker)=>{
+            putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
+        });
         useMapEvents({
             click(e) {
                 putMarker({ geocode: [e.latlng.lat, e.latlng.lng], popup: "Placeholder prijava" });

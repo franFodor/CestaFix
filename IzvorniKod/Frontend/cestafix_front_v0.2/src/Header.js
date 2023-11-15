@@ -81,29 +81,30 @@ const Header = () => {
         'Content-Type': 'application/json',
       },
       body: formDataJSON,
-    }).then(({ text, response }) => {
-        if (!response.ok) {console.log("bacam error");  throw new Error('Failed Login'); }
-        const jsonData = JSON.parse(text);
-
-        const myData = {
-          name: jsonData.name,
-          email: jsonData.email,
-          citydep: jsonData.citydep,
-          role: jsonData.role,
-          userid: jsonData.userid
-        }
-
-        Cookies.set('loginData', JSON.stringify(myData));
-        document.querySelector('.loginFail').innerText = '';
-        window.location.reload();
-
-      }).catch((error) => {
-        let divElement = document.querySelector('.loginFail');
-        divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
-        divElement.style.color = 'red';
-
-      });
-
+     }).then(response => {
+      if (!response.ok) {
+        throw new Error('Failed Login');
+      }
+      return response.text();
+     }).then(text => {
+     
+      const myData = {
+        name: formDataJSON.name,
+        email: formDataJSON.email,
+        citydep: formDataJSON.citydep,
+        role: formDataJSON.role,
+        userid: formDataJSON.userid
+      }
+     
+      Cookies.set('loginData', JSON.stringify(myData));
+      document.querySelector('.loginFail').innerText = '';
+      window.location.reload();
+     }).catch((error) => {
+      let divElement = document.querySelector('.loginFail');
+      divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
+      divElement.style.color = 'red';
+      console.log("uhvacen>",error);
+     });
 
   };
   // Funkciju triggera submit register forme. Salje podatke forme na /api/register
@@ -147,17 +148,17 @@ const Header = () => {
       <form onSubmit={handleLogin}>
         <div className="container">
           <label htmlFor="username"><b>E-Mail:</b></label>
-          <input type="text" placeholder="Enter Username" name="username" required />
+          <input type="text" placeholder="Upiši svoj E-mail" name="username" required />
 
           <label htmlFor="password"><b>Lozinka</b></label>
 
-          <input type="password" placeholder="Enter Password" name="password" required />
+          <input type="password" placeholder="Upiši svoju lozinku" name="password" required />
 
           <label>
             <input type="checkbox" defaultChecked="checked" name="remember" style={{ marginBottom: '15px' }} /> Zapamti me!
           </label>
 
-          <button type="submit" className="login-button">Login</button>
+          <button type="submit" className="login-button">Prijavi se!</button>
         </div>
       </form>
       <div className="loginFail"></div>

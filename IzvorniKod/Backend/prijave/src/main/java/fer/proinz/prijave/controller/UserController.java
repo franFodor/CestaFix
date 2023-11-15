@@ -2,6 +2,7 @@ package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -14,11 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/getAllUsers")
     public List<User> getAllUsers() {
@@ -35,7 +36,7 @@ public class UserController {
         }
     }
 
-    @Secured("ADMIN")
+    @Secured("STAFF")
     @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User saved = userService.createUser(user);
@@ -44,7 +45,7 @@ public class UserController {
                 .body(saved);
     }
 
-    @Secured("ADMIN")
+    @Secured("STAFF")
     @PutMapping("/{userId}")
     public User updateUser(
             @PathVariable("userId") int userId,
@@ -53,7 +54,7 @@ public class UserController {
         return userService.updateUser(userId, updatedUser);
     }
 
-    @Secured("ADMIN")
+    @Secured("STAFF")
     @DeleteMapping("/{userId}")
     public Optional<User> deleteUser(@PathVariable("userId") int userId) {
         return userService.deleteUser(userId);

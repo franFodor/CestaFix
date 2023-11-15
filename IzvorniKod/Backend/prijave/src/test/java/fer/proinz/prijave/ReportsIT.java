@@ -1,6 +1,7 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -36,7 +37,7 @@ public class ReportsIT {
     private DataSource dataSource;
     @Autowired
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -79,12 +80,12 @@ public class ReportsIT {
 
             preparedStatementReport.executeUpdate();
 
-            String sqlUser = "INSERT INTO Users (user_id, name, email, password, role) " +
+            String sqlUser = "INSERT INTO Users (user_id, username, email, password, role) " +
                     "VALUES (?, ?, ?, ?, ?)";
 
             User user = User.builder()
                     .userId(2)
-                    .name("John Doe")
+                    .username("John Doe")
                     .email("john.doe@gmail.com")
                     .password("wjs82jas72nw")
                     .role("USER")
@@ -92,10 +93,10 @@ public class ReportsIT {
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
             preparedStatementUser.setLong(1, user.getUserId());
-            preparedStatementUser.setString(2, user.getName());
+            preparedStatementUser.setString(2, user.getUsername());
             preparedStatementUser.setString(3, user.getEmail());
             preparedStatementUser.setString(4, user.getPassword());
-            preparedStatementUser.setString(5, user.getRole());
+            preparedStatementUser.setString(5, String.valueOf(user.getRole()));
 
             preparedStatementUser.executeUpdate();
 

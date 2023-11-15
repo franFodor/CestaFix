@@ -17,16 +17,16 @@ public class UserDetail implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()) {
             return org.springframework.security.core.userdetails.User.builder()
-                    .username(user.get().getName())
+                    .username(user.get().getUsername())
                     .password(user.get().getPassword())
-                    .roles(user.get().getRole())
+                    .roles(String.valueOf(user.get().getRole()))
                     .build();
         } else {
-            throw new UsernameNotFoundException("User with this username does not exists!");
+            throw new UsernameNotFoundException("User with this email does not exists!");
         }
     }
 }

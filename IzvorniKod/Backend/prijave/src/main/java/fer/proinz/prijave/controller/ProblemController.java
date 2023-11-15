@@ -2,6 +2,7 @@ package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.model.Problem;
 import fer.proinz.prijave.service.ProblemService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +14,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/problems")
 public class ProblemController {
 
-    @Autowired
-    private ProblemService problemService;
+    private final ProblemService problemService;
 
     @GetMapping("/getAllProblems")
     public List<Problem> getAllProblems() {

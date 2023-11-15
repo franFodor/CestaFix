@@ -1,10 +1,9 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fer.proinz.prijave.model.CityDepartment;
 import fer.proinz.prijave.model.User;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,12 +57,12 @@ public class UsersIT {
     @BeforeEach
     void setUpUser() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlUser = "INSERT INTO Users (user_id, name, email, password, role) " +
+            String sqlUser = "INSERT INTO Users (user_id, username, email, password, role) " +
                     "VALUES (?, ?, ?, ?, ?)";
 
             User user = User.builder()
                     .userId(4)
-                    .name("John Doe")
+                    .username("John Doe")
                     .email("john.doe@gmail.com")
                     .password(passwordEncoder.encode("qwertz"))
                     .role("USER")
@@ -71,10 +70,10 @@ public class UsersIT {
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
             preparedStatementUser.setLong(1, user.getUserId());
-            preparedStatementUser.setString(2, user.getName());
+            preparedStatementUser.setString(2, user.getUsername());
             preparedStatementUser.setString(3, user.getEmail());
             preparedStatementUser.setString(4, user.getPassword());
-            preparedStatementUser.setString(5, user.getRole());
+            preparedStatementUser.setString(5, String.valueOf(user.getRole()));
 
             preparedStatementUser.executeUpdate();
 
@@ -137,8 +136,8 @@ public class UsersIT {
 
         User user = User.builder()
                 .userId(4)
-                .name("John Doe")
-                .email("john.doe@gmail.com")
+                .username("Mat Waller")
+                .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role("USER")
                 .citydep(null)
@@ -148,7 +147,7 @@ public class UsersIT {
 
         mockMvc
                 .perform(post("/user")
-                        .with(user("admin").roles("ADMIN"))
+                        .with(user("staff").roles("STAFF"))
                         .contentType("application/json")
                         .content(jsonReport))
                 .andExpect(status().isCreated());
@@ -159,8 +158,8 @@ public class UsersIT {
 
         User user = User.builder()
                 .userId(4)
-                .name("John Doe")
-                .email("john.doe@gmail.com")
+                .username("Mat Waller")
+                .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role("USER")
                 .build();
@@ -171,7 +170,7 @@ public class UsersIT {
         mockMvc
                 .perform(
                         put("/user/" + user.getUserId())
-                                .with(user("admin").roles("ADMIN"))
+                                .with(user("staff").roles("STAFF"))
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isOk());
@@ -182,7 +181,7 @@ public class UsersIT {
         mockMvc
                 .perform(
                         delete("/user/4")
-                                .with(user("admin").roles("ADMIN")))
+                                .with(user("staff").roles("STAFF")))
                 .andExpect(status().isOk());
     }
 

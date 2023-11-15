@@ -28,7 +28,7 @@ public class LoginController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
-    public ResponseEntity<User> authenticateUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginDto.getEmail(),
@@ -39,7 +39,7 @@ public class LoginController {
         Optional<User> userOptional = userRepository.findByEmail(loginDto.getEmail());
         if (userOptional.isPresent()) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            return ResponseEntity.ok(userOptional.get());
+            return ResponseEntity.ok("Successful login!");
         } else {
             throw new RuntimeException("authenticateUser Fail");
         }

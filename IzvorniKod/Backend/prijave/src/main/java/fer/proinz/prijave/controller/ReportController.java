@@ -2,6 +2,7 @@ package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.service.ReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -12,11 +13,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/report")
 public class ReportController {
 
-    @Autowired
-    private ReportService reportService;
+    private final ReportService reportService;
 
     @GetMapping( "/getAllReports")
     public List<Report> getAllReports() {

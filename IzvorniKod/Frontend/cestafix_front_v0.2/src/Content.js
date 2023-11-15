@@ -7,12 +7,8 @@ import L from 'leaflet';
 import  {NovaPrijava} from './createReport.js';
 
 const Content = () => {
-    
 
-    
-    useEffect(() => {
-        populateMarkers();
-     }, []);
+
 
 
     async function populateMarkers (){
@@ -20,12 +16,17 @@ const Content = () => {
         dbMarkers.forEach((marker)=>{
             putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
         });
-
     }
 
+
+
+     useEffect(() => {
+        populateMarkers();
+     }, []);
+
+
     async function fetchMarkers(){
-        let returnData = [];
-        returnData =fetch('/api/problems/getAllProblems', {
+        return fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -37,14 +38,9 @@ const Content = () => {
             }
             return response.json();
           })
-          .then(data => {
-            console.log(data);
-            returnData = data;
-          })
           .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
           });
-          return returnData;
         
     }
     

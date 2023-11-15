@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
@@ -16,8 +16,7 @@ const Content = () => {
     }
 
     async function fetchMarkers(){
-        let returnData = [];
-        await fetch('/api/problems/getAllProblems', {
+        return fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -31,12 +30,10 @@ const Content = () => {
           })
           .then(data => {
             console.log(data);
-            returnData = data;
           })
           .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
           });
-          return returnData;
           
 
 
@@ -62,7 +59,14 @@ const Content = () => {
         });
         return null;
     }
-    populateMarkers();
+
+
+    useEffect(() => {
+        populateMarkers();
+     }, []);
+
+
+
     return (
         <main className='flex-grow w-full'>
             <MapContainer center={[45.812915, 15.975522]} zoom={13} className='w-full h-full'>

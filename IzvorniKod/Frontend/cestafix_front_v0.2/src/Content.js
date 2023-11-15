@@ -12,7 +12,8 @@ const Content = () => {
     }
 
     function fetchMarkers(){
-        return fetch('/api/problems/getAllProblems', {
+        let returnData
+        fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -25,11 +26,12 @@ const Content = () => {
             return response.json();
           })
           .then(data => {
-            return data;
+            returnData = data;
           })
           .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
           });
+          return returnData;
           
 
 

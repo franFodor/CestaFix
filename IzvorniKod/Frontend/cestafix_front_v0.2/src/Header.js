@@ -5,9 +5,9 @@
 
 import React, { useState, Component } from 'react';
 import Cookies from 'js-cookie';
-import './Header.css' ;
+import './Header.css';
 
-import  {NovaPrijava} from './createReport.js';
+import { NovaPrijava } from './createReport.js';
 
 
 const Header = () => {
@@ -45,21 +45,21 @@ const Header = () => {
 
   }
 
-const handleLogout = (e) => {
-   Cookies.remove('loginData', { path: '/' });
-   fetch('/api/logout', {
-       method: 'POST',
-       headers: {
-           'Content-Type': 'application/json',
-       }
-   }).then(() => {
-       window.location.reload();
+  const handleLogout = (e) => {
+    Cookies.remove('loginData', { path: '/' });
+    fetch('/api/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(() => {
+      window.location.reload();
 
-       //If Logout API fails, refresh the page anyway
-   }).catch(() => {
-       window.location.reload();
-   });
-}
+      //If Logout API fails, refresh the page anyway
+    }).catch(() => {
+      window.location.reload();
+    });
+  }
 
 
 
@@ -78,38 +78,34 @@ const handleLogout = (e) => {
     fetch('/api/login', {
       method: 'POST',
       headers: {
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: formDataJSON,
-     }).then((response) => {
-      if(!response.ok){throw new Error('Failed Login');}
-      return response.text().then(text => ({text, response}));
-     })
-       .then(({text, response}) => {
-           if(!response.ok){throw new Error('Failed Login');}
-           const jsonData = JSON.parse(text);
-     
-           const myData = {
-               name: jsonData.name,
-               email: jsonData.email,
-               citydep: jsonData.citydep,
-               role: jsonData.role,
-               userid: jsonData.userid
-           }
-     
-           Cookies.set('loginData', JSON.stringify(myData))
-           window.location.reload();
-           document.querySelector('.loginFail').innerText = '';
-           
-      }) .catch((error) => {
-        let divElement = document.querySelector('.loginFail');
-divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
-divElement.style.color = 'red';
+    }).then(({ text, response }) => {
+        if (!response.ok) {console.log("bacam error");  throw new Error('Failed Login'); }
+        const jsonData = JSON.parse(text);
 
-       });
-     
-     
-};
+        const myData = {
+          name: jsonData.name,
+          email: jsonData.email,
+          citydep: jsonData.citydep,
+          role: jsonData.role,
+          userid: jsonData.userid
+        }
+
+        Cookies.set('loginData', JSON.stringify(myData));
+        document.querySelector('.loginFail').innerText = '';
+        window.location.reload();
+
+      }).catch((error) => {
+        let divElement = document.querySelector('.loginFail');
+        divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
+        divElement.style.color = 'red';
+
+      });
+
+
+  };
   // Funkciju triggera submit register forme. Salje podatke forme na /api/register
   const handleRegister = (e) => {
     e.preventDefault();
@@ -130,12 +126,16 @@ divElement.style.color = 'red';
       },
       body: formDataJSON,
     }).then((response) => {
-
-      })
+      if (!response.ok) { throw new Error('Failed Register'); }
+      Cookies.set('loginData', JSON.stringify("d"));
+      window.location.reload();
+    })
       .catch((error) => {
-            console.log("here")
+        let divElement = document.querySelector('.registerFail');
+        divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
+        divElement.style.color = 'red';
       });
-};
+  };
 
 
   //Elementi Login Popupa
@@ -150,22 +150,22 @@ divElement.style.color = 'red';
           <input type="text" placeholder="Enter Username" name="username" required />
 
           <label htmlFor="password"><b>Lozinka</b></label>
-          
+
           <input type="password" placeholder="Enter Password" name="password" required />
-         
+
           <label>
             <input type="checkbox" defaultChecked="checked" name="remember" style={{ marginBottom: '15px' }} /> Zapamti me!
           </label>
-          
+
           <button type="submit" className="login-button">Login</button>
         </div>
       </form>
-      <div className = "loginFail"></div>
+      <div className="loginFail"></div>
 
       <div onClick={toggleForm} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
         Nemaš račun? Izradi ga!
       </div>
-      <div  style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
+      <div style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
         Zaboravljena lozinka?
       </div>
     </div>
@@ -212,10 +212,11 @@ divElement.style.color = 'red';
         </div>
       </form>
 
+      <div className="registerFail"></div>
       <div onClick={toggleForm} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
         Već imaš račun? Ulogiraj se!
       </div>
-      <div  style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
+      <div style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
         Zaboravljena lozinka?
       </div>
     </div>
@@ -231,18 +232,18 @@ divElement.style.color = 'red';
     <header className="header">
       <div className="right">
         {(loginData) ? (
-            <>
-                <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
-                <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
-                <button className="headerBTN1" onClick={handleLogout}>Logout</button>
-            </>
-            ) : (
-            <>
-                <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
-                <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
-                <button className="headerBTN1" onClick={handleAccount}>Login/Register</button>
-            </>
-            )
+          <>
+            <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+            <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+            <button className="headerBTN1" onClick={handleLogout}>Logout</button>
+          </>
+        ) : (
+          <>
+            <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+            <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+            <button className="headerBTN1" onClick={handleAccount}>Login/Register</button>
+          </>
+        )
         }
 
 
@@ -251,14 +252,14 @@ divElement.style.color = 'red';
         <h1 className="text-2xl font-bold">CestaFIX</h1>
       </div>
 
- {/*Popup za Login/Register*/}
-        {showPopup && (
-          <div className="popup">
-            <div className="popup-content">
-              {popupContent}
-            </div>
+      {/*Popup za Login/Register*/}
+      {showPopup && (
+        <div className="popup">
+          <div className="popup-content">
+            {popupContent}
           </div>
-        )}
+        </div>
+      )}
     </header>
   );
 

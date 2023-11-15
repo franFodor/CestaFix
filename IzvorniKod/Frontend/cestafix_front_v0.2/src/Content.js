@@ -4,55 +4,65 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import  {NovaPrijava} from './createReport.js';
+import { NovaPrijava } from './createReport.js';
 
 const Content = () => {
+    
+    const [markers, setMarkers] = useState(initialiseMark());
+
+
+     async function initialiseMark(){
+        const dbMarkers = await fetchMarkers();
+        return dbMarkers.map((marker) => (
+            <Marker key={marker.problemId} position={marker.geocode} icon={markerIcon}>
+                <Popup>{marker.popup}</Popup>
+            </Marker>
+        ))
+    };
 
 
 
-
-    async function populateMarkers (){
-        let dbMarkers = await fetchMarkers();
-        dbMarkers.forEach((marker)=>{
-            putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
-        });
-    }
-
-
-
-     useEffect(() => {
-        populateMarkers();
-     }, []);
+    useEffect(() => {
+        const fetchAndPopulateMarkers = async () => {
+            const dbMarkers = await fetchMarkers();
+            dbMarkers.forEach((marker) => {
+                console.log("Dodajem Marker>", marker);
+            //putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
+            });
+        };
+        fetchAndPopulateMarkers();
+    }, []);
 
 
-    async function fetchMarkers(){
+    async function fetchMarkers() {
         return fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
-              'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
-          })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not OK');
-            }
-            return response.json();
-          })
-          .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-          });
-        
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                }
+                return response.json();
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+            });
+
     }
-    
+
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
         iconSize: [35, 35],
     });
 
-    const [markers, setMarkers] = useState([]);
 
     const putMarker = (newMarker) => {
         setMarkers([...markers, newMarker]);
+        console.log("Markeri u PutMarker> ", markers);
+        NovaPrijava();
     };
 
     function AddMarker() {
@@ -66,7 +76,7 @@ const Content = () => {
     }
 
 
-     
+
     return (
         <main className='flex-grow w-full'>
             <MapContainer center={[45.812915, 15.975522]} zoom={13} className='w-full h-full'>
@@ -75,13 +85,7 @@ const Content = () => {
                     url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=jl7SF9AkX5d5T6Di7nm2"
                 />
                 <AddMarker />
-                {markers.map((marker, index) => (
-                    <Marker key={index} position={marker.geocode} icon={markerIcon}>
-                        <Popup>{marker.popup}
-                        </Popup>
-                        
-                    </Marker>
-                ))}
+                
             </MapContainer>
         </main>
     );

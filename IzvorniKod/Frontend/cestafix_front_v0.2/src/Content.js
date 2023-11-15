@@ -7,8 +7,16 @@ import L from 'leaflet';
 import  {NovaPrijava} from './createReport.js';
 
 const Content = () => {
+    
+
+    
+    useEffect(() => {
+        populateMarkers();
+     }, []);
+
+
     async function populateMarkers (){
-        let dbMarkers =await fetchMarkers();
+        let dbMarkers = await fetchMarkers();
         dbMarkers.forEach((marker)=>{
             putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
         });
@@ -16,7 +24,8 @@ const Content = () => {
     }
 
     async function fetchMarkers(){
-        return fetch('/api/problems/getAllProblems', {
+        let returnData = [];
+        returnData =fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -30,13 +39,13 @@ const Content = () => {
           })
           .then(data => {
             console.log(data);
+            returnData = data;
           })
           .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
           });
-          
-
-
+          return returnData;
+        
     }
     
     const markerIcon = new L.Icon({
@@ -61,12 +70,7 @@ const Content = () => {
     }
 
 
-    useEffect(() => {
-        populateMarkers();
-     }, []);
-
-
-
+     
     return (
         <main className='flex-grow w-full'>
             <MapContainer center={[45.812915, 15.975522]} zoom={13} className='w-full h-full'>

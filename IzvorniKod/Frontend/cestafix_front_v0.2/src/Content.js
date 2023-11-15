@@ -54,7 +54,6 @@ const Content = () => {
     };
 
     function AddMarker() {
-        populateMap();
         useMapEvents({
             click(e) {
                 putMarker({ geocode: [e.latlng.lat, e.latlng.lng], popup: "Placeholder prijava" });

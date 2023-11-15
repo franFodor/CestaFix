@@ -7,7 +7,7 @@ import L from 'leaflet';
 import  {NovaPrijava} from './createReport.js';
 
 const Content = () => {
-    async function populateMap (){
+    async function populateMarkers (){
         let dbMarkers =await fetchMarkers();
         dbMarkers.forEach((marker)=>{
             putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
@@ -62,7 +62,7 @@ const Content = () => {
         });
         return null;
     }
-
+    populateMarkers();
     return (
         <main className='flex-grow w-full'>
             <MapContainer center={[45.812915, 15.975522]} zoom={13} className='w-full h-full'>

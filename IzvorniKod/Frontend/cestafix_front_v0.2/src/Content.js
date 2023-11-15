@@ -7,7 +7,11 @@ import L from 'leaflet';
 import  {NovaPrijava} from './createReport.js';
 
 const Content = () => {
-    const populateMap =() =>{
+    async function populateMap (){
+        let dbMarkers =await fetchMarkers();
+        dbMarkers.forEach((marker)=>{
+            putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
+        });
 
     }
 
@@ -49,12 +53,8 @@ const Content = () => {
         setMarkers([...markers, newMarker]);
     };
 
-    async function AddMarker() {
-
-        let dbMarkers =await fetchMarkers();
-        dbMarkers.forEach((marker)=>{
-            putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
-        });
+    function AddMarker() {
+        populateMap();
         useMapEvents({
             click(e) {
                 putMarker({ geocode: [e.latlng.lat, e.latlng.lng], popup: "Placeholder prijava" });

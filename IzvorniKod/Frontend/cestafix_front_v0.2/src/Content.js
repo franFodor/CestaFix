@@ -12,8 +12,8 @@ const Content = () => {
     }
 
     async function fetchMarkers(){
-        let returnData
-        fetch('/api/problems/getAllProblems', {
+        let returnData = [];
+        await fetch('/api/problems/getAllProblems', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -26,6 +26,7 @@ const Content = () => {
             return response.json();
           })
           .then(data => {
+            console.log(data);
             returnData = data;
           })
           .catch(error => {

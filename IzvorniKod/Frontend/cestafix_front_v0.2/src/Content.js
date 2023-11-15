@@ -11,7 +11,7 @@ const Content = () => {
 
     }
 
-    function fetchMarkers(){
+    async function fetchMarkers(){
         let returnData
         fetch('/api/problems/getAllProblems', {
             method: 'GET',
@@ -48,9 +48,9 @@ const Content = () => {
         setMarkers([...markers, newMarker]);
     };
 
-    function AddMarker() {
+    async function AddMarker() {
 
-        let dbMarkers =fetchMarkers();
+        let dbMarkers =await fetchMarkers();
         dbMarkers.forEach((marker)=>{
             putMarker({ geocode: [marker.latitude, marker.longitude], popup: "Placeholder prijava" });
         });

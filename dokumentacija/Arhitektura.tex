@@ -67,7 +67,7 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
-	\SetCell{LightGreen}user\_id & INT     & Jedinstveni identifikator korisnika      \\ \hline
+	\SetCell{LightGreen}user\_id & INT     & jedinstveni identifikator korisnika      \\ \hline
 	username                     & VARCHAR & ime korisnika                            \\ \hline
 	email                        & VARCHAR & e-mail adresa korisnika                  \\ \hline
 	password                     & VARCHAR & hash lozinke korisnika                   \\ \hline
@@ -90,7 +90,7 @@ Sastoji se od atributa: report\_id, user\_id, title, description, address, photo
 	\SetCell{LightGreen}report\_id  & INT        & jedinstveni identifikator prijave                          \\ \hline
 	\SetCell{LightBlue} user\_id    & INT        & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
 	title                           & VARCHAR    & naziv prijave/oštećenja                                    \\ \hline
-	description                     & VARCHAR    & opis oštećenja                                             \\ \hline
+	description                     & TEXT       & opis oštećenja                                             \\ \hline
 	address                         & VARCHAR    & adresa oštećenja                                           \\ \hline
 	photo                           & BYTEA      & slika oštećenja                                            \\ \hline
 	report\_time                    & TIMESTAMP  & vrijeme podnošenja prijave                                 \\ \hline
@@ -165,6 +165,13 @@ Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Man
 
 \subsection{Dijagram baze podataka}
 \textit{ U ovom potpoglavlju potrebno je umetnuti dijagram baze podataka. Primarni i strani ključevi moraju biti označeni, a tablice povezane. Bazu podataka je potrebno normalizirati. Podsjetite se kolegija "Baze podataka".}
+
+\begin{figure}[H]
+	\includegraphics[scale=0.725]{slike/ERD-model} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{E-R dijagram baze podataka}
+	\label{fig:ERdijagramBazePodataka}
+\end{figure}
 
 \eject
 

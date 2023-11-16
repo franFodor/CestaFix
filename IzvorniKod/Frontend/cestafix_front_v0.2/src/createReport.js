@@ -1,6 +1,8 @@
 function NovaPrijava () {
     //////TODO: Implementirati Unos Nove prijave; ovisi o login/non-login
-    console.log("prijavi Stetu!");
+    console.log("Prijavljena Nova Šteta!");
+    return("Pokrećemo prijavu nove štete...");
+
   };
 
 

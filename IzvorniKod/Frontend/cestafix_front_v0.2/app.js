@@ -23,7 +23,7 @@ app.use(
 app.use(express.static(path.join(__dirname, 'build')))
 
 app.listen(3000, () => {
-    console.log(`Starting Proxy at :3000}`);
+    console.log(`Starting Proxy at :3000`);
 });
 
 app.get("*", async (req, res) => {

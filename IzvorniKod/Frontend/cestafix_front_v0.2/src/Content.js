@@ -3,15 +3,27 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { NovaPrijava } from './createReport.js';
 
 const Content = () => {
+
+
+    const [isVisible, setIsVisible] = useState(false);
+    function novaPrijava() {
+        //////TODO: Implementirati Unos Nove prijave; ovisi o login/non-login
+        console.log("Prijavljena Nova Šteta!");
+        setIsVisible(true);
+
+        return ("Pokrećemo prijavu nove štete...");
+
+    };
 
     const [markers, setMarkers] = useState([]);
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
         iconSize: [35, 35],
     });
+
+
 
     async function fetchMarkers() {
         const response = await fetch('/api/problems/getAllProblems', {
@@ -52,13 +64,19 @@ const Content = () => {
     function AddMarker() {
         useMapEvents({
             click(e) {
-                setMarkers([...markers, { position: [e.latlng.lat, e.latlng.lng], popup:<div>{NovaPrijava()}</div>, icon: markerIcon }]);
+                setMarkers([...markers, { position: [e.latlng.lat, e.latlng.lng], popup: <div>{novaPrijava}</div>, icon: markerIcon }]);
 
             }
         });
 
         return null;
     }
+
+
+    
+
+
+
 
     return (
         <main className='flex-grow w-full'>

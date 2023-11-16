@@ -6,13 +6,13 @@
 import React, { useState, Component } from 'react';
 import Cookies from 'js-cookie';
 import './Header.css';
+import './createReport.css';
 
-import { NovaPrijava } from './createReport.js';
 
 
 const Header = () => {
   const handleNovaPrijava = () => {
-    NovaPrijava();
+    setShowReport(true);
   };
 
   const handleCheckStatus = () => {
@@ -30,6 +30,7 @@ const Header = () => {
 
   //Za toggle vidljivosti popupa
   const [showPopup, setShowPopup] = useState(false);
+  const [showReport, setShowReport] = useState(false);
 
   //Za toggle vrste popupa
   const [popupContent, setPopupContent] = useState('');
@@ -37,6 +38,7 @@ const Header = () => {
 
   //Zatvara Popup.
   const closePopup = () => { setShowPopup(false); };
+  const closeReport = () => {setShowReport(false);};
 
   //Mijenja Popup između Login i Register verzije.
   const toggleForm = () => {
@@ -81,13 +83,13 @@ const Header = () => {
         'Content-Type': 'application/json',
       },
       body: formDataJSON,
-     }).then(response => {
+    }).then(response => {
       if (!response.ok) {
         throw new Error('Failed Login');
       }
       return response.text();
-     }).then(text => {
-     
+    }).then(text => {
+
       const myData = {
         name: formDataJSON.name,
         email: formDataJSON.email,
@@ -95,16 +97,16 @@ const Header = () => {
         role: formDataJSON.role,
         userid: formDataJSON.userid
       }
-     
+
       Cookies.set('loginData', JSON.stringify(myData));
       document.querySelector('.loginFail').innerText = '';
       window.location.reload();
-     }).catch((error) => {
+    }).catch((error) => {
       let divElement = document.querySelector('.loginFail');
       divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
       divElement.style.color = 'red';
-      console.log("uhvacen>",error);
-     });
+      console.log("uhvacen>", error);
+    });
 
   };
   // Funkciju triggera submit register forme. Salje podatke forme na /api/register
@@ -228,6 +230,45 @@ const Header = () => {
 
   const loginData = Cookies.get('loginData');
 
+
+
+
+
+  let reportFormHTML = (<div>
+    <span className="closeReport" onClick={closeReport}>&times;</span>
+    <h1 className="text-2xl font-bold">Prijavi Štetu!</h1>
+    <form id="createReport" action="NEEDTOCOMPLETE" method="post" encType="multipart/form-data">
+      <div>
+        <label htmlFor="name" >Naziv Štete:</label>
+        <input id="name" type="text" name="name" required />
+      </div>
+      <div>
+        <label htmlFor="explanation">Kratki Opis: </label>
+        <textarea id="explanation" name="explanation" required />
+      </div>
+      <div>
+        <label htmlFor="photo">Dodaj Slike! </label>
+        <input id="photo" type="file" name="photo" accept="image/*" multiple />
+      </div>
+      <div>
+        <label htmlFor="coordinates">Geografske Koordinate ili Adresa:</label>
+        <input id="coordinates" type="text" name="coordinates" required />
+      </div>
+      <div>
+        <label htmlFor="dropdown">Odaberite Kategoriju štete:       </label>
+        <select id="dropdown" name="dropdown">
+          <option value="option1">Šteta Na Cesti</option>
+          <option value="option2">Sve Ostalo</option>
+          {/* --------------------POPRAVIT-------------------- */}
+        </select>
+      </div>
+      <div>
+        <input type="submit" value="Submit" className='confirmButton' />
+      </div>
+    </form>
+  </div>
+  );
+
   return (
 
     <header className="header">
@@ -261,7 +302,22 @@ const Header = () => {
           </div>
         </div>
       )}
+
+      {/*Popup za Reportanje*/}
+      {showReport && (
+        <div className="newReport" >
+          <div className='newReport-content'>
+            {reportFormHTML}
+          </div></div>
+      )}
     </header>
+
+
+
+
+
+
+
   );
 
 };

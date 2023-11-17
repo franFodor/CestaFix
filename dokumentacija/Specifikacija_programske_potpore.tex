@@ -2,10 +2,6 @@
 
 \section{Funkcionalni zahtjevi}
 
-\textbf{\textit{dio 1. revizije}}\\
-
-\textit{Navesti \textbf{dionike} koji imaju \textbf{interes u ovom sustavu} ili  \textbf{su nositelji odgovornosti}. To su prije svega korisnici, ali i administratori sustava, naručitelji, razvojni tim.}\\
-
 \noindent \textbf{Dionici:}
 
 \begin{packed_enum}
@@ -52,7 +48,7 @@
 		\item pratiti status vlastitih prijava
 		\item imati uvid u postojeće prijave
 		\item imati uvid u statistiku statusa prijava
-		\item izmjeniti podatke korisničkog računa
+		\item izmijeniti podatke korisničkog računa
 
 	\end{packed_enum}
 
@@ -64,7 +60,7 @@
 		\item objediniti nepovezane prijave po temi i lokaciji
 		\item promijeniti status prijave
 		\item pratiti i analizirati probleme u stvarnom vremenu
-		\item izmjeniti podatke korisničkog računa
+		\item izmijeniti podatke korisničkog računa
 
 	\end{packed_enum}
 
@@ -98,17 +94,13 @@
 
 \subsection{Obrasci uporabe}
 
-\textbf{\textit{dio 1. revizije}}
-
 \subsubsection{Opis obrazaca uporabe}
-\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
-
 
 \noindent \underbar{\textbf{UC01 - Registracija korisničkog računa}}
 \begin{packed_item}
 
 	\item \textbf{Glavni sudionik: }Neregistrirani korisnik
-	\item  \textbf{Cilj:} Stvoranje korisničkog račun za pristup sustavu
+	\item  \textbf{Cilj:} Stvaranje korisničkog račun za pristup sustavu
 	\item  \textbf{Sudionici:} Baza podataka
 	\item  \textbf{Preduvjet:} -
 	\item  \textbf{Opis osnovnog tijeka:}
@@ -148,7 +140,7 @@
 
 		\item Korisnik odabire opciju za prijavu
 		\item Korisnik unosi korisničko ime i lozinku te potvrđuje unos
-		\item Korisnik se preuspjerava na početnu stranicu
+		\item Korisnik se preusmjerava na početnu stranicu
 	\end{packed_enum}
 
 	\item  \textbf{Opis mogućih odstupanja:}
@@ -247,7 +239,7 @@
 \begin{packed_item}
 
 	\item \textbf{Glavni sudionik: }Administrator
-	\item  \textbf{Cilj:} Dodjeljavanje uloge službenika gradskog ureda registriranom korisniku
+	\item  \textbf{Cilj:} Dodjeljivanje uloge službenika gradskog ureda registriranom korisniku
 	\item  \textbf{Sudionici:} Baza podataka
 	\item  \textbf{Preduvjet:} Korisnik je prijavljen i ima administratorske ovlasti, postoji odgovarajući gradski ured za registriranog korisnika
 	\item  \textbf{Opis osnovnog tijeka:}
@@ -541,7 +533,7 @@
 		\item Korisnik odabire padajući izbornik
 		\item Korisnik odabire opciju pregleda gradskih ureda
 		\item Korisnik odabire gradski ured
-		\item Korisnik odabire opciju da dodavanje kategorija oštećenja, 
+		\item Korisnik odabire opciju za dodavanje kategorija oštećenja 
 		\item Korisnik radi odabir kategorija i potvđuje odabir
 		\item Ažurirani popis kategorija oštećenja za koje je zadužen gradski ured se upisuje u bazu podataka i korisnik se preusmjerava na pregled profila gradskog ureda
 	\end{packed_enum}
@@ -647,7 +639,7 @@
 \begin{packed_item}
 
 	\item \textbf{Glavni sudionik: }Administrator
-	\item  \textbf{Cilj:} Dodjeljavanje uloge administratora registriranom korisniku
+	\item  \textbf{Cilj:} Dodjeljivanje uloge administratora registriranom korisniku
 	\item  \textbf{Sudionici:} Baza podataka
 	\item  \textbf{Preduvjet:} Korisnik je prijavljen i ima administratorske ovlasti
 	\item  \textbf{Opis osnovnog tijeka:}
@@ -702,10 +694,9 @@
 	\end{packed_enum}
 \end{packed_item}
 
-\subsubsection{Dijagrami obrazaca uporabe}
-
-\textit{Prikazati odnos aktora i obrazaca uporabe odgovarajućim UML dijagramom. Nije nužno nacrtati sve na jednom dijagramu. Modelirati po razinama apstrakcije i skupovima srodnih funkcionalnosti.}
 \eject
+
+\subsubsection{Dijagrami obrazaca uporabe}
 
 \begin{figure}[H]
 	\includegraphics[scale=0.5]{slike/UC-registrirani-neregistrirani} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -728,13 +719,9 @@
 	\label{fig:DijagramObrascaUporabeAdministrator}
 \end{figure}
 
-\subsection{Sekvencijski dijagrami}
-
-\textbf{\textit{dio 1. revizije}}\\
-
-\textit{Nacrtati sekvencijske dijagrame koji modeliraju najvažnije dijelove sustava (max. 4 dijagrama). Ukoliko postoji nedoumica oko odabira, razjasniti s asistentom. Uz svaki dijagram napisati detaljni opis dijagrama.}
 \eject
 
+\subsection{Sekvencijski dijagrami}
 
 \noindent \textbf{Obrazac uporabe UC11 - Kreiranje prijave oštećenja}
 
@@ -799,13 +786,9 @@ oštećenja. Po završetku, poslužitelj prikazuje službeniku gradskog ureda po
 	\label{fig:SekvencijskiDijagramObjedinjavanjeNepovezanihPrijavaOštećenja}
 \end{figure}
 
-
+\eject
 
 \section{Ostali zahtjevi}
-
-\textbf{\textit{dio 1. revizije}}\\
-
-\textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
 
 \begin{packed_enum}
 	\item Sustav treba podržavati rad više korisnika u stvarnom vremenu

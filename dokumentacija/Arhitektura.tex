@@ -1,15 +1,5 @@
 \chapter{Arhitektura i dizajn sustava}
 
-\textbf{\textit{dio 1. revizije}}\\
-
-\textit{ Potrebno je opisati stil arhitekture te identificirati: podsustave, preslikavanje na radnu platformu, spremišta podataka, mrežne protokole, globalni upravljački tok i sklopovsko-programske zahtjeve. Po točkama razraditi i popratiti odgovarajućim skicama:}
-\begin{itemize}
-	\item 	\textit{izbor arhitekture temeljem principa oblikovanja pokazanih na predavanjima (objasniti zašto ste baš odabrali takvu arhitekturu)}
-	\item 	\textit{organizaciju sustava s najviše razine apstrakcije (npr. klijent-poslužitelj, baza podataka, datotečni sustav, grafičko sučelje)}
-	\item 	\textit{organizaciju aplikacije (npr. slojevi frontend i backend, MVC arhitektura) }
-\end{itemize}
-
-
 \noindent \\Pri analizi projektnih zahtjeva i detaljnom razmatranju uloga dionika te njihovih interakcija unutar aplikacije, odlučili smo strukturirati naš sustav na tri ključne razine: razinu klijenta, razinu web aplikacije i razinu baze podataka. Unutar ove podjele, nužno je uključiti slojeve korisničkog sučelja, aplikacijske logike i pristupa podacima. Kao model arhitekture, odabrali smo višeslojnu strukturu sličnu MVC (Model-View-Controller) stilu. MVC je oblik arhitekture softvera koji organizira aplikaciju u tri komponente:
 
 \begin{itemize}
@@ -34,7 +24,7 @@
 \textbf{\\Web aplikacija} Web aplikacija je kompleksni softverski sustav koji se sastoji od frontend i backend dijelova:
 \begin{itemize}
 	\item \textbf{Frontend} (Klijent) predstavlja korisničko sučelje putem kojeg korisnici ostvaruju interakciju sa sustavom. Ostvaren je korištenjem JavaScript programskog jezika, za potrebu upravljanja događajima na korisničkom sučelju, i React radnog okvira, što omogućuje kreiranje dinamičnog i intuitivnog korisničkog sučelja, čime se ostvaruje ugodno korisničko iskustvo. Frontend je strukturiran u komponente, što olakšava održavanje i ponovnu uporabu koda. Komunicira s backendom kroz HTTPS zahtjeve te pritom omogućuje prijenos podataka i ažuriranje informacija o prijavama šteta. Kroz klijentsku logiku, frontend provodi validaciju unesenih podataka kako bi osigurao ispravnost prije slanja na backend. Responsivni dizajn osigurava konzistentno korisničko iskustvo na različitim uređajima.	
-	\item \textbf{Backend} (Poslužitelj) je dio sustava unutar kojeg se obrađuju zahtjevi i izvršavaju daljnje radnje. Kako bi se postiglo "razdvajanje zabrinutosti", organiziran je na kontrolere, servise i repozitorije. Controlleri imaju ključnu ulogu u obradi ulaznih zahtjeva (HTTP zahtjeva) omogučujući organizaciju i upravljanje tokom rukovanja zahtjevima u backend dijelu aplikacije kao i pozivanje odgovarajućih metoda u Modelu te slanje odgovora klijentskom dijelu. Servisi u backendu na učinkovit i organiziran način obavljaju poslovnu logiku i specifične funkcionalnosti koje su potrebne za obradu zahtjeva, koji dolaze s frontend dijela aplikacije. Repozitoriji imaju ključnu ulogu u komunikaciji s bazom podataka, odnosno omogućuju servisima da abstrahiraju detalje interakcije s bazom podataka, pružajući im jednostavan i konzistentan način komunikacije s podacima. Backend je ostvaren korištenjem Java programskog jezika i Spring Boot radnog okvira. Također, pruža RESTful API-je koji omogućuju komunikaciju između klijenta i servera te definiraju kako resursi (poput prijava šteta) mogu biti stvoreni, ažurirani i dohvaćeni. Osim toga backend sadrži i DTO-e (Data Transfer Objects) za prijenos podataka između različitih dijelova sustava odnosno slojeva aplikacije. 
+	\item \textbf{Backend} (Poslužitelj) je dio sustava unutar kojeg se obrađuju zahtjevi i izvršavaju daljnje radnje. Kako bi se postiglo "razdvajanje zabrinutosti", organiziran je na kontrolere, servise i repozitorije. Controlleri imaju ključnu ulogu u obradi ulaznih zahtjeva (HTTP zahtjeva) omogučujući organizaciju i upravljanje tijekom rukovanja zahtjevima u backend dijelu aplikacije kao i pozivanje odgovarajućih metoda u Modelu te slanje odgovora klijentskom dijelu. Servisi u backendu na učinkovit i organiziran način obavljaju poslovnu logiku i specifične funkcionalnosti koje su potrebne za obradu zahtjeva, koji dolaze s frontend dijela aplikacije. Repozitoriji imaju ključnu ulogu u komunikaciji s bazom podataka, odnosno omogućuju servisima da abstrahiraju detalje interakcije s bazom podataka, pružajući im jednostavan i konzistentan način komunikacije s podacima. Backend je ostvaren korištenjem Java programskog jezika i Spring Boot radnog okvira. Također, pruža RESTful API-je koji omogućuju komunikaciju između klijenta i servera te definiraju kako resursi (poput prijava šteta) mogu biti stvoreni, ažurirani i dohvaćeni. Osim toga backend sadrži i DTO-e (Data Transfer Objects) za prijenos podataka između različitih dijelova sustava odnosno slojeva aplikacije. 
 \end{itemize}
 
 \noindent \textbf{Baza podataka} je podatkovni sloj koji se koristi za sigurnu pohranu podataka te je detaljnije opisana u sljedećem poglavlju.
@@ -49,9 +39,6 @@
 
 \section{Baza podataka}
 
-\textbf{\textit{dio 1. revizije}}\\
-
-\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.\\}
 \noindent Sustav je temeljen na uporabi relacijske baze podataka implementirane u PostgreSQL-u gdje su entiteti modelirani kao tablice koje posjeduju svoje jedinstveno ime i skup atributa.
 Odabir relacijske baze podataka proizlazi iz potrebe za lakšim ostvarenjem naših potreba za upravljanjem podacima pri prijavljivanju oštećenja i njihovoj sanaciji
 odnosno kako bismo što jednostavnije modelirali sustav prema stvarnom svijetu.
@@ -69,9 +56,6 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 
 
 \subsection{Opis tablica}
-
-
-\textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
 
 \noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije. Sastoji se od atributa: user\_id, name, email, password i role.
 Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
@@ -180,10 +164,7 @@ Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Man
 	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
 \end{longtblr}
 
-
-
 \subsection{Dijagram baze podataka}
-\textit{ U ovom potpoglavlju potrebno je umetnuti dijagram baze podataka. Primarni i strani ključevi moraju biti označeni, a tablice povezane. Bazu podataka je potrebno normalizirati. Podsjetite se kolegija "Baze podataka".}
 
 \begin{figure}[H]
 	\includegraphics[scale=0.725]{slike/ERD-model} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -197,20 +178,14 @@ Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Man
 
 \section{Dijagram razreda}
 
-\textit{Potrebno je priložiti dijagram razreda s pripadajućim opisom. Zbog preglednosti je moguće dijagram razlomiti na više njih, ali moraju biti grupirani prema sličnim razinama apstrakcije i srodnim funkcionalnostima.}\\
-
-\textbf{\textit{dio 1. revizije}}\\
-
-\textit{Prilikom prve predaje projekta, potrebno je priložiti potpuno razrađen dijagram razreda vezan uz \textbf{generičku funkcionalnost} sustava. Ostale funkcionalnosti trebaju biti idejno razrađene u dijagramu sa sljedećim komponentama: nazivi razreda, nazivi metoda i vrste pristupa metodama (npr. javni, zaštićeni), nazivi atributa razreda, veze i odnosi između razreda.}\\
-
 Na slikama 4.3, 4.4 i 4.5 su prikazani razredi koji pripadaju \textit{backend} dijelu 
 s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje DTO 
 (Data Transfer Object) i modele. \newline
 
 Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima 
 upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju 
-logiku interakcije i promjene. Kontroler LoginController omogućuje prijavu registriranog korisniak u sustav,
-dok kontroler SignUpController omogućuje registraniju neregistriranog korisnika. Kontroler ReportController
+logiku interakcije i promjene. Kontroler LoginController omogućuje prijavu registriranog korisnika u sustav,
+dok kontroler SignUpController omogućuje registraciju neregistriranog korisnika. Kontroler ReportController
 omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje interakcije s 
 objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje interakcije i
 promjene povezane s registriranim korisnicima.
@@ -241,7 +216,7 @@ gradskog ureda.
 \end{figure}
 
 Na slici 4.5 prikazi su razredi koji pripadaju Model razredima. Oni preslikavaju strukturu baze podataka
-u aplikaciji. Komunicijaru s bazom podataka te vraćaju podatke iz nje. Razred User predstavlja registriranog
+u aplikaciji. Komuniciraju s bazom podataka te vraćaju podatke iz nje. Razred User predstavlja registriranog
 korisnika koji je unio nužne podatke u sustav. Razred Report predstavlja prijavu oštećenja za koju je korisnik
 unio potrebne i opcionalne podatke. Razred Problem predstavlja prijavu problema koja predstavlja jednu ili više
 prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja 
@@ -254,8 +229,8 @@ razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-model.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
-	\caption{Dijagram razreda - dio DTO}
-	\label{fig:DijagramRazredaDTO}
+	\caption{Dijagram razreda - dio Model}
+	\label{fig:DijagramRazredaModel}
 \end{figure}
 
 

@@ -1,0 +1,291 @@
+\chapter{Arhitektura i dizajn sustava}
+
+\textbf{\textit{dio 1. revizije}}\\
+
+\textit{ Potrebno je opisati stil arhitekture te identificirati: podsustave, preslikavanje na radnu platformu, spremišta podataka, mrežne protokole, globalni upravljački tok i sklopovsko-programske zahtjeve. Po točkama razraditi i popratiti odgovarajućim skicama:}
+\begin{itemize}
+	\item 	\textit{izbor arhitekture temeljem principa oblikovanja pokazanih na predavanjima (objasniti zašto ste baš odabrali takvu arhitekturu)}
+	\item 	\textit{organizaciju sustava s najviše razine apstrakcije (npr. klijent-poslužitelj, baza podataka, datotečni sustav, grafičko sučelje)}
+	\item 	\textit{organizaciju aplikacije (npr. slojevi frontend i backend, MVC arhitektura) }
+\end{itemize}
+
+
+\noindent \\Pri analizi projektnih zahtjeva i detaljnom razmatranju uloga dionika te njihovih interakcija unutar aplikacije, odlučili smo strukturirati naš sustav na tri ključne razine: razinu klijenta, razinu web aplikacije i razinu baze podataka. Unutar ove podjele, nužno je uključiti slojeve korisničkog sučelja, aplikacijske logike i pristupa podacima. Kao model arhitekture, odabrali smo višeslojnu strukturu sličnu MVC (Model-View-Controller) stilu. MVC je oblik arhitekture softvera koji organizira aplikaciju u tri komponente:
+
+\begin{itemize}
+	\item 	\textit{Model (poslovna logika i podaci)}
+	\item 	\textit{View (korisničko sučelje)}
+	\item 	\textit{Controller (upravljač, posrednik između Modela i Viewa)}
+\end{itemize}
+\noindent Razdvajanje logike, prezentacije i upravljanja omogućuje jednostavno održavanje i razvoj aplikacije, a promjene u jednoj komponenti ne bi trebale značajno utjecati na druge. Ova arhitektura, bazirana na klijent-poslužitelj odnosu, omogućuje jasno definiranu organizaciju slojeva, a s ciljem maksimalne ponovne uporabivosti, integrirali smo i različite programske biblioteke i radne okvire. Razvojni tim je pisao kod u razvojnom okruženju IntelliJ IDEA i Visual Studio Code, a za pokretanje, konfiguraciju i puštanje u pogon, kao i neovisnost o računalu na kojem se kod izvršava, odabrali smo platforme Docker, Render i Node.JS.
+
+
+\noindent \\Arhitektura web aplikacije "CestaFix" može se podijeliti na tri podsustava:
+\begin{itemize}
+	\item 	\textit{Web poslužitelj}
+	\item   \textit{Web aplikacija}
+	\item   \textit{Baza podataka}
+\end{itemize}
+
+\noindent\textbf{Web poslužitelj} je komponenta koja pruža podršku za backend sustav aplikacije i čija je ključna uloga omogućiti komunikaciju između klijenta i aplikacije. Ova interakcija odvija se putem HTTP (Hyper Text Transfer Protocol) protokola, standardnog protokola za prijenos informacija na webu. Pokretanje web aplikacije i prosljeđivanje zahtjeva aplikaciji radi daljnje obrade, inicira se upravo pomoću web poslužitelja. Za implementaciju web poslužitelja korišten je Spring Boot, Java framework, koji se ističe brzim konfiguriranjem i implementacijom web aplikacija temeljenih na Javi. Sastavljen od Model i Controller slojeva prema MVC arhitekturi, gdje se poslovna logika, kao što je upravljanje prijavama šteta, nalazi u Modelu. Web poslužitelj također omogućuje definiranje i implementaciju RESTful API-ja, što omogućuje komunikaciju između frontenda (klijenta) i backenda (poslužitelja) putem HTTP/HTTPS mrežnih protokola. Primarni zadatak Controllera unutar web poslužitelja je obrađivanje HTTP zahtjeva koji pristižu iz frontend dijela aplikacije, izvršavanje odgovarajuće funkcionalnosti te slanje odgovora. Dodatno, Spring Boot omogućuje učinkovito upravljanje stanjem aplikacije, uključujući praćenje stanja sesija za registrirane korisnike.
+\newline
+\textbf{\\Web preglednik} je softver koji djeluje kao posrednik između poslužitelja i klijenta, omogućujući korisniku prikaz web sadržaja. Osnovna funkcionalnost web preglednika ostvarena je pri slanju HTTP zahtjeva poslužitelju te prijemu i interpretaciji HTTP odgovora. Web preglednici djeluju kao prevoditelji, omogućavajući korisnicima vizualizaciju web sadržaja kroz sučelje preglednika, dekodiranjem informacija dobivenih iz HTTP odgovora.
+\newline
+\textbf{\\Web aplikacija} Web aplikacija je kompleksni softverski sustav koji se sastoji od frontend i backend dijelova:
+\begin{itemize}
+	\item \textbf{Frontend} (Klijent) predstavlja korisničko sučelje putem kojeg korisnici ostvaruju interakciju sa sustavom. Ostvaren je korištenjem JavaScript programskog jezika, za potrebu upravljanja događajima na korisničkom sučelju, i React radnog okvira, što omogućuje kreiranje dinamičnog i intuitivnog korisničkog sučelja, čime se ostvaruje ugodno korisničko iskustvo. Frontend je strukturiran u komponente, što olakšava održavanje i ponovnu uporabu koda. Komunicira s backendom kroz HTTPS zahtjeve te pritom omogućuje prijenos podataka i ažuriranje informacija o prijavama šteta. Kroz klijentsku logiku, frontend provodi validaciju unesenih podataka kako bi osigurao ispravnost prije slanja na backend. Responsivni dizajn osigurava konzistentno korisničko iskustvo na različitim uređajima.	
+	\item \textbf{Backend} (Poslužitelj) je dio sustava unutar kojeg se obrađuju zahtjevi i izvršavaju daljnje radnje. Kako bi se postiglo "razdvajanje zabrinutosti", organiziran je na kontrolere, servise i repozitorije. Controlleri imaju ključnu ulogu u obradi ulaznih zahtjeva (HTTP zahtjeva) omogučujući organizaciju i upravljanje tokom rukovanja zahtjevima u backend dijelu aplikacije kao i pozivanje odgovarajućih metoda u Modelu te slanje odgovora klijentskom dijelu. Servisi u backendu na učinkovit i organiziran način obavljaju poslovnu logiku i specifične funkcionalnosti koje su potrebne za obradu zahtjeva, koji dolaze s frontend dijela aplikacije. Repozitoriji imaju ključnu ulogu u komunikaciji s bazom podataka, odnosno omogućuju servisima da abstrahiraju detalje interakcije s bazom podataka, pružajući im jednostavan i konzistentan način komunikacije s podacima. Backend je ostvaren korištenjem Java programskog jezika i Spring Boot radnog okvira. Također, pruža RESTful API-je koji omogućuju komunikaciju između klijenta i servera te definiraju kako resursi (poput prijava šteta) mogu biti stvoreni, ažurirani i dohvaćeni. Osim toga backend sadrži i DTO-e (Data Transfer Objects) za prijenos podataka između različitih dijelova sustava odnosno slojeva aplikacije. 
+\end{itemize}
+
+\noindent \textbf{Baza podataka} je podatkovni sloj koji se koristi za sigurnu pohranu podataka te je detaljnije opisana u sljedećem poglavlju.
+
+\begin{figure}[H]
+	\includegraphics[scale=0.25]{slike/Arhitektura_sustava.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Arhitektura sustava}
+	\label{fig:Arhitektura}
+\end{figure}
+
+
+\section{Baza podataka}
+
+\textbf{\textit{dio 1. revizije}}\\
+
+\textit{Potrebno je opisati koju vrstu i implementaciju baze podataka ste odabrali, glavne komponente od kojih se sastoji i slično.\\}
+\noindent Sustav je temeljen na uporabi relacijske baze podataka implementirane u PostgreSQL-u gdje su entiteti modelirani kao tablice koje posjeduju svoje jedinstveno ime i skup atributa.
+Odabir relacijske baze podataka proizlazi iz potrebe za lakšim ostvarenjem naših potreba za upravljanjem podacima pri prijavljivanju oštećenja i njihovoj sanaciji
+odnosno kako bismo što jednostavnije modelirali sustav prema stvarnom svijetu.
+Ova baza podataka ključna je za sigurnost podataka i brz pristup, pohranu, umetanje, izmjenu te dohvat podataka koje sustav koristi za daljnju obradu.
+Baza podataka ove aplikacija sadrži sljedeće entitete:
+\begin{packed_item}
+	\item \textit{Users}
+	\item \textit{Reports}
+	\item \textit{CityDep}
+	\item \textit{Category}
+	\item \textit{Problems}
+	\item \textit{CitydepCategory}
+\end{packed_item}
+
+
+
+\subsection{Opis tablica}
+
+
+\textit{Svaku tablicu je potrebno opisati po zadanom predlošku. Lijevo se nalazi točno ime varijable u bazi podataka, u sredini se nalazi tip podataka, a desno se nalazi opis varijable. Svjetlozelenom bojom označite primarni ključ. Svjetlo plavom označite strani ključ}
+
+\noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije. Sastoji se od atributa: user\_id, name, email, password i role.
+Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
+
+
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
+	\SetCell{LightGreen}user\_id & INT     & jedinstveni identifikator korisnika      \\ \hline
+	username                     & VARCHAR & ime korisnika                            \\ \hline
+	email                        & VARCHAR & e-mail adresa korisnika                  \\ \hline
+	password                     & VARCHAR & hash lozinke korisnika                   \\ \hline
+	role                         & VARCHAR & uloga korisnika                          \\ \hline
+	citydep\_id                  & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+\end{longtblr}
+
+
+\noindent\textbf{Reports} je entitet koji sadrži sve bitne informacije o prijavama oštećenja.
+Sastoji se od atributa: report\_id, user\_id, title, description, address, photo, report\_time, status i problem\_id. Povezan je vezom \textit{Many-to-One}  s entitetom Problems preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Users preko atributa user\_id.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[13,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                \\ \hline[3pt]
+	\SetCell{LightGreen}report\_id  & INT        & jedinstveni identifikator prijave                          \\ \hline
+	\SetCell{LightBlue} user\_id    & INT        & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
+	title                           & VARCHAR    & naziv prijave/oštećenja                                    \\ \hline
+	description                     & TEXT       & opis oštećenja                                             \\ \hline
+	address                         & VARCHAR    & adresa oštećenja                                           \\ \hline
+	photo                           & BYTEA      & slika oštećenja                                            \\ \hline
+	report\_time                    & TIMESTAMP  & vrijeme podnošenja prijave                                 \\ \hline
+	status                          & VARCHAR    & status prijave                                             \\ \hline
+	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
+\end{longtblr}
+
+\noindent\textbf{Citydep} je entitet koji sadrži sve bitne informacije o gradskim uredima.
+Sastoji se od atributa: citydep\_id i citydep\_name. Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom CityDepCategory preko atributa citydep\_id.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{Citydep}}                                            \\ \hline[3pt]
+	\SetCell{LightGreen}citydep\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	citydep\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
+\end{longtblr}
+
+\noindent\textbf{Category} je entitet koji sadrži sve bitne informacije o kategoriji oštećenja. Sastoji se od atributa: category\_id i category\_name. Povezan je vezom \textit{One-to-Many} s entitetom Problems preko atributa category\_id i vezom \textit{One-to-Many} s entitetom CityDepCategory preko atributa category\_id.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{Category}}                                                  \\ \hline[3pt]
+	\SetCell{LightGreen}category\_id & INT     & jedinstveni identifikator kategorije oštećenja \\ \hline
+	category\_name                   & VARCHAR & naziv kategorije oštećenja                     \\ \hline
+\end{longtblr}
+
+\noindent\textbf{Problems} je entitet koji sadrži sve bitne informacije o prijavljenom oštećenju. Sastoji se od atributa: problem\_id, longitude, latitude, status i category\_id. Povezan je vezom One-to-Many s entitetom Reports preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{Problems}}                                                                           \\ \hline[3pt]
+	\SetCell{LightGreen}problem\_id  & INT     & jedinstveni identifikator oštećenja                                     \\ \hline
+	longitude                        & DOUBLE  & geografska dužina lokacije oštećenja                                    \\ \hline
+	latitude                         & DOUBLE  & geografska širina lokacije oštećenja                                    \\ \hline
+	status                           & VARCHAR & status oštećenja                                                        \\ \hline
+	\SetCell{LightBlue} category\_id & INT     & jedinstveni identifikator kategorije oštećenja  (category.category\_id) \\ \hline
+\end{longtblr}
+
+
+\noindent\textbf{CitydepCategory} je entitet koji sadrži sve bitne informacije vezane uz kategoriju oštećenja kojom se bavi određeni gradski ured.
+Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
+
+\begin{longtblr}[
+	label=none,
+	entry=none
+	]{
+	width = \textwidth,
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
+	rowhead = 1,
+	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+	\hline \SetCell[c=3]{c}{\textbf{CitydepCategory}}                                                              \\ \hline[3pt]
+	\SetCell{LightBlue}citydep\_id  & INT & jedinstveni identifikator gradskog ureda (citydep.citydep\_id)         \\ \hline
+	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
+\end{longtblr}
+
+
+
+\subsection{Dijagram baze podataka}
+\textit{ U ovom potpoglavlju potrebno je umetnuti dijagram baze podataka. Primarni i strani ključevi moraju biti označeni, a tablice povezane. Bazu podataka je potrebno normalizirati. Podsjetite se kolegija "Baze podataka".}
+
+\begin{figure}[H]
+	\includegraphics[scale=0.725]{slike/ERD-model} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{E-R dijagram baze podataka}
+	\label{fig:ERdijagramBazePodataka}
+\end{figure}
+
+\eject
+
+
+\section{Dijagram razreda}
+
+\textit{Potrebno je priložiti dijagram razreda s pripadajućim opisom. Zbog preglednosti je moguće dijagram razlomiti na više njih, ali moraju biti grupirani prema sličnim razinama apstrakcije i srodnim funkcionalnostima.}\\
+
+\textbf{\textit{dio 1. revizije}}\\
+
+\textit{Prilikom prve predaje projekta, potrebno je priložiti potpuno razrađen dijagram razreda vezan uz \textbf{generičku funkcionalnost} sustava. Ostale funkcionalnosti trebaju biti idejno razrađene u dijagramu sa sljedećim komponentama: nazivi razreda, nazivi metoda i vrste pristupa metodama (npr. javni, zaštićeni), nazivi atributa razreda, veze i odnosi između razreda.}\\
+
+Na slikama 4.3, 4.4 i 4.5 su prikazani razredi koji pripadaju \textit{backend} dijelu 
+s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje DTO 
+(Data Transfer Object) i modele. \newline
+
+Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima 
+upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju 
+logiku interakcije i promjene. Kontroler LoginController omogućuje prijavu registriranog korisniak u sustav,
+dok kontroler SignUpController omogućuje registraniju neregistriranog korisnika. Kontroler ReportController
+omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje interakcije s 
+objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje interakcije i
+promjene povezane s registriranim korisnicima.
+
+\begin{figure}[H]
+	\includegraphics[scale=0.60]{slike/DR-controller} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - dio Controllers}
+	\label{fig:DijagramRazredaControllers}
+\end{figure}
+
+Na slici 4.4 prikazani su razredi koji pripadaju DTO. Data Transfer Objects omogućavaju
+razmjenu podataka između procesa i slojeva. LoginDto i SignUpDto služe za stvaranje novog objekta
+za prijavu, odnosno registraciju korisnika. ReportDto i ProblemDto služe za stvaranje novog objekta
+prijave oštećenja, odnosno problema. ReportStatusCheckDto i ReportStatusChangeDto služe za stvaranje 
+objekta po kojem će se omogućiti provjera statusa prijave, odnosno promjena statusa prijave oštećenja.
+ReportStatusChangeDto služi za stvaranje objekta po kojem će se izvesti objedinjavanje prijava oštećenja.
+StatisticsDto služi za dogvaćanje podataka o statistici. UserDto
+služi da dohvaćanje podataka o korisničkom računu, dok RoleDto služi za stvaranje objekta po kojem
+će se izvesti promjena uloge registriranog korisnika. CityDepartmentDto služi za stvaranje objekta
+gradskog ureda. 
+
+\begin{figure}[H]
+	\includegraphics[scale=0.60]{slike/DR-DTO.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - dio DTO}
+	\label{fig:DijagramRazredaDTO}
+\end{figure}
+
+Na slici 4.5 prikazi su razredi koji pripadaju Model razredima. Oni preslikavaju strukturu baze podataka
+u aplikaciji. Komunicijaru s bazom podataka te vraćaju podatke iz nje. Razred User predstavlja registriranog
+korisnika koji je unio nužne podatke u sustav. Razred Report predstavlja prijavu oštećenja za koju je korisnik
+unio potrebne i opcionalne podatke. Razred Problem predstavlja prijavu problema koja predstavlja jednu ili više
+prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja 
+kategoriju oštećenja koju korisnik može odabrati za prijavljeno oštećenje, odnosno koju gradski ured može dobiti
+na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više 
+kategorija oštećenja koje im je administrator dodijelio. Razred CitydepCategory predstavlja vezu između
+razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija i gradskih ureda u parovima.
+
+
+\begin{figure}[H]
+	\includegraphics[scale=0.60]{slike/DR-model.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - dio DTO}
+	\label{fig:DijagramRazredaDTO}
+\end{figure}
+
+
+\textbf{\textit{dio 2. revizije}}\\
+
+\textit{Prilikom druge predaje projekta dijagram razreda i opisi moraju odgovarati stvarnom stanju implementacije}
+
+
+
+\eject
+
+\section{Dijagram stanja}
+
+
+\textbf{\textit{dio 2. revizije}}\\
+
+\textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
+
+
+\eject
+
+\section{Dijagram aktivnosti}
+
+\textbf{\textit{dio 2. revizije}}\\
+
+\textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
+
+\eject
+\section{Dijagram komponenti}
+
+\textbf{\textit{dio 2. revizije}}\\
+
+\textit{Potrebno je priložiti dijagram komponenti s pripadajućim opisom. Dijagram komponenti treba prikazivati strukturu cijele aplikacije.}

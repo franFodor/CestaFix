@@ -1,0 +1,12 @@
+footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333; /* Set your background color */
+    color: #fff; /* Set your text color */
+    padding: 10px;
+    text-align: center; /* Center the text horizontally */
+    margin: 0;
+  }
+  

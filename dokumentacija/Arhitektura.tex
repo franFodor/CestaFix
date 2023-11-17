@@ -206,9 +206,14 @@ Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Man
 Na slikama 4.3, 4.4 i 4.5 su prikazani razredi koji pripadaju \textit{backend} dijelu 
 s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje DTO 
 (Data Transfer Object) i modele. \newline
-Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane
-u tim razredima upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih
-u Model razredima. Omogućuju logiku interakcije i promjene.
+
+Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima 
+upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju 
+logiku interakcije i promjene. Kontroler LoginController omogućuje prijavu registriranog korisniak u sustav,
+dok kontroler SignUpController omogućuje registraniju neregistriranog korisnika. Kontroler ReportController
+omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje interakcije s 
+objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje interakcije i
+promjene povezane s registriranim korisnicima.
 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-controller} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -218,7 +223,40 @@ u Model razredima. Omogućuju logiku interakcije i promjene.
 \end{figure}
 
 Na slici 4.4 prikazani su razredi koji pripadaju DTO. Data Transfer Objects omogućavaju
-razmjenu podataka između procesa.
+razmjenu podataka između procesa i slojeva. LoginDto i SignUpDto služe za stvaranje novog objekta
+za prijavu, odnosno registraciju korisnika. ReportDto i ProblemDto služe za stvaranje novog objekta
+prijave oštećenja, odnosno problema. ReportStatusCheckDto i ReportStatusChangeDto služe za stvaranje 
+objekta po kojem će se omogućiti provjera statusa prijave, odnosno promjena statusa prijave oštećenja.
+ReportStatusChangeDto služi za stvaranje objekta po kojem će se izvesti objedinjavanje prijava oštećenja.
+StatisticsDto služi za dogvaćanje podataka o statistici. UserDto
+služi da dohvaćanje podataka o korisničkom računu, dok RoleDto služi za stvaranje objekta po kojem
+će se izvesti promjena uloge registriranog korisnika. CityDepartmentDto služi za stvaranje objekta
+gradskog ureda. 
+
+\begin{figure}[H]
+	\includegraphics[scale=0.60]{slike/DR-DTO.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - dio DTO}
+	\label{fig:DijagramRazredaDTO}
+\end{figure}
+
+Na slici 4.5 prikazi su razredi koji pripadaju Model razredima. Oni preslikavaju strukturu baze podataka
+u aplikaciji. Komunicijaru s bazom podataka te vraćaju podatke iz nje. Razred User predstavlja registriranog
+korisnika koji je unio nužne podatke u sustav. Razred Report predstavlja prijavu oštećenja za koju je korisnik
+unio potrebne i opcionalne podatke. Razred Problem predstavlja prijavu problema koja predstavlja jednu ili više
+prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja 
+kategoriju oštećenja koju korisnik može odabrati za prijavljeno oštećenje, odnosno koju gradski ured može dobiti
+na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više 
+kategorija oštećenja koje im je administrator dodijelio. Razred CitydepCategory predstavlja vezu između
+razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija i gradskih ureda u parovima.
+
+
+\begin{figure}[H]
+	\includegraphics[scale=0.60]{slike/DR-model.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram razreda - dio DTO}
+	\label{fig:DijagramRazredaDTO}
+\end{figure}
 
 
 \textbf{\textit{dio 2. revizije}}\\

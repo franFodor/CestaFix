@@ -29,16 +29,30 @@ Kako bi se *pokrenula* stranica potrebno je (za sada) ući i na [frontend](https
 
 # Članovi tima 
 * Fran Fodor - voditelj<br/>
-* Mateo Jakšić - dokumentacija<br/>
-* Vedran Knežević - backend<br/>
-* Leon Sattvik Kolenc - frontend<br/>
-* Jan Murić - frontend<br/>
-* Sara Podvorec - dokumentacija<br/>
-* Ante Prkačin - backend
+* Mateo Jakšić
+* Vedran Knežević
+* Leon Sattvik Kolenc
+* Jan Murić
+* Sara Podvorec
+* Ante Prkačin
 
 # Kontribucije
->Pravila ovise o organizaciji tima i su često izdvojena u CONTRIBUTING.md
-
+### Dokumentacija
+* Mateo Jakšić
+* Sara Podvorec </br>
+### Frontend
+* Fran Fodor
+* Leon Sattvik Kolenc
+* Jan Murić
+### Backend
+* Vedran Knežević
+* Ante Prkačin
+### Baza podataka 
+* Fran Fodor
+* Vedran Knežević
+* Ante Prkačin
+### Deployment 
+* Fran Fodor
 
 
 # 📝 Kodeks ponašanja [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.1-4baaaa.svg)](CODE_OF_CONDUCT.md)

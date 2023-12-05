@@ -3,13 +3,17 @@ package fer.proinz.prijave;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fer.proinz.prijave.model.Report;
+import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
+import fer.proinz.prijave.service.JwtService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,7 +41,14 @@ public class ReportsIT {
     private DataSource dataSource;
     @Autowired
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
+
+    private String jwtTokenForUser;
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -56,8 +67,8 @@ public class ReportsIT {
     @BeforeEach
     void setUpReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlReport = "INSERT INTO Reports (report_id, title, description, address, photo, report_time, status) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sqlReport = "INSERT INTO Reports (report_id, title, description, address, photo, report_time, status, longitude, latitude) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             Report report = Report.builder()
                     .reportId(15L)
@@ -67,6 +78,8 @@ public class ReportsIT {
                     .photo(null)
                     .reportTime(Timestamp.from(Instant.now()))
                     .status("Osteceno")
+                    .longitude(45.80666)
+                    .latitude(15.9696)
                     .build();
 
             PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
@@ -77,6 +90,8 @@ public class ReportsIT {
             preparedStatementReport.setBytes(5, report.getPhoto());
             preparedStatementReport.setTimestamp(6, report.getReportTime());
             preparedStatementReport.setString(7, report.getStatus());
+            preparedStatementReport.setDouble(8, report.getLongitude());
+            preparedStatementReport.setDouble(9, report.getLatitude());
 
             preparedStatementReport.executeUpdate();
 
@@ -87,9 +102,17 @@ public class ReportsIT {
                     .userId(2)
                     .username("John Doe")
                     .email("john.doe@gmail.com")
-                    .password("wjs82jas72nw")
-                    .role("USER")
+                    .password(passwordEncoder.encode("qwertz"))
+                    .role(Role.USER)
                     .build();
+
+            UserDetails userDetails = User.builder()
+                    .username("John Doe")
+                    .password(passwordEncoder.encode("qwertz"))
+                    .role(Role.USER)
+                    .build();
+
+            this.jwtTokenForUser = jwtService.generateToken(userDetails);
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
             preparedStatementUser.setLong(1, user.getUserId());
@@ -130,21 +153,22 @@ public class ReportsIT {
     public void getAllReportsAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/report/getAllReports"))
+                        get("/public/report/getAll"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getReportByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/report/get/15"))
+                .perform(get("/public/report/15"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void createReportAndExpect201OK() throws Exception {
+    public void createReportAuthenticated() throws Exception {
         User testUser = new User();
         testUser.setUserId(2);
+        testUser.setRole(Role.USER);
 
         Report report = Report.builder()
                 .reportId(15L)
@@ -155,15 +179,45 @@ public class ReportsIT {
                 .photo(null)
                 .reportTime(Timestamp.from(Instant.now()))
                 .status("Osteceno")
+                .longitude(45.80666)
+                .latitude(15.9696)
                 .build();
+
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
         mockMvc
-                .perform(post("/report")
-                                .contentType("application/json")
-                                .content(jsonReport))
-                .andExpect(status().isCreated());
+                .perform(post("/public/report")
+                        .header("Authorization", "Bearer " + jwtTokenForUser)
+                        .contentType("application/json")
+                        .content(jsonReport))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createReportAnonymous() throws Exception {
+
+        Report report = Report.builder()
+                .reportId(15L)
+                .user(null)
+                .title("Pukotina na cesti")
+                .description("kwerwoirwsnfsffowefsg")
+                .address("Ulica grada Vukovara 3")
+                .photo(null)
+                .reportTime(Timestamp.from(Instant.now()))
+                .status("Osteceno")
+                .longitude(45.80666)
+                .latitude(15.9696)
+                .build();
+
+
+        String jsonReport = objectMapper.writeValueAsString(report);
+
+        mockMvc
+                .perform(post("/public/report")
+                        .contentType("application/json")
+                        .content(jsonReport))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -184,8 +238,8 @@ public class ReportsIT {
 
         mockMvc
                 .perform(
-                        put("/report/" + report.getReportId())
-                                .with(user("admin").roles("ADMIN"))
+                        put("/advanced/report/" + report.getReportId())
+                                .header("Authorization", "Bearer " + jwtTokenForUser)
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isOk());
@@ -195,8 +249,8 @@ public class ReportsIT {
     public void deleteReportAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/report/15")
-                                .with(user("admin").roles("ADMIN")))
+                        delete("/advanced/report/15")
+                                .header("Authorization", "Bearer " + jwtTokenForUser))
                 .andExpect(status().isOk());
     }
 }

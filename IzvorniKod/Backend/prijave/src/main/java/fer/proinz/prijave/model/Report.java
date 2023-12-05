@@ -1,5 +1,6 @@
 package fer.proinz.prijave.model;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +24,7 @@ public class Report implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @Nullable
     private User user;
 
     private String title;
@@ -36,6 +38,10 @@ public class Report implements Serializable {
     private Timestamp reportTime;
 
     private String status;
+
+    private double longitude;
+
+    private double latitude;
 
 }
 

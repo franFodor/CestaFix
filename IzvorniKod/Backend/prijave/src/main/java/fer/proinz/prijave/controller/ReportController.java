@@ -14,37 +14,31 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/report")
+@RequestMapping
 public class ReportController {
 
     private final ReportService reportService;
 
-    @GetMapping( "/getAllReports")
+    @GetMapping( "/public/report/getAll")
     public List<Report> getAllReports() {
         return reportService.getAllReports();
     }
 
-    @GetMapping( "/get/{reportId}")
+    @GetMapping( "/public/report/{reportId}")
     public ResponseEntity<Report> getReportById(@PathVariable("reportId") int reportId) {
         Optional<Report> reportOptional = reportService.getReportById(reportId);
-        if(reportOptional.isPresent()) {
-            return ResponseEntity.ok(reportOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return reportOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
 
     }
 
-    @PostMapping("")
+    @PostMapping("/public/report")
     public ResponseEntity<Report> createReport(@RequestBody Report report) {
         Report saved = reportService.createReport(report);
-        return ResponseEntity
-                .created(URI.create("/report/" + saved.getReportId()))
-                .body(saved);
+        return ResponseEntity.ok(saved);
     }
 
-    @Secured("ADMIN")
-    @PutMapping("/{reportId}")
+    @PutMapping("/advanced/report/{reportId}")
     public Report updateReport(
             @PathVariable("reportId") int reportId,
             @RequestBody Report updatedReport
@@ -52,9 +46,8 @@ public class ReportController {
         return reportService.updateReport(reportId, updatedReport);
     }
 
-    @Secured("ADMIN")
-    @DeleteMapping("/{reportId}")
-    public Optional<Report> deleteReport(@PathVariable("reportId") int reportId) {
+    @DeleteMapping("/advanced/report/{reportId}")
+    public ResponseEntity<Report> deleteReport(@PathVariable("reportId") int reportId) {
         return reportService.deleteReport(reportId);
     }
 

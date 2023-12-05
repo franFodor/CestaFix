@@ -3,6 +3,7 @@ package fer.proinz.prijave.service;
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,12 +41,12 @@ public class ReportService {
                 .orElseThrow(RuntimeException::new);
     }
 
-    public Optional<Report> deleteReport(int reportId) {
+    public ResponseEntity<Report> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
 
         if(reportOptional.isPresent()) {
             reportRepository.deleteById(reportId);
-            return reportOptional;
+            return ResponseEntity.ok(reportOptional.get());
         } else {
             throw new RuntimeException("report with id " + reportId + " does not exists!");
         }

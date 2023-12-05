@@ -4,6 +4,7 @@ import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,37 +17,30 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/getAllUsers")
+    @GetMapping("/advanced/user/getAll")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/get/{userId}")
+    @GetMapping("/normal/user/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable("userId") int userId) {
         Optional<User> userOptional = userService.getUserById(userId);
-        if(userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return userOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @Secured("STAFF")
-    @PostMapping("")
+    @PostMapping("/normal/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User saved = userService.createUser(user);
-        return ResponseEntity
-                .created(URI.create("/user/" + saved.getUserId()))
-                .body(saved);
+        return ResponseEntity.ok(saved);
     }
 
-    @Secured("STAFF")
-    @PutMapping("/{userId}")
+    @PutMapping("/advanced/user/{userId}")
     public User updateUser(
             @PathVariable("userId") int userId,
             @RequestBody User updatedUser
@@ -54,9 +48,8 @@ public class UserController {
         return userService.updateUser(userId, updatedUser);
     }
 
-    @Secured("STAFF")
-    @DeleteMapping("/{userId}")
-    public Optional<User> deleteUser(@PathVariable("userId") int userId) {
+    @DeleteMapping("/advanced/user/{userId}")
+    public ResponseEntity<User> deleteUser(@PathVariable("userId") int userId) {
         return userService.deleteUser(userId);
     }
 

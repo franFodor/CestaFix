@@ -1,15 +1,20 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fer.proinz.prijave.model.CityDepartment;
+import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
+import fer.proinz.prijave.service.JwtService;
+import fer.proinz.prijave.service.UserDetail;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -40,6 +45,11 @@ public class UsersIT {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtService jwtService;
+
+    private String jwtTokenForUser;
+
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
             .withDatabaseName("postgres")
@@ -65,8 +75,16 @@ public class UsersIT {
                     .username("John Doe")
                     .email("john.doe@gmail.com")
                     .password(passwordEncoder.encode("qwertz"))
-                    .role("USER")
+                    .role(Role.USER)
                     .build();
+
+            UserDetails userDetails = User.builder()
+                    .username("John Doe")
+                    .password(passwordEncoder.encode("qwertz"))
+                    .role(Role.USER)
+                    .build();
+
+            this.jwtTokenForUser = jwtService.generateToken(userDetails);
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
             preparedStatementUser.setLong(1, user.getUserId());
@@ -118,19 +136,21 @@ public class UsersIT {
     public void getAllUsersAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        get("/user/getAllUsers"))
+                        get("/advanced/user/getAll")
+                                .header("Authorization", "Bearer " + jwtTokenForUser))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getUserByIdAndExpect200OK() throws Exception {
         mockMvc
-                .perform(get("/user/get/4"))
+                .perform(get("/normal/user/4")
+                        .header("Authorization", "Bearer " + jwtTokenForUser))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void createUserAndExpect201OK() throws Exception {
+    public void createUserAndExpect200OK() throws Exception {
         CityDepartment testCitydep = new CityDepartment();
         testCitydep.setCitydepId(1);
 
@@ -139,38 +159,40 @@ public class UsersIT {
                 .username("Mat Waller")
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
-                .role("USER")
+                .role(Role.USER)
                 .citydep(null)
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(user);
 
         mockMvc
-                .perform(post("/user")
-                        .with(user("staff").roles("STAFF"))
+                .perform(post("/normal/user")
+                        .header("Authorization", "Bearer " + jwtTokenForUser)
                         .contentType("application/json")
                         .content(jsonReport))
-                .andExpect(status().isCreated());
+                .andExpect(status().isOk());
     }
 
     @Test
     public void updateUserAndExpect200OK() throws Exception {
+        CityDepartment testCitydep = new CityDepartment();
+        testCitydep.setCitydepId(1);
 
         User user = User.builder()
                 .userId(4)
                 .username("Mat Waller")
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
-                .role("USER")
+                .role(Role.USER)
+                .citydep(null)
                 .build();
-
 
         String jsonReport = objectMapper.writeValueAsString(user);
 
         mockMvc
                 .perform(
-                        put("/user/" + user.getUserId())
-                                .with(user("staff").roles("STAFF"))
+                        put("/advanced/user/" + user.getUserId())
+                                .header("Authorization", "Bearer " + jwtTokenForUser)
                                 .contentType("application/json")
                                 .content(jsonReport))
                 .andExpect(status().isOk());
@@ -180,8 +202,8 @@ public class UsersIT {
     public void deleteUserAndExpect200OK() throws Exception {
         mockMvc
                 .perform(
-                        delete("/user/4")
-                                .with(user("staff").roles("STAFF")))
+                        delete("/advanced/user/4")
+                                .header("Authorization", "Bearer " + jwtTokenForUser))
                 .andExpect(status().isOk());
     }
 

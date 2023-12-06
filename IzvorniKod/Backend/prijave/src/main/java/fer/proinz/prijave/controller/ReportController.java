@@ -39,15 +39,15 @@ public class ReportController {
     }
 
     @PutMapping("/advanced/report/{reportId}")
-    public Report updateReport(
+    public ResponseEntity<Report> updateReport(
             @PathVariable("reportId") int reportId,
             @RequestBody Report updatedReport
         ) {
-        return reportService.updateReport(reportId, updatedReport);
+        return ResponseEntity.ok(reportService.updateReport(reportId, updatedReport));
     }
 
     @DeleteMapping("/advanced/report/{reportId}")
-    public ResponseEntity<Report> deleteReport(@PathVariable("reportId") int reportId) {
+    public ResponseEntity<String> deleteReport(@PathVariable("reportId") int reportId) {
         return reportService.deleteReport(reportId);
     }
 

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -28,25 +29,21 @@ public class ReportService {
     }
 
     public Report updateReport(int reportId, Report updatedReport) {
-        return reportRepository.findById(reportId)
-                .map(report -> {
-                    if (updatedReport.getTitle() != null) {
-                        report.setTitle(updatedReport.getTitle());
-                    }
-                    if (updatedReport.getDescription() != null) {
-                        report.setDescription(updatedReport.getDescription());
-                    }
-                    return reportRepository.save(report);
-                })
-                .orElseThrow(RuntimeException::new);
+        Optional<Report> report = reportRepository.findById(reportId);
+        if (report.isPresent()) {
+            Report saved = reportRepository.save(updatedReport);
+            return saved;
+        } else {
+            throw new NoSuchElementException("No report with this id");
+        }
     }
 
-    public ResponseEntity<Report> deleteReport(int reportId) {
+    public ResponseEntity<String> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
 
         if(reportOptional.isPresent()) {
             reportRepository.deleteById(reportId);
-            return ResponseEntity.ok(reportOptional.get());
+            return ResponseEntity.ok("Report with id " + reportId + " is deleted.");
         } else {
             throw new RuntimeException("report with id " + reportId + " does not exists!");
         }

@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -32,28 +33,23 @@ public class UserService {
     }
 
     public User updateUser(int userId, User updatedUser) {
-        return userRepository.findById(userId)
-                .map(user -> {
-                    if (updatedUser.getUsername() != null) {
-                        user.setUsername(updatedUser.getUsername());
-                    }
-                    if (updatedUser.getEmail() != null) {
-                        user.setEmail(updatedUser.getEmail());
-                    }
-                    if (updatedUser.getPassword() != null) {
-                        user.setPassword(updatedUser.getPassword());
-                    }
-                    return userRepository.save(user);
-                })
-                .orElseThrow(RuntimeException::new);
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            User saved = userRepository.save(updatedUser);
+            return  saved;
+        } else {
+            throw new NoSuchElementException("No user with this id");
+        }
+
+
     }
 
-    public ResponseEntity<User> deleteUser(int userId) {
+    public ResponseEntity<String> deleteUser(int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if(userOptional.isPresent()) {
             userRepository.deleteById(userId);
-            return ResponseEntity.ok(userOptional.get());
+            return ResponseEntity.ok("User with id " + userId + " is deleted.");
         } else {
             throw new RuntimeException("user with id " + userId + " does not exists!");
         }

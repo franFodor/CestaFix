@@ -36,6 +36,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
 
+                        .requestMatchers("/actuator/health").permitAll()
+
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/advanced/**").hasRole("STAFF")
                         .requestMatchers("/normal/**").hasRole("USER")

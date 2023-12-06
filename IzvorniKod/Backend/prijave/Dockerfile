@@ -8,6 +8,9 @@ COPY ../../pom.xml .
 COPY ../../src src
 RUN chmod +x mvnw
 
+# Pokretanje builda
+RUN ./mvnw clean package
+
 ENV DB_URL=jdbc:postgresql://dpg-cl4krus72pts739i2rvg-a:5432/prijava_ostecenja_db
 ENV DB_USERNAME=prijava_ostecenja_db_user
 ENV DB_PASS=KT9yduovllMpa8qQsZH3PKTn2AAM3t93

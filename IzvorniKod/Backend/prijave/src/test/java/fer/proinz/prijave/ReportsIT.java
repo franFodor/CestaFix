@@ -44,10 +44,8 @@ public class ReportsIT {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private JwtService jwtService;
-
     private String jwtTokenForUser;
 
     @Container
@@ -67,8 +65,8 @@ public class ReportsIT {
     @BeforeEach
     void setUpReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlReport = "INSERT INTO Reports (report_id, title, description, address, photo, report_time, status, longitude, latitude) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sqlReport = "INSERT INTO Reports (report_id, title, description, address, photo, status, longitude, latitude) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             Report report = Report.builder()
                     .reportId(15L)
@@ -76,7 +74,6 @@ public class ReportsIT {
                     .description("kwerwoirwsnfsffowefsg")
                     .address("Ulica grada Vukovara 3")
                     .photo(null)
-                    .reportTime(Timestamp.from(Instant.now()))
                     .status("Osteceno")
                     .longitude(45.80666)
                     .latitude(15.9696)
@@ -88,10 +85,9 @@ public class ReportsIT {
             preparedStatementReport.setString(3, report.getDescription());
             preparedStatementReport.setString(4, report.getAddress());
             preparedStatementReport.setBytes(5, report.getPhoto());
-            preparedStatementReport.setTimestamp(6, report.getReportTime());
-            preparedStatementReport.setString(7, report.getStatus());
-            preparedStatementReport.setDouble(8, report.getLongitude());
-            preparedStatementReport.setDouble(9, report.getLatitude());
+            preparedStatementReport.setString(6, report.getStatus());
+            preparedStatementReport.setDouble(7, report.getLongitude());
+            preparedStatementReport.setDouble(8, report.getLatitude());
 
             preparedStatementReport.executeUpdate();
 
@@ -177,7 +173,6 @@ public class ReportsIT {
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
-                .reportTime(Timestamp.from(Instant.now()))
                 .status("Osteceno")
                 .longitude(45.80666)
                 .latitude(15.9696)
@@ -204,7 +199,6 @@ public class ReportsIT {
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
-                .reportTime(Timestamp.from(Instant.now()))
                 .status("Osteceno")
                 .longitude(45.80666)
                 .latitude(15.9696)
@@ -229,7 +223,6 @@ public class ReportsIT {
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
-                .reportTime(Timestamp.from(Instant.now()))
                 .status("Osteceno")
                 .build();
 

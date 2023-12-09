@@ -44,10 +44,8 @@ public class UsersIT {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private JwtService jwtService;
-
     private String jwtTokenForUser;
 
     @Container

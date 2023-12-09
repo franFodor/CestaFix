@@ -6,9 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -21,6 +24,9 @@ public class Report implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long reportId;
+
+    @Column(name = "business_id", columnDefinition = "uuid", nullable = false, updatable = false, insertable = false)
+    private UUID businessId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -35,6 +41,7 @@ public class Report implements Serializable {
 
     private byte[] photo;
 
+    @Column(name = "report_time", nullable = false, updatable = false, insertable = false)
     private Timestamp reportTime;
 
     private String status;

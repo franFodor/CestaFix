@@ -2,6 +2,9 @@ package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.service.ReportService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,9 @@ public class ReportController {
 
     private final ReportService reportService;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @GetMapping( "/public/report/getAll")
     public List<Report> getAllReports() {
         return reportService.getAllReports();
@@ -33,8 +39,10 @@ public class ReportController {
     }
 
     @PostMapping("/public/report")
+    @Transactional
     public ResponseEntity<Report> createReport(@RequestBody Report report) {
         Report saved = reportService.createReport(report);
+        entityManager.refresh(saved);
         return ResponseEntity.ok(saved);
     }
 

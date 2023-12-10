@@ -18,8 +18,8 @@ Ključni obrasci uporabe
 * Provjera statistike statusa prijava oštećenja
 
 # Tehnologije
-* Frontend - React
-* Backend - Spring
+* Frontend - JavaScript, React
+* Backend - Java, Spring Boot
 * Baza podataka - PostgreSQL
 * Deployment - Render
 

@@ -77,7 +77,7 @@ const Header = () => {
 
     const formDataJSON = JSON.stringify(formData);
 
-    fetch('/api/login', {
+    fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const Header = () => {
 
     const formDataJSON = JSON.stringify(formData);
 
-    fetch('/api/register', {
+    fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -269,15 +269,25 @@ const Header = () => {
   </div>
   );
 
+  function getUsername(){
+    return false || "Placeholder";
+  }
+
   return (
 
     <header className="header">
       <div className="right">
-        {(loginData) ? (
+        {(1) ? (
           <>
-            <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
-            <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
-            <button className="headerBTN1" onClick={handleLogout}>Logout</button>
+          <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+          
+ <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+<div className="dropdown">
+ <button className="headerBTN1 dropbtn">{getUsername()}</button>
+ <div className="dropdown-content">
+   <button className="headerBTNLOGOUT" onClick={handleLogout}>Logout</button>
+ </div>
+</div>
           </>
         ) : (
           <>

@@ -26,7 +26,7 @@ const Content = () => {
 
 
     async function fetchMarkers() {
-        const response = await fetch('/api/public/report/getAll', {
+        const response = await fetch('/api/public/problems/getAll', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

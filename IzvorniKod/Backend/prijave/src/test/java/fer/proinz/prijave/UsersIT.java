@@ -70,14 +70,16 @@ public class UsersIT {
 
             User user = User.builder()
                     .userId(4)
-                    .username("John Doe")
+                    .firstname("John")
+                    .lastname("Doe")
                     .email("john.doe@gmail.com")
                     .password(passwordEncoder.encode("qwertz"))
                     .role(Role.USER)
                     .build();
 
             UserDetails userDetails = User.builder()
-                    .username("John Doe")
+                    .firstname("John")
+                    .lastname("Doe")
                     .password(passwordEncoder.encode("qwertz"))
                     .role(Role.USER)
                     .build();
@@ -154,7 +156,8 @@ public class UsersIT {
 
         User user = User.builder()
                 .userId(4)
-                .username("Mat Waller")
+                .firstname("Mat")
+                .lastname("Waller")
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role(Role.USER)
@@ -178,7 +181,8 @@ public class UsersIT {
 
         User user = User.builder()
                 .userId(4)
-                .username("Mat Waller")
+                .firstname("Mat")
+                .lastname("Waller")
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role(Role.USER)

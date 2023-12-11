@@ -96,14 +96,16 @@ public class ReportsIT {
 
             User user = User.builder()
                     .userId(2)
-                    .username("John Doe")
+                    .firstname("John")
+                    .lastname("Doe")
                     .email("john.doe@gmail.com")
                     .password(passwordEncoder.encode("qwertz"))
                     .role(Role.USER)
                     .build();
 
             UserDetails userDetails = User.builder()
-                    .username("John Doe")
+                    .firstname("John")
+                    .lastname("Doe")
                     .password(passwordEncoder.encode("qwertz"))
                     .role(Role.USER)
                     .build();

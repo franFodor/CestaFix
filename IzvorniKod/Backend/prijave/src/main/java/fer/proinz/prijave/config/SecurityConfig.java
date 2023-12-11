@@ -42,18 +42,6 @@ public class SecurityConfig {
                         .requestMatchers("/advanced/**").hasRole("STAFF")
                         .requestMatchers("/normal/**").hasRole("USER")
                         .anyRequest().authenticated()
-
-                        /*.requestMatchers("/user/getAllUsers").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/user/**").hasAnyRole("USER", "STAFF")
-                        .requestMatchers(HttpMethod.POST, "/user").hasAnyRole("USER", "STAFF")
-                        .requestMatchers(HttpMethod.PUT, "/user/**").hasRole("STAFF")
-                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("STAFF")
-
-                        .requestMatchers("/report/getAllReports").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/report/**").hasAnyRole("USER", "STAFF")
-                        .requestMatchers(HttpMethod.POST, "/report").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/report/**").hasRole("STAFF")
-                        .requestMatchers(HttpMethod.DELETE, "/report/**").hasRole("STAFF")*/
                 )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

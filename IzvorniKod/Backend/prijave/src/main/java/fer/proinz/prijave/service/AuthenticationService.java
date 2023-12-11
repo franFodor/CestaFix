@@ -26,7 +26,8 @@ public class AuthenticationService {
     public AuthenticationResponseDto register(RegisterRequestDto request) {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             var user = User.builder()
-                    .username(request.getUsername())
+                    .firstname(request.getFirstname())
+                    .lastname(request.getLastname())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.USER)

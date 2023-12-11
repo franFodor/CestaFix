@@ -49,7 +49,7 @@ const Header = () => {
 
   const handleLogout = (e) => {
     Cookies.remove('loginData', { path: '/' });
-    fetch('/api/logout', {
+    fetch('/api/auth/logout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const Header = () => {
 
     const formDataJSON = JSON.stringify(formData);
 
-    fetch('/api/login', {
+    fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const Header = () => {
 
     const formDataJSON = JSON.stringify(formData);
 
-    fetch('/api/register', {
+    fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

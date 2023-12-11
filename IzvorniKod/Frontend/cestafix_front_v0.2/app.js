@@ -15,7 +15,7 @@ const { API_BASE_URL } = process.env;
 app.use(
     "/api",
     createProxyMiddleware({
-        target: "https://backend-j8o6.onrender.com/",
+        target: "https://cestafix-be.onrender.com/",
         changeOrigin: true,
     })
 );

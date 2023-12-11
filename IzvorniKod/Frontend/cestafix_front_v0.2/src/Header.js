@@ -77,7 +77,7 @@ const Header = () => {
 
     const formDataJSON = JSON.stringify(formData);
 
-    fetch('/api/auth/login', {
+    fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ const Header = () => {
 
     const formDataJSON = JSON.stringify(formData);
 
-    fetch('/api/auth/register', {
+    fetch('/api/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

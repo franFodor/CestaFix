@@ -107,7 +107,7 @@ input[type=text], input[type=password] {
   color: white;
   padding: 10px;
   border-radius: 10px; /* This will make the corners of the button rounded */
-  border: 2px solid gray;
+  border: 2px solid rgba(36, 35, 35, 0.637);
   width: calc(100% - 20px); /* This will make the button fill its parent container with a margin of 10px */
   margin: 10px; /* This is the margin around the button */
   cursor: pointer;

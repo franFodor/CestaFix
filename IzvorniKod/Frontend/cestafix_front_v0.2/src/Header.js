@@ -270,6 +270,7 @@ const Header = () => {
   );
 
   function getUsername(){
+    console.log(">>>",Cookies.get('loginData'));
     return false || "Placeholder";
   }
 
@@ -277,7 +278,7 @@ const Header = () => {
 
     <header className="header">
       <div className="right">
-        {(1) ? (
+        {(loginData) ? (
           <>
           <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
           

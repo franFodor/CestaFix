@@ -25,7 +25,8 @@ public class User implements UserDetails, Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
-    private String username;
+    private String firstname;
+    private String lastname;
 
     private String email;
 

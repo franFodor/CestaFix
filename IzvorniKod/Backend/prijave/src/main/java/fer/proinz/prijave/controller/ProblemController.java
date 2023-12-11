@@ -15,23 +15,20 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/problems")
+@RequestMapping
 public class ProblemController {
 
     private final ProblemService problemService;
 
-    @GetMapping("/getAllProblems")
+    @GetMapping("/public/problems/getAll")
     public List<Problem> getAllProblems() {
         return problemService.getAllProblems();
     }
 
-    @GetMapping("/get/{problemId}")
+    @GetMapping("/public/problems/{problemId}")
     public ResponseEntity<Problem> getProblemById(@PathVariable("problemId") int problemId) {
         Optional<Problem> problemOptional = problemService.getProblemById(problemId);
-        if(problemOptional.isPresent()) {
-            return ResponseEntity.ok(problemOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return problemOptional.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

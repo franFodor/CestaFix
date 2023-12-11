@@ -102,8 +102,75 @@ input[type=text], input[type=password] {
   border-color: green; /* Set the border color to green on hover */
 }
 
+.headerBTNLOGOUT {
+  background-color: rgba(36, 35, 35, 0.637);
+  color: white;
+  padding: 10px;
+  border-radius: 10px; /* This will make the corners of the button rounded */
+  border: 2px solid rgba(36, 35, 35, 0.637);
+  width: calc(100% - 20px); /* This will make the button fill its parent container with a margin of 10px */
+  margin: 10px; /* This is the margin around the button */
+  cursor: pointer;
+  transition: border-color 0.5s; /* Add transition for border-color */
+ }
+ 
+ .headerBTNLOGOUT:hover {
+  border: 2px solid red; /* Set the border color to red on hover */
+ }
 
 /* Add padding to containers */
 .container {
   padding: 16px;
 }
+
+/* Dropdown Button */
+.dropbtn {
+  background: rgba(15, 15, 15, 0.514);
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  transition: color 0.5s, border-color 0.5s; /* Add transition for border-color */
+
+ }
+ 
+ /* The container <div> - needed to position the dropdown content */
+ .dropdown {
+
+  position: relative;
+  display: inline-block;
+ }
+ .dropdown:hover{
+
+  background: rgba(15, 15, 15, 0.514);
+ }
+ 
+ /* Dropdown Content (Hidden by Default) */
+ .dropdown-content {
+  
+  background: rgba(15, 15, 15, 0.514);
+  display: none;
+width: 100%;
+  position: absolute;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+
+ }
+ 
+ /* Links inside the dropdown */
+ .dropdown-content a {
+  color: black;
+  text-decoration: none;
+  display: block;
+ }
+ 
+ /* Show the dropdown menu on hover */
+ .dropdown:hover .dropdown-content {display: block;}
+ 
+ /* Change the background color of the dropdown button when the dropdown content is shown */
+ .dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+  transition: background-color 0.5s;
+
+}
+ 

@@ -6,6 +6,8 @@ import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,21 +30,34 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public User createUser(User user) {
+    public User getPersonalData() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return user;
+    }
 
+    public User createUser(User user) {
         return userRepository.save(user);
     }
 
     public User updateUser(int userId, User updatedUser) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            User saved = userRepository.save(updatedUser);
-            return  saved;
-        } else {
-            throw new NoSuchElementException("No user with this id");
-        }
-
-
+        return userRepository.findById(userId)
+                .map(user -> {
+                    if (updatedUser.getFirstname() != null) {
+                        user.setFirstname(updatedUser.getFirstname());
+                    }
+                    if (updatedUser.getLastname() != null) {
+                        user.setLastname(updatedUser.getLastname());
+                    }
+                    if (updatedUser.getEmail() != null) {
+                        user.setEmail(updatedUser.getEmail());
+                    }
+                    if (updatedUser.getPassword() != null) {
+                        user.setPassword(updatedUser.getPassword());
+                    }
+                    return userRepository.save(user);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
     public ResponseEntity<String> deleteUser(int userId) {

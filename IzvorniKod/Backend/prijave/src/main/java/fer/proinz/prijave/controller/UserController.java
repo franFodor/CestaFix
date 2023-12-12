@@ -34,6 +34,11 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/normal/user/whoAmI")
+    public ResponseEntity<User> getPersonalData() {
+        return ResponseEntity.ok(userService.getPersonalData());
+    }
+
     @PostMapping("/normal/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User saved = userService.createUser(user);

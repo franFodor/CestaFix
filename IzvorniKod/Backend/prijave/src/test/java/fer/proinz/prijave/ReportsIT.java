@@ -114,10 +114,11 @@ public class ReportsIT {
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
             preparedStatementUser.setLong(1, user.getUserId());
-            preparedStatementUser.setString(2, user.getUsername());
-            preparedStatementUser.setString(3, user.getEmail());
-            preparedStatementUser.setString(4, user.getPassword());
-            preparedStatementUser.setString(5, String.valueOf(user.getRole()));
+            preparedStatementUser.setString(2, user.getFirstname());
+            preparedStatementUser.setString(3, user.getLastname());
+            preparedStatementUser.setString(4, user.getEmail());
+            preparedStatementUser.setString(5, user.getPassword());
+            preparedStatementUser.setString(6, String.valueOf(user.getRole()));
 
             preparedStatementUser.executeUpdate();
 

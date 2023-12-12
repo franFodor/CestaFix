@@ -40,7 +40,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/advanced/**").hasRole("STAFF")
-                        .requestMatchers("/normal/**").hasRole("USER")
+                        .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

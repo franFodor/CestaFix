@@ -24,24 +24,18 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponseDto register(RegisterRequestDto request) {
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            var user = User.builder()
-                    .firstname(request.getFirstname())
-                    .lastname(request.getLastname())
-                    .email(request.getEmail())
-                    .password(passwordEncoder.encode(request.getPassword()))
-                    .role(Role.USER)
-                    .build();
-            userRepository.save(user);
-            var jwtToken = jwtService.generateToken(user);
-            return AuthenticationResponseDto.builder()
-                    .token(jwtToken)
-                    .build();
-        } else {
-            throw new IllegalArgumentException("User with this email already exists!");
-        }
-
-
+        var user = User.builder()
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .build();
+        userRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponseDto.builder()
+                .token(jwtToken)
+                .build();
     }
 
     public AuthenticationResponseDto login(LoginRequestDto request) {

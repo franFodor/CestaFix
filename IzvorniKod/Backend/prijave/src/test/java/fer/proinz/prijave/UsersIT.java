@@ -99,13 +99,13 @@ public class UsersIT {
                     "VALUES (?, ?)";
 
             CityDepartment cityDepartment = CityDepartment.builder()
-                    .citydepId(1)
-                    .citydepName("Ured za obnovu javnih povrsina")
+                    .citydeptId(1)
+                    .citydeptName("Ured za obnovu javnih povrsina")
                     .build();
 
             PreparedStatement preparedStatementCityDepartment = connection.prepareStatement(sqlCityDepartment);
-            preparedStatementCityDepartment.setLong(1, cityDepartment.getCitydepId());
-            preparedStatementCityDepartment.setString(2, cityDepartment.getCitydepName());
+            preparedStatementCityDepartment.setLong(1, cityDepartment.getCitydeptId());
+            preparedStatementCityDepartment.setString(2, cityDepartment.getCitydeptName());
 
             preparedStatementCityDepartment.executeUpdate();
 
@@ -152,7 +152,7 @@ public class UsersIT {
     @Test
     public void createUserAndExpect200OK() throws Exception {
         CityDepartment testCitydep = new CityDepartment();
-        testCitydep.setCitydepId(1);
+        testCitydep.setCitydeptId(1);
 
         User user = User.builder()
                 .userId(4)
@@ -161,7 +161,7 @@ public class UsersIT {
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role(Role.USER)
-                .citydep(null)
+                .citydept(null)
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(user);
@@ -177,7 +177,7 @@ public class UsersIT {
     @Test
     public void updateUserAndExpect200OK() throws Exception {
         CityDepartment testCitydep = new CityDepartment();
-        testCitydep.setCitydepId(1);
+        testCitydep.setCitydeptId(1);
 
         User user = User.builder()
                 .userId(4)
@@ -186,7 +186,7 @@ public class UsersIT {
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role(Role.USER)
-                .citydep(null)
+                .citydept(null)
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(user);

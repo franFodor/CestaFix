@@ -40,8 +40,8 @@ public class User implements UserDetails, Serializable {
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "citydep_id")
-    private CityDepartment citydep;
+    @JoinColumn(name = "citydept_id")
+    private CityDepartment citydept;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

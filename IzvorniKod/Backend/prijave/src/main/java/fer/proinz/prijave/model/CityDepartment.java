@@ -14,12 +14,12 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Citydep")
+@Table(name = "Citydept")
 public class CityDepartment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int citydepId;
+    private int citydeptId;
 
-    private String citydepName;
+    private String citydeptName;
 }

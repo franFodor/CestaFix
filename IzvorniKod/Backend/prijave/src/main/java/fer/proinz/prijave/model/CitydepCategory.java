@@ -24,6 +24,6 @@ public class CitydepCategory {
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "citydep_id")
+    @JoinColumn(name = "citydept_id")
     private CityDepartment cityDepartment;
 }

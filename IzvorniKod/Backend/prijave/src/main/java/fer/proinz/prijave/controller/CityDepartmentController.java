@@ -31,5 +31,7 @@ public class CityDepartmentController {
     }
 
     @PostMapping("/advanced/cityDept")
-    public ResponseEntity<CityDepartment> updateCityDepartment()
+    public ResponseEntity<CityDepartment> updateCityDepartment() {
+        return null;
+    }
 }

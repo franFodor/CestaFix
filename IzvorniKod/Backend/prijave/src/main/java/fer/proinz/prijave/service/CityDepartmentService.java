@@ -45,7 +45,7 @@ public class CityDepartmentService {
         Optional<CityDepartment> cityDepartment = cityDepartmentRepository.findById(cityDepartmentId);
 
         if (cityDepartment.isPresent()) {
-            cityDepartmentRepository.delete(cityDepartmentId);
+            cityDepartmentRepository.deleteById(cityDepartmentId);
             return ResponseEntity.ok("City department with id " + cityDepartmentId + "is deleted.");
         } else {
             throw new RuntimeException("City department with id " + cityDepartmentId + " does not exist!");

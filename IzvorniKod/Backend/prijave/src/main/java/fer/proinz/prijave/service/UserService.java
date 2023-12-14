@@ -8,9 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -41,19 +43,37 @@ public class UserService {
     }
 
     public User updateUser(int userId, User updatedUser) {
-        Optional<User> user = userRepository.findById(userId);
+        /*Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             User saved = userRepository.save(updatedUser);
             return  saved;
         } else {
             throw new NoSuchElementException("No user with this id");
-        }
+        }*/
+        return userRepository.findById(userId)
+                .map(user -> {
+                    if (updatedUser.getFirstname() != null) {
+                        user.setFirstname(updatedUser.getFirstname());
+                    }
+                    if (updatedUser.getLastname() != null) {
+                        user.setLastname(updatedUser.getLastname());
+                    }
+                    if (updatedUser.getEmail() != null) {
+                        user.setEmail(updatedUser.getEmail());
+                    }
+                    if (updatedUser.getPassword() != null) {
+                        user.setPassword(updatedUser.getPassword());
+                    }
+                    return userRepository.save(user);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
-    public ResponseEntity<String> deleteUser(int userId) {
+    public ResponseEntity<String> deleteUser(int userId, Authentication authentication) {
         Optional<User> userOptional = userRepository.findById(userId);
+        User authenticatedUser = (User) authentication.getPrincipal();
 
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             userRepository.deleteById(userId);
             return ResponseEntity.ok("User with id " + userId + " is deleted.");
         } else {

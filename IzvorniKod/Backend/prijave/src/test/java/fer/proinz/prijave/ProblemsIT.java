@@ -164,6 +164,30 @@ public class ProblemsIT {
     }
 
     @Test
+    public void updateProblemAndExpect200OK() throws Exception {
+        Category testCategory = new Category();
+        testCategory.setCategoryId(1);
+        testCategory.setCategoryName("Kolnik");
+
+        Problem problem = Problem.builder()
+                .problemId(15L)
+                .longitude(45.1234)
+                .latitude(27.3857)
+                .status("Popravljeno")
+                .category(testCategory)
+                .build();
+
+        String jsonProblem = objectMapper.writeValueAsString(problem);
+
+        mockMvc
+                .perform(put("/advanced/user/" + problem.getProblemId())
+                        .header("Authorization", "Bearer " + jwtTokenForStaff)
+                        .contentType("application/json")
+                        .content(jsonProblem))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void deleteProblemAndExpect200OK() throws Exception {
         mockMvc
                 .perform(

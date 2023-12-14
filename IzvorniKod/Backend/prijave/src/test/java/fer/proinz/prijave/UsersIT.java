@@ -182,10 +182,10 @@ public class UsersIT {
 
         User user = User.builder()
                 .userId(4)
-                .firstname("Mat")
+                .firstname("Justin")
                 .lastname("Waller")
-                .email("mat.waller@gmail.com")
-                .password(passwordEncoder.encode("qwertz"))
+                .email("justin.waller@gmail.com")
+                .password(passwordEncoder.encode("cowboy"))
                 .role(Role.USER)
                 .citydept(null)
                 .build();

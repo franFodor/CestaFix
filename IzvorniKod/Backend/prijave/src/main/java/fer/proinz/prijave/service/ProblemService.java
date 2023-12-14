@@ -33,13 +33,27 @@ public class ProblemService {
     }
 
     public Problem updateProblem(int problemId, Problem updatedProblem) {
-        Optional<Problem> problemOptional = problemRepository.findById(problemId);
+        /*Optional<Problem> problemOptional = problemRepository.findById(problemId);
         if (problemOptional.isPresent()) {
             Problem saved = problemRepository.save(updatedProblem);
             return saved;
         } else {
             throw new NoSuchElementException("No problem with this id");
-        }
+        }*/
+        return problemRepository.findById(problemId)
+                .map(problem -> {
+                    if (updatedProblem.getLongitude() != null) {
+                        problem.setLongitude(updatedProblem.getLongitude());
+                    }
+                    if (updatedProblem.getLatitude() != null) {
+                        problem.setLatitude(updatedProblem.getLatitude());
+                    }
+                    if (updatedProblem.getStatus() != null) {
+                        problem.setStatus(updatedProblem.getStatus());
+                    }
+                    return problemRepository.save(problem);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
     public ResponseEntity<String> deleteProblem(int problemId) {

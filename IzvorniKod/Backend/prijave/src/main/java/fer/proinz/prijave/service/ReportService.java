@@ -29,13 +29,30 @@ public class ReportService {
     }
 
     public Report updateReport(int reportId, Report updatedReport) {
-        Optional<Report> report = reportRepository.findById(reportId);
+        /*Optional<Report> report = reportRepository.findById(reportId);
         if (report.isPresent()) {
             Report saved = reportRepository.save(updatedReport);
             return saved;
         } else {
             throw new NoSuchElementException("No report with this id");
-        }
+        }*/
+        return reportRepository.findById(reportId)
+                .map(report -> {
+                    if (updatedReport.getTitle() != null) {
+                        report.setTitle(updatedReport.getTitle());
+                    }
+                    if (updatedReport.getDescription() != null) {
+                        report.setDescription(updatedReport.getDescription());
+                    }
+                    if (updatedReport.getAddress() != null) {
+                        report.setAddress(updatedReport.getAddress());
+                    }
+                    if (updatedReport.getPhoto() != null) {
+                        report.setPhoto(updatedReport.getPhoto());
+                    }
+                    return reportRepository.save(report);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
     public ResponseEntity<String> deleteReport(int reportId) {

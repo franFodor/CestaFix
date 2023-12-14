@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Role;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,9 +55,10 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(userId, updatedUser));
     }
 
+    //@PreAuthorize("hasRole('STAFF') or (hasRole('USER') and #userId == principal.id)")
     @DeleteMapping("/advanced/user/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") int userId) {
-        return userService.deleteUser(userId);
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") int userId, Authentication authentication) {
+        return userService.deleteUser(userId, authentication);
     }
 
 }

@@ -219,9 +219,9 @@ public class ReportsIT {
 
         Report report = Report.builder()
                 .reportId(15L)
-                .title("Pukotina na cesti")
-                .description("kwerwoirwsnfsffowefsg")
-                .address("Ulica grada Vukovara 3")
+                .title("Pukotina na trotoaru")
+                .description("nsjgaowjsks")
+                .address("Ulica grada Vukovara 5")
                 .photo(null)
                 .status("Osteceno")
                 .build();

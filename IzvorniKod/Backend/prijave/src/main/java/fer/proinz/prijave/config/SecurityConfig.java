@@ -40,6 +40,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF")
+                        .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").hasAnyRole("USER", "STAFF")
                         .requestMatchers("/advanced/**").hasRole("STAFF")
                         .anyRequest().authenticated()
                 )

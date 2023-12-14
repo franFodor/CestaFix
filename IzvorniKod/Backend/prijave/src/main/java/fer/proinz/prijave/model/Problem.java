@@ -25,8 +25,10 @@ public class Problem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long problemId;
 
-    private double longitude;
-    private double latitude;
+    private Double longitude;
+
+    private Double latitude;
+
     private String status;
 
     @ManyToOne

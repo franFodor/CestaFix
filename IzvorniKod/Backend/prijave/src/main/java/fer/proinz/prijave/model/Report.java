@@ -1,5 +1,6 @@
 package fer.proinz.prijave.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,6 +50,11 @@ public class Report implements Serializable {
     private double longitude;
 
     private double latitude;
+
+    @JsonIgnoreProperties("reports")
+    @ManyToOne
+    @JoinColumn(name = "problem_id")
+    private Problem problem;
 
 }
 

@@ -45,7 +45,7 @@ public class ReportService {
             reportRepository.deleteById(reportId);
             return ResponseEntity.ok("Report with id " + reportId + " is deleted.");
         } else {
-            throw new RuntimeException("report with id " + reportId + " does not exists!");
+            throw new RuntimeException("Report with id " + reportId + " does not exists!");
         }
     }
 

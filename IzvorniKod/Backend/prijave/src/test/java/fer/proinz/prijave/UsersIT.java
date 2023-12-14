@@ -116,7 +116,7 @@ public class UsersIT {
     }
 
     @AfterEach
-    void tearDownReport() {
+    void tearDownUser() {
         try (Connection connection = dataSource.getConnection()) {
             String sqlUser = "DELETE FROM Users WHERE user_id = ?";
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
@@ -165,13 +165,13 @@ public class UsersIT {
                 .citydept(null)
                 .build();
 
-        String jsonReport = objectMapper.writeValueAsString(user);
+        String jsonUser = objectMapper.writeValueAsString(user);
 
         mockMvc
                 .perform(post("/normal/user")
                         .header("Authorization", "Bearer " + jwtTokenForUser)
                         .contentType("application/json")
-                        .content(jsonReport))
+                        .content(jsonUser))
                 .andExpect(status().isOk());
     }
 
@@ -190,14 +190,14 @@ public class UsersIT {
                 .citydept(null)
                 .build();
 
-        String jsonReport = objectMapper.writeValueAsString(user);
+        String jsonUser = objectMapper.writeValueAsString(user);
 
         mockMvc
                 .perform(
                         put("/advanced/user/" + user.getUserId())
                                 .header("Authorization", "Bearer " + jwtTokenForUser)
                                 .contentType("application/json")
-                                .content(jsonReport))
+                                .content(jsonUser))
                 .andExpect(status().isOk());
     }
 

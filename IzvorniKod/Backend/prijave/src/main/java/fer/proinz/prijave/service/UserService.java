@@ -41,23 +41,13 @@ public class UserService {
     }
 
     public User updateUser(int userId, User updatedUser) {
-        return userRepository.findById(userId)
-                .map(user -> {
-                    if (updatedUser.getFirstname() != null) {
-                        user.setFirstname(updatedUser.getFirstname());
-                    }
-                    if (updatedUser.getLastname() != null) {
-                        user.setLastname(updatedUser.getLastname());
-                    }
-                    if (updatedUser.getEmail() != null) {
-                        user.setEmail(updatedUser.getEmail());
-                    }
-                    if (updatedUser.getPassword() != null) {
-                        user.setPassword(updatedUser.getPassword());
-                    }
-                    return userRepository.save(user);
-                })
-                .orElseThrow(RuntimeException::new);
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            User saved = userRepository.save(updatedUser);
+            return  saved;
+        } else {
+            throw new NoSuchElementException("No user with this id");
+        }
     }
 
     public ResponseEntity<String> deleteUser(int userId) {

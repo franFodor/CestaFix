@@ -1,0 +1,73 @@
+/* -------------LOGIN+REGISTER FORM---------------- */
+.form > input[type=password], .form > input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.form > label {
+
+}
+
+.login-button,.signupbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+.loginContent {
+    width: 300px;
+}
+
+.registerContent {
+    width: 300px;
+}
+
+/* -------------REPORT FORM---------------- */
+
+.reportContent {
+    width: 300px;
+    display: flex;
+}
+
+textarea {
+    flex-grow: 1;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.form > div > label {
+
+}
+
+select {
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.form > div > input[type=text] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.confirmButton {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}

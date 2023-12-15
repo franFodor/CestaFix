@@ -1,5 +1,6 @@
 import {APILogin} from '../API.js'
 import './Forms.css'
+import Cookies from 'js-cookie'
 
 const LoginFormComponent = () => {
     const handleLogin = (event) => {

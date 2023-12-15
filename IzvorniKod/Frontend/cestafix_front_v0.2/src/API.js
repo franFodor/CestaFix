@@ -34,6 +34,16 @@ async function APIRegister(username, email, password, remember) {
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(formData)
     });
-};
+}
 
-export {APILogin, APILogout, APIRegister};
+async function APIGetAllProblems(){
+    return fetch('/api/public/problem/getAll', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+    });
+}
+
+
+
+
+export {APILogin, APILogout, APIRegister, APIGetAllProblems};

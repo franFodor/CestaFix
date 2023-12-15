@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import ReportListComponent from './ReportList.js'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import './Content.css'
+import { APIGetAllProblems } from './API.js'
 
 const Content = () => {
 
@@ -26,13 +29,7 @@ const Content = () => {
 
 
     async function fetchMarkers() {
-        const response = await fetch('/api/public/problems/getAll', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-
+        let response = await APIGetAllProblems();
         if (!response.ok) {
             throw new Error('Network response was not OK');
         }
@@ -73,13 +70,9 @@ const Content = () => {
     }
 
 
-    
-
-
-
 
     return (
-        <main className='flex-grow w-full'>
+        <div className='main flex-grow w-full'>
             <MapContainer center={[45.812915, 15.975522]} zoom={13} className='w-full h-full'>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -92,7 +85,8 @@ const Content = () => {
                 ))}
                 <AddMarker />
             </MapContainer>
-        </main>
+            <ReportListComponent />
+        </div>
     );
 }
 

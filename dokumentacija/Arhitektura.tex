@@ -130,7 +130,7 @@ Sastoji se od atributa: citydep\_id i citydep\_name. Povezan je vezom \textit{On
 	category\_name                   & VARCHAR & naziv kategorije oštećenja                     \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Problems} je entitet koji sadrži sve bitne informacije o prijavljenom oštećenju. Sastoji se od atributa: problem\_id, longitude, latitude, status i category\_id. Povezan je vezom One-to-Many s entitetom Reports preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
+\noindent\textbf{Problems} je entitet koji sadrži sve bitne informacije o prijavljenom oštećenju. Sastoji se od atributa: problem\_id, longitude, latitude, status i category\_id. Povezan je vezom \textit{One-to-Many} s entitetom Reports preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none

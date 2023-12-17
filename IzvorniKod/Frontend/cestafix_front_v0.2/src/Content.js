@@ -28,19 +28,10 @@ const Content = () => {
 
 
 
-    async function fetchMarkers() {
-        let response = await APIGetAllProblems();
-        if (!response.ok) {
-            throw new Error('Network response was not OK');
-        }
-
-        const data = await response.json();
-        return data;
-    }
 
     useEffect(() => {
         const fetchAndPopulateMarkers = async () => {
-            const dbMarkers = await fetchMarkers();
+            const dbMarkers = await APIGetAllProblems();
             setMarkers(dbMarkers.map((marker) => ({
                 position: [marker.latitude, marker.longitude],
                 popup:

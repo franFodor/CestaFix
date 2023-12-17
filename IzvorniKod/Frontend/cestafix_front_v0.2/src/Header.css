@@ -26,10 +26,6 @@
   max-width: 100px; 
 }
 
-.right {
-  display: flex;
-  justify-content: space-around;
-}
 .headerBTN1 {
   position: relative;
   margin: 10px;
@@ -74,7 +70,6 @@
  
  /* The container <div> - needed to position the dropdown content */
  .dropdown {
-
   position: relative;
   display: inline-block;
  }
@@ -88,10 +83,11 @@
   
   background: rgba(15, 15, 15, 0.514);
   display: none;
-width: 100%;
+  width: 100%;
   position: absolute;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1000;
+
 
  }
  
@@ -103,7 +99,12 @@ width: 100%;
  }
  
  /* Show the dropdown menu on hover */
- .dropdown:hover .dropdown-content {display: block;}
+ .dropdown:hover .dropdown-content {
+ display: flex;
+ justify-content: center;
+
+ align-items: center;
+}
  
  /* Change the background color of the dropdown button when the dropdown content is shown */
  .dropdown:hover .dropbtn {
@@ -111,4 +112,27 @@ width: 100%;
   transition: background-color 0.5s;
 
 }
+
+.reportText{
+  
+  color:black;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.headerBTNSUBMIT{
+  background-color: rgba(36, 35, 35, 0.637);
+  color: white;
+  padding: 10px;
+  border-radius: 10px; /* This will make the corners of the button rounded */
+  border: 2px solid rgba(36, 35, 35, 0.637);
+  width: calc(100% - 20px); /* This will make the button fill its parent container with a margin of 10px */
+  margin: 10px; /* This is the margin around the button */
+  cursor: pointer;
+  transition: border-color 0.5s; /* Add transition for border-color */
+ }
  
+ .headerBTNSUBMIT:hover {
+  border: 2px solid #3e8e41; /* Set the border color to red on hover */
+ }

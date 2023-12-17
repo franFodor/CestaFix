@@ -37,10 +37,19 @@ async function APIRegister(username, email, password, remember) {
 }
 
 async function APIGetAllProblems(){
-    return fetch('/api/public/problem/getAll', {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json'}
+    const response = await fetch('/api/public/problem/getAll', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     });
+
+    if (!response.ok) {
+        throw new Error('Network response was not OK');
+    }
+
+    const data = await response.json();
+    return data;
 }
 
 

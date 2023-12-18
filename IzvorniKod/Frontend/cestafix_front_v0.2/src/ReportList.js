@@ -1,22 +1,17 @@
 import './ReportList.css';
 import './API.js'
 import React, { useState, useEffect } from 'react';
-import { APIGetAllProblems } from './API.js';
+import { APIGetAllProblems, APIGetAllReports } from './API.js';
 
-function ReportListComponent() {
+function ReportListComponent({problemID}) {
     let [reports, setReports] = useState([]);
     let [isLoaded, setIsLoaded] = useState(false);
 
-
-
-
-
     useEffect(() => {
         const receiveReports = async () => {
-            const newReports = await APIGetAllProblems();
-        setReports(newReports); // BUG: resp.json() vraca Promise, treba vratiti array
+            const newReports = await APIGetAllReports(problemID);
+        setReports(newReports);
         if (newReports){ setIsLoaded(true);}
-        
         }
         receiveReports();
        

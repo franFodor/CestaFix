@@ -5,29 +5,21 @@ import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './Content.css'
-import { APIGetAllProblems } from './API.js'
+import {APIGetAllProblems} from './API.js'
 
 const Content = () => {
 
-
-    const [isVisible, setIsVisible] = useState(false);
     function novaPrijava() {
         //////TODO: Implementirati Unos Nove prijave; ovisi o login/non-login
         console.log("Prijavljena Nova Šteta!");
-        setIsVisible(true);
-
         return ("Pokrećemo prijavu nove štete...");
 
     };
-
     const [markers, setMarkers] = useState([]);
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
         iconSize: [35, 35],
     });
-
-
-
 
     useEffect(() => {
         const fetchAndPopulateMarkers = async () => {
@@ -76,7 +68,7 @@ const Content = () => {
                 ))}
                 <AddMarker />
             </MapContainer>
-            <ReportListComponent />
+            <ReportListComponent problemID="1"/>
         </div>
     );
 }

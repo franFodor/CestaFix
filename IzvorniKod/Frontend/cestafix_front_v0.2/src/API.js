@@ -52,7 +52,16 @@ async function APIGetAllProblems(){
     return data;
 }
 
+async function APIGetAllReports(problem_id){
+    const response = await fetch('/api/public/problem/' + problem_id, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
 
+    const data = await response.json();
+    return data.reports;
+}
 
-
-export {APILogin, APILogout, APIRegister, APIGetAllProblems};
+export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports};

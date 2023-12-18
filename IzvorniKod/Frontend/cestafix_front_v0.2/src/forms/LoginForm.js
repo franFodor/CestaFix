@@ -1,4 +1,4 @@
-import {APILogin} from '../API.js'
+import {APILogin, APIWhoAmI} from '../API.js'
 import './Forms.css'
 import Cookies from 'js-cookie'
 
@@ -6,20 +6,33 @@ const LoginFormComponent = () => {
     const handleLogin = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-        APILogin(formData.get("email"), formData.get("password")).then(response => {
-            const respJson = response.json();
-            const myData = {
-                name: respJson.name,
-                email: respJson.email,
-                citydep: respJson.citydep,
-                role: respJson.role,
-                userid: respJson.userid
-            } // Ispravan format??
-            Cookies.set('loginData', JSON.stringify(myData));
-            document.querySelector('.loginFail').innerText = '';
-            window.location.reload();
+        APILogin(formData.get("email"), formData.get("password"))
+            .then(response => {
+                if (response.status === 403) {
+                    let divElement = document.querySelector('.loginFail');
+                    divElement.innerText = 'Prijava nije uspjela.';
+                    divElement.style.color = 'red';
+                } else {
+                    return response.json();
+                }
+            })
+            .then(respJson => {
+                if (respJson && respJson.token) {
+                    Cookies.set('sessionToken', respJson.token);
 
-            }).catch((error) => {
+
+                    return APIWhoAmI(respJson.token);
+                }
+            })
+            .then(userInfo => {
+                if (userInfo) {
+                    Cookies.set('userInfo', JSON.stringify(userInfo));
+
+                    document.querySelector('.loginFail').innerText = '';
+                    window.location.reload();
+                }
+            })
+            .catch((error) => {
             let divElement = document.querySelector('.loginFail');
             divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
             divElement.style.color = 'red';

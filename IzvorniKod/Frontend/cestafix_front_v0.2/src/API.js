@@ -64,4 +64,16 @@ async function APIGetAllReports(problem_id){
     return data.reports;
 }
 
-export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports};
+async function APIWhoAmI(token){
+    const response = await fetch('/api/normal/user/whoAmI', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization' : 'Bearer ' + token
+        },
+    });
+
+    const data = await response.json();
+    return data;
+}
+export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI};

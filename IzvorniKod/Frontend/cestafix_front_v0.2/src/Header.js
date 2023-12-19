@@ -15,10 +15,6 @@ const Header = () => {
   const handleReportBtn = () => { setIsReportPopupShown(!isReportPopupShown); }; // Switcha stanje izmedu true i false
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
 
-  const handleCheckStatus = (event) => {
-    console.log("huh");
-    //////TODO: Promptati Korisnika za Šifru prijave i onda renderati deatalje prijave.
-  };
 
   const handleNovaPrijava = (event) => {
     console.log("test");
@@ -26,6 +22,7 @@ const Header = () => {
 
   const handleLogout = () => {
     Cookies.remove('userInfo', { path: '/' });
+    window.location.reload();
   }
 
 

@@ -25,13 +25,13 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    Cookies.remove('userinfo', { path: '/' });
+    Cookies.remove('userInfo', { path: '/' });
   }
 
 
   function getUsername() {
-    console.log(">>>", Cookies.get('userinfo'));
-    let loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userinfo')));
+    console.log(">>>", Cookies.get('userInfo'));
+    let loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userInfo')));
     return loggedUser.firstname;
   }
 
@@ -39,7 +39,7 @@ const Header = () => {
 
     <header className="header">
       <div className="right">
-        {(Cookies.get('userinfo')) ? (
+        {(Cookies.get('userInfo')) ? (
           <>
             <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
 

@@ -25,21 +25,21 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    Cookies.remove('loginData', { path: '/' });
+    Cookies.remove('userinfo', { path: '/' });
   }
 
-  const loginData = Cookies.get('loginData');
 
   function getUsername() {
-    console.log(">>>", Cookies.get('loginData'));
-    return false || "Placeholder";
+    console.log(">>>", Cookies.get('userinfo'));
+    let loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userinfo')));
+    return loggedUser.firstname;
   }
 
   return (
 
     <header className="header">
       <div className="right">
-        {(loginData) ? (
+        {(Cookies.get('userinfo')) ? (
           <>
             <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
 
@@ -48,7 +48,7 @@ const Header = () => {
               <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
               <div className="dropdown-content">
                 <div>
-                {CheckReportComponent()}
+                  {CheckReportComponent()}
                 </div>
               </div>
             </div>
@@ -64,7 +64,14 @@ const Header = () => {
         ) : (
           <>
             <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
-            <button className="headerBTN1" onClick={handleCheckStatus}>Provjeri Status Prijave!</button>
+            <div className="dropdown reportDropdown">
+              <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
+              <div className="dropdown-content">
+                <div>
+                  {CheckReportComponent()}
+                </div>
+              </div>
+            </div>
             <button className="headerBTN1" onClick={handleAccountBtn}>Login/Register</button>
           </>
         )

@@ -43,7 +43,7 @@ public class ReportsIT {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
-    private String jwtTokenForUser;
+    private String jwtToken;
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -88,8 +88,8 @@ public class ReportsIT {
 
             preparedStatementReport.executeUpdate();
 
-            String sqlUser = "INSERT INTO Users (user_id, username, email, password, role) " +
-                    "VALUES (?, ?, ?, ?, ?)";
+            String sqlUser = "INSERT INTO Users (user_id, firstname, lastname, email, password, role) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
 
             User user = User.builder()
                     .userId(2)
@@ -107,7 +107,7 @@ public class ReportsIT {
                     .role(Role.USER)
                     .build();
 
-            this.jwtTokenForUser = jwtService.generateToken(userDetails);
+            this.jwtToken = jwtService.generateToken(userDetails);
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
             preparedStatementUser.setLong(1, user.getUserId());
@@ -147,16 +147,13 @@ public class ReportsIT {
 
     @Test
     public void getAllReportsAndExpect200OK() throws Exception {
-        mockMvc
-                .perform(
-                        get("/public/report/getAll"))
+        mockMvc.perform(get("/public/report/getAll"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void getReportByIdAndExpect200OK() throws Exception {
-        mockMvc
-                .perform(get("/public/report/15"))
+        mockMvc.perform(get("/public/report/15"))
                 .andExpect(status().isOk());
     }
 
@@ -181,9 +178,8 @@ public class ReportsIT {
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
-        mockMvc
-                .perform(post("/public/report")
-                        .header("Authorization", "Bearer " + jwtTokenForUser)
+        mockMvc.perform(post("/public/report")
+                        .header("Authorization", "Bearer " + jwtToken)
                         .contentType("application/json")
                         .content(jsonReport))
                 .andExpect(status().isOk());
@@ -207,8 +203,7 @@ public class ReportsIT {
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
-        mockMvc
-                .perform(post("/public/report")
+        mockMvc.perform(post("/public/report")
                         .contentType("application/json")
                         .content(jsonReport))
                 .andExpect(status().isOk());
@@ -216,7 +211,6 @@ public class ReportsIT {
 
     @Test
     public void updateReportAndExpect200OK() throws Exception {
-
         Report report = Report.builder()
                 .reportId(15L)
                 .title("Pukotina na trotoaru")
@@ -229,21 +223,32 @@ public class ReportsIT {
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
-        mockMvc
-                .perform(
-                        put("/advanced/report/" + report.getReportId())
-                                .header("Authorization", "Bearer " + jwtTokenForUser)
-                                .contentType("application/json")
-                                .content(jsonReport))
-                .andExpect(status().isOk());
+        String roleFromToken = (String) jwtService.extractRole(jwtToken);
+        if (roleFromToken.equals("STAFF")) {
+            mockMvc.perform(put("/advanced/report/" + report.getReportId())
+                            .contentType("application/json")
+                            .content(jsonReport))
+                    .andExpect(status().isOk());
+        } else {
+            mockMvc.perform(put("/advanced/report/" + report.getReportId())
+                            .contentType("application/json")
+                            .content(jsonReport))
+                    .andExpect(status().isForbidden());
+        }
+
+
     }
 
     @Test
     public void deleteReportAndExpect200OK() throws Exception {
-        mockMvc
-                .perform(
-                        delete("/advanced/report/15")
-                                .header("Authorization", "Bearer " + jwtTokenForUser))
-                .andExpect(status().isOk());
+        String roleFromToken = (String) jwtService.extractRole(jwtToken);
+        if (roleFromToken.equals("STAFF")) {
+            mockMvc.perform(delete("/advanced/report/15"))
+                    .andExpect(status().isOk());
+        } else {
+            mockMvc.perform(delete("/advanced/report/15"))
+                    .andExpect(status().isForbidden());
+        }
+
     }
 }

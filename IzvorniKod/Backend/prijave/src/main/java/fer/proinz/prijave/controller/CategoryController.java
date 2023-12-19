@@ -17,12 +17,12 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/public/categories/getAll")
+    @GetMapping("/public/category/getAll")
     public List<Category> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/public/categories/{categoryId}")
+    @GetMapping("/public/category/{categoryId}")
     public ResponseEntity<Category> getCategoryById(@PathVariable("categoryId") int categoryId) {
         Optional<Category> categoryOptional = categoryService.getCategoryById(categoryId);
         return categoryOptional.map(ResponseEntity::ok)
@@ -31,14 +31,13 @@ public class CategoryController {
 
 
     @PostMapping("/advanced/category")
-    @Transactional
     public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         Category saved = categoryService.createCategory(category);
         return ResponseEntity.ok(saved);
     }
 
     @PutMapping("/advanced/category/{categoryId}")
-    public ResponseEntity<Category> updateUser(
+    public ResponseEntity<Category> updateCategory(
             @PathVariable("categoryId") int categoryId,
             @RequestBody Category category
     ) {

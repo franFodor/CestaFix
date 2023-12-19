@@ -29,18 +29,25 @@ public class CategoryService {
     }
 
     public Category updateCategory(int categoryId, Category updatedCategory) {
-        Optional<Category> category = categoryRepository.findById(categoryId);
+        /*Optional<Category> category = categoryRepository.findById(categoryId);
         if (category.isPresent()) {
             Category saved = categoryRepository.save(updatedCategory);
             return saved;
         } else {
             throw new NoSuchElementException("No category with this id");
-        }
+        }*/
+        return categoryRepository.findById(categoryId)
+                .map(category -> {
+                    if (updatedCategory.getCategoryName() != null) {
+                        category.setCategoryName(updatedCategory.getCategoryName());
+                    }
+                    return categoryRepository.save(category);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
     public ResponseEntity<String> deleteCategory(int categoryId) {
         Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-
         if (categoryOptional.isPresent()) {
             categoryRepository.deleteById(categoryId);
             return ResponseEntity.ok("Category with id " + categoryId + " is deleted.");

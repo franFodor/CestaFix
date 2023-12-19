@@ -1,7 +1,9 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fer.proinz.prijave.model.*;
+import fer.proinz.prijave.model.Category;
+import fer.proinz.prijave.model.Role;
+import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.JwtService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-public class ProblemsIT {
+public class CategoryIT {
 
     @Autowired
     private DataSource dataSource;
@@ -57,41 +59,20 @@ public class ProblemsIT {
     }
 
     @BeforeEach
-    void setUpProblem() {
+    void setUpCategory() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlProblem = "INSERT INTO Problems (problem_id, longitude, latitude, status) " +
-                    "VALUES (?, ?, ?, ?)";
-
-            Problem problem = Problem.builder()
-                    .problemId(15L)
-                    .longitude(45.1234)
-                    .latitude(27.3857)
-                    .status("Oštećeno")
-                    .build();
-
-
-            PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setLong(1, problem.getProblemId());
-            preparedStatementProblem.setDouble(2, problem.getLongitude());
-            preparedStatementProblem.setDouble(3, problem.getLatitude());
-            preparedStatementProblem.setString(4, problem.getStatus());
-            preparedStatementProblem.executeUpdate();
-
             String sqlCategory = "INSERT INTO Category (category_id, category_name) " +
                     "VALUES (?, ?)";
 
             Category category = Category.builder()
                     .categoryId(1)
-                    .categoryName("Kolnik")
+                    .categoryName("Vodovodno oštećenje")
                     .build();
 
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
             preparedStatementCategory.setInt(1, category.getCategoryId());
             preparedStatementCategory.setString(2, category.getCategoryName());
             preparedStatementCategory.executeUpdate();
-
-            /*String sqlUser = "INSERT INTO Users (user_id, username, email, password, role) " +
-                    "VALUES (?, ?, ?, ?, ?)";*/
 
             UserDetails userDetails = User.builder()
                     .firstname("John")
@@ -108,13 +89,8 @@ public class ProblemsIT {
     }
 
     @AfterEach
-    void tearDownProblem() {
+    void tearDownCategory() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlProblem = "DELETE FROM Problems WHERE problem_id = ?";
-            PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setLong(1, 15L);
-            preparedStatementProblem.executeUpdate();
-
             String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
             preparedStatementCategory.setInt(1, 1);
@@ -126,80 +102,72 @@ public class ProblemsIT {
     }
 
     @Test
-    public void getAllProblemsAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/public/problem/getAll"))
+    public void getAllCategoriesAndExpect200OK() throws Exception {
+        mockMvc.perform(get("/public/category/getAll"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void getProblemByIdAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/public/problem/15"))
+    public void getCategoryByIdAndExpect200OK() throws Exception {
+        mockMvc.perform(get("/public/category/1"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void createProblemAndExpect200OK() throws Exception {
-        Category testCategory = new Category();
-        testCategory.setCategoryId(1);
-        testCategory.setCategoryName("Kolnik");
-
-        Problem problem = Problem.builder()
-                .problemId(15L)
-                .longitude(45.1234)
-                .latitude(27.3857)
-                .status("Oštećeno")
-                .category(testCategory)
+    public void createCategoryAndExpect200OK() throws Exception {
+        Category category = Category.builder()
+                .categoryId(5)
+                .categoryName("Oštećenje kolnika")
                 .build();
 
-        String jsonProblem = objectMapper.writeValueAsString(problem);
-
-        mockMvc.perform(post("/public/problem")
-                        .contentType("application/json")
-                        .content(jsonProblem))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void updateProblemAndExpect200OK() throws Exception {
-        Category testCategory = new Category();
-        testCategory.setCategoryId(1);
-        testCategory.setCategoryName("Kolnik");
-
-        Problem problem = Problem.builder()
-                .problemId(15L)
-                .longitude(45.1234)
-                .latitude(27.3857)
-                .status("Popravljeno")
-                .category(testCategory)
-                .build();
-
-        String jsonProblem = objectMapper.writeValueAsString(problem);
+        String jsonCategory = objectMapper.writeValueAsString(category);
 
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(put("/advanced/user/" + problem.getProblemId())
+            mockMvc.perform(post("/advanced/category")
                             .contentType("application/json")
-                            .content(jsonProblem))
+                            .content(jsonCategory))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(put("/advanced/user/" + problem.getProblemId())
+            mockMvc.perform(post("/advanced/category")
                             .contentType("application/json")
-                            .content(jsonProblem))
+                            .content(jsonCategory))
                     .andExpect(status().isForbidden());
         }
-
     }
 
     @Test
-    public void deleteProblemAndExpect200OK() throws Exception {
+    public void updateCategoryAndExpect200OK() throws Exception {
+        Category category = Category.builder()
+                .categoryId(1)
+                .categoryName("Električno oštećenje")
+                .build();
+
+        String jsonCategory = objectMapper.writeValueAsString(category);
+
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(delete("/advanced/problem/15"))
+            mockMvc.perform(put("/advanced/category/" + category.getCategoryId())
+                            .contentType("application/json")
+                            .content(jsonCategory))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(delete("/advanced/problem/15"))
+            mockMvc.perform(put("/advanced/category/" + category.getCategoryId())
+                            .contentType("application/json")
+                            .content(jsonCategory))
                     .andExpect(status().isForbidden());
         }
+    }
 
+    @Test
+    public void deleteCategoryAndExpect200OK() throws Exception {
+        String roleFromToken = (String) jwtService.extractRole(jwtToken);
+        if (roleFromToken.equals("STAFF")) {
+            mockMvc.perform(delete("/advanced/category/1"))
+                    .andExpect(status().isOk());
+        } else {
+            mockMvc.perform(delete("/advanced/category/1"))
+                    .andExpect(status().isForbidden());
+        }
     }
 }

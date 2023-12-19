@@ -32,18 +32,24 @@ public class CityDepartmentService {
             int cityDepartmentId,
             CityDepartment updatedCityDepartment
     ) {
-        Optional<CityDepartment> cityDepartment = cityDepartmentRepository.findById(cityDepartmentId);
-
+        /*Optional<CityDepartment> cityDepartment = cityDepartmentRepository.findById(cityDepartmentId);
         if (cityDepartment.isPresent()) {
             return cityDepartmentRepository.save(updatedCityDepartment);
         } else {
             throw new NoSuchElementException("No city department with this id");
-        }
+        }*/
+        return cityDepartmentRepository.findById(cityDepartmentId)
+                .map(cityDept -> {
+                    if (updatedCityDepartment.getCitydeptName() != null) {
+                        cityDept.setCitydeptName(updatedCityDepartment.getCitydeptName());
+                    }
+                    return cityDepartmentRepository.save(cityDept);
+                })
+                .orElseThrow(RuntimeException::new);
     }
 
     public ResponseEntity<String> deleteCityDepartment(int cityDepartmentId) {
         Optional<CityDepartment> cityDepartment = cityDepartmentRepository.findById(cityDepartmentId);
-
         if (cityDepartment.isPresent()) {
             cityDepartmentRepository.deleteById(cityDepartmentId);
             return ResponseEntity.ok("City department with id " + cityDepartmentId + "is deleted.");

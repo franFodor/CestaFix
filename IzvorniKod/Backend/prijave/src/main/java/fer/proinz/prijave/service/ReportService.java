@@ -57,7 +57,6 @@ public class ReportService {
 
     public ResponseEntity<String> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
-
         if(reportOptional.isPresent()) {
             reportRepository.deleteById(reportId);
             return ResponseEntity.ok("Report with id " + reportId + " is deleted.");

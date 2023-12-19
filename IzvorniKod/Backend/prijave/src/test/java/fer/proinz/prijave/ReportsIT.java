@@ -225,12 +225,12 @@ public class ReportsIT {
 
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(put("/advanced/report/" + report.getReportId())
+            mockMvc.perform(patch("/advanced/report/" + report.getReportId())
                             .contentType("application/json")
                             .content(jsonReport))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(put("/advanced/report/" + report.getReportId())
+            mockMvc.perform(patch("/advanced/report/" + report.getReportId())
                             .contentType("application/json")
                             .content(jsonReport))
                     .andExpect(status().isForbidden());

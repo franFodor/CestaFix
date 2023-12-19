@@ -147,12 +147,12 @@ public class CategoryIT {
 
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(put("/advanced/category/" + category.getCategoryId())
+            mockMvc.perform(patch("/advanced/category/" + category.getCategoryId())
                             .contentType("application/json")
                             .content(jsonCategory))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(put("/advanced/category/" + category.getCategoryId())
+            mockMvc.perform(patch("/advanced/category/" + category.getCategoryId())
                             .contentType("application/json")
                             .content(jsonCategory))
                     .andExpect(status().isForbidden());

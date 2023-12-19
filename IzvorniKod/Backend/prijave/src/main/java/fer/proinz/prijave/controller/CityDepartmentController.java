@@ -38,7 +38,7 @@ public class CityDepartmentController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/advanced/cityDept/{citydeptId}")
+    @PatchMapping("/advanced/cityDept/{citydeptId}")
     public ResponseEntity<CityDepartment> updateCityDepartment(
             @PathVariable("citydeptId") int citydeptId,
             @RequestBody CityDepartment cityDepartment

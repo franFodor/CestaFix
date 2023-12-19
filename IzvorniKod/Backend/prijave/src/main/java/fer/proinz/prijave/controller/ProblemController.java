@@ -34,7 +34,7 @@ public class ProblemController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/advanced/problem/{problemId}")
+    @PatchMapping("/advanced/problem/{problemId}")
     public ResponseEntity<Problem> updateReport(
             @PathVariable("problemId") int problemId,
             @RequestBody Problem updatedProblem

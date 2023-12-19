@@ -191,12 +191,12 @@ public class UsersIT {
 
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(put("/advanced/user/" + user.getUserId())
+            mockMvc.perform(patch("/advanced/user/" + user.getUserId())
                             .contentType("application/json")
                             .content(jsonUser))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(put("/advanced/user/" + user.getUserId())
+            mockMvc.perform(patch("/advanced/user/" + user.getUserId())
                             .contentType("application/json")
                             .content(jsonUser))
                     .andExpect(status().isForbidden());

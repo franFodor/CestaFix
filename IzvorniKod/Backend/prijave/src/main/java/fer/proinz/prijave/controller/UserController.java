@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/advanced/user/{userId}")
+    @PatchMapping("/advanced/user/{userId}")
     public ResponseEntity<User> updateUser(
             @PathVariable("userId") int userId,
             @RequestBody User updatedUser

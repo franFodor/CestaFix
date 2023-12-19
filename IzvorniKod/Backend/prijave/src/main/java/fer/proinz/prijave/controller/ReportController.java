@@ -46,7 +46,7 @@ public class ReportController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/advanced/report/{reportId}")
+    @PatchMapping("/advanced/report/{reportId}")
     public ResponseEntity<Report> updateReport(
             @PathVariable("reportId") int reportId,
             @RequestBody Report updatedReport

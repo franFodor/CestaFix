@@ -39,9 +39,9 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
 
                         .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF")
-                        .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").hasAnyRole("USER", "STAFF")
-                        .requestMatchers("/advanced/**").hasRole("STAFF")
+                        .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF", "ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").hasAnyRole("USER", "STAFF", "ADMIN")
+                        .requestMatchers("/advanced/**").hasAnyRole("STAFF", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

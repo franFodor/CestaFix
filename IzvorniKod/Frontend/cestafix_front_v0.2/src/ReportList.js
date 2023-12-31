@@ -1,7 +1,7 @@
 import './ReportList.css';
 import './API.js'
 import React, { useState, useEffect } from 'react';
-import { APIGetAllProblems, APIGetAllReports } from './API.js';
+import {APIGetAllReports } from './API.js';
 
 function ReportListComponent({problemID}) {
     let [reports, setReports] = useState([]);

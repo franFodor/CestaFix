@@ -99,10 +99,10 @@ Sastoji se od atributa: report\_id, user\_id, title, description, address, photo
 	photo                           & BYTEA      & slika oštećenja                                            \\ \hline
 	report\_time                    & TIMESTAMP  & vrijeme podnošenja prijave                                 \\ \hline
 	status                          & VARCHAR    & status prijave                                             \\ \hline
-	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 	longitude                       & DOUBLE     & geografska dužina lokacije oštećenja                       \\ \hline
 	latitude                        & DOUBLE     & geografska širina lokacije oštećenja                       \\ \hline
-	business\_id                    & UUID       &                                                            \\ \hline
+	business\_id                    & UUID       & jedinstveni identifikator anonimne prijave                 \\ \hline 
+	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 \end{longtblr}
 
 \noindent\textbf{Citydept} je entitet koji sadrži sve bitne informacije o gradskim uredima.

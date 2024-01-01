@@ -47,18 +47,18 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 \begin{packed_item}
 	\item \textit{Users}
 	\item \textit{Reports}
-	\item \textit{CityDep}
+	\item \textit{CityDept}
 	\item \textit{Category}
 	\item \textit{Problems}
-	\item \textit{CitydepCategory}
+	\item \textit{CitydeptCategory}
 \end{packed_item}
 
 
 
 \subsection{Opis tablica}
 
-\noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije. Sastoji se od atributa: user\_id, name, email, password i role.
-Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
+\noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije. Sastoji se od atributa: user\_id, firstname, lastname, email, password, role i citydept\_id.
+Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa citydept\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
 
 
 \begin{longtblr}[
@@ -71,16 +71,17 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
 	\SetCell{LightGreen}user\_id & INT     & jedinstveni identifikator korisnika      \\ \hline
-	username                     & VARCHAR & ime korisnika                            \\ \hline
+	firstname                    & VARCHAR & ime korisnika                            \\ \hline
+	lastname                     & VARCHAR & prezime korisnika                        \\ \hline
 	email                        & VARCHAR & e-mail adresa korisnika                  \\ \hline
 	password                     & VARCHAR & hash lozinke korisnika                   \\ \hline
 	role                         & VARCHAR & uloga korisnika                          \\ \hline
-	citydep\_id                  & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	citydept\_id                 & INT     & jedinstveni identifikator gradskog ureda \\ \hline
 \end{longtblr}
 
 
 \noindent\textbf{Reports} je entitet koji sadrži sve bitne informacije o prijavama oštećenja.
-Sastoji se od atributa: report\_id, user\_id, title, description, address, photo, report\_time, status i problem\_id. Povezan je vezom \textit{Many-to-One}  s entitetom Problems preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Users preko atributa user\_id.
+Sastoji se od atributa: report\_id, user\_id, title, description, address, photo, report\_time, status, problem\_id, longitude, latitude i business\_id. Povezan je vezom \textit{Many-to-One} s entitetom Problems preko atributa problem\_id i vezom \textit{Many-to-One} s entitetom Users preko atributa user\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -89,7 +90,7 @@ Sastoji se od atributa: report\_id, user\_id, title, description, address, photo
 	colspec={|X[13,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                \\ \hline[3pt]
+	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                 \\ \hline[3pt]
 	\SetCell{LightGreen}report\_id  & INT        & jedinstveni identifikator prijave                          \\ \hline
 	\SetCell{LightBlue} user\_id    & INT        & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
 	title                           & VARCHAR    & naziv prijave/oštećenja                                    \\ \hline
@@ -99,10 +100,13 @@ Sastoji se od atributa: report\_id, user\_id, title, description, address, photo
 	report\_time                    & TIMESTAMP  & vrijeme podnošenja prijave                                 \\ \hline
 	status                          & VARCHAR    & status prijave                                             \\ \hline
 	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
+	longitude                       & DOUBLE     & geografska dužina lokacije oštećenja                       \\ \hline
+	latitude                        & DOUBLE     & geografska širina lokacije oštećenja                       \\ \hline
+	business\_id                    & UUID       &                                                            \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Citydep} je entitet koji sadrži sve bitne informacije o gradskim uredima.
-Sastoji se od atributa: citydep\_id i citydep\_name. Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa citydep\_id i vezom \textit{One-to-Many} s entitetom CityDepCategory preko atributa citydep\_id.
+\noindent\textbf{Citydept} je entitet koji sadrži sve bitne informacije o gradskim uredima.
+Sastoji se od atributa: citydept\_id i citydept\_name. Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa citydept\_id i vezom \textit{One-to-Many} s entitetom CityDeptCategory preko atributa citydept\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -111,12 +115,12 @@ Sastoji se od atributa: citydep\_id i citydep\_name. Povezan je vezom \textit{On
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Citydep}}                                            \\ \hline[3pt]
-	\SetCell{LightGreen}citydep\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
-	citydep\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Citydept}}                                            \\ \hline[3pt]
+	\SetCell{LightGreen}citydept\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	citydept\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Category} je entitet koji sadrži sve bitne informacije o kategoriji oštećenja. Sastoji se od atributa: category\_id i category\_name. Povezan je vezom \textit{One-to-Many} s entitetom Problems preko atributa category\_id i vezom \textit{One-to-Many} s entitetom CityDepCategory preko atributa category\_id.
+\noindent\textbf{Category} je entitet koji sadrži sve bitne informacije o kategoriji oštećenja. Sastoji se od atributa: category\_id i category\_name. Povezan je vezom \textit{One-to-Many} s entitetom Problems preko atributa category\_id i vezom \textit{One-to-Many} s entitetom CityDeptCategory preko atributa category\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -141,15 +145,15 @@ Sastoji se od atributa: citydep\_id i citydep\_name. Povezan je vezom \textit{On
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Problems}}                                                                           \\ \hline[3pt]
 	\SetCell{LightGreen}problem\_id  & INT     & jedinstveni identifikator oštećenja                                     \\ \hline
-	longitude                        & DOUBLE  & geografska dužina lokacije oštećenja                                    \\ \hline
-	latitude                         & DOUBLE  & geografska širina lokacije oštećenja                                    \\ \hline
+	longitude                        & FLOAT   & geografska dužina lokacije oštećenja                                    \\ \hline
+	latitude                         & FLOAT   & geografska širina lokacije oštećenja                                    \\ \hline
 	status                           & VARCHAR & status oštećenja                                                        \\ \hline
 	\SetCell{LightBlue} category\_id & INT     & jedinstveni identifikator kategorije oštećenja  (category.category\_id) \\ \hline
 \end{longtblr}
 
 
-\noindent\textbf{CitydepCategory} je entitet koji sadrži sve bitne informacije vezane uz kategoriju oštećenja kojom se bavi određeni gradski ured.
-Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Many-to-One} s entitetom CityDep preko atributa citydep\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
+\noindent\textbf{CitydeptCategory} je entitet koji sadrži sve bitne informacije vezane uz kategoriju oštećenja kojom se bavi određeni gradski ured.
+Sastoji se od atributa: citydept\_id i category\_id. Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa citydept\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
 
 \begin{longtblr}[
 	label=none,
@@ -159,9 +163,9 @@ Sastoji se od atributa: citydep\_id i category\_id. Povezan je vezom \textit{Man
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{CitydepCategory}}                                                              \\ \hline[3pt]
-	\SetCell{LightBlue}citydep\_id  & INT & jedinstveni identifikator gradskog ureda (citydep.citydep\_id)         \\ \hline
-	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{CitydeptCategory}}                                                              \\ \hline[3pt]
+	\SetCell{LightBlue}citydept\_id  & INT & jedinstveni identifikator gradskog ureda (citydept.citydept\_id)         \\ \hline
+	\SetCell{LightBlue}category\_id  & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
 \end{longtblr}
 
 \subsection{Dijagram baze podataka}
@@ -222,7 +226,7 @@ unio potrebne i opcionalne podatke. Razred Problem predstavlja prijavu problema 
 prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja 
 kategoriju oštećenja koju korisnik može odabrati za prijavljeno oštećenje, odnosno koju gradski ured može dobiti
 na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više 
-kategorija oštećenja koje im je administrator dodijelio. Razred CitydepCategory predstavlja vezu između
+kategorija oštećenja koje im je administrator dodijelio. Razred CitydeptCategory predstavlja vezu između
 razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija i gradskih ureda u parovima.
 
 

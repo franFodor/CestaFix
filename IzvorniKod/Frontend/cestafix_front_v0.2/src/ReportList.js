@@ -12,6 +12,7 @@ function ReportListComponent({problemID}) {
             const newReports = await APIGetAllReports(problemID);
         setReports(newReports);
         if (newReports){ setIsLoaded(true);}
+        else {setIsLoaded(false);}
         }
         receiveReports();
        

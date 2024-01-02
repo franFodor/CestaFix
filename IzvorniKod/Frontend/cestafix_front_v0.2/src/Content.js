@@ -9,12 +9,17 @@ import {APIGetAllProblems} from './API.js'
 
 const Content = () => {
 
+    function handleMarkerClick(markerData) {
+        setSelectedMarkerId(markerData.problemId);
+    }
+
     function novaPrijava() {
         //////TODO: Implementirati Unos Nove prijave; ovisi o login/non-login
         console.log("Prijavljena Nova Šteta!");
         return ("Pokrećemo prijavu nove štete...");
 
     };
+    const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
     const [markers, setMarkers] = useState([]);
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
@@ -34,7 +39,8 @@ const Content = () => {
                         <p>Kategorija: {marker.category.categoryName || "Nije Dodijeljena!"}</p>
                         <p>Koordinate: {marker.latitude + " " + marker.longitude}</p>
                     </div>,
-                icon: markerIcon
+                icon: markerIcon,
+                problemId: marker.problemId
             })));
         };
 
@@ -44,7 +50,7 @@ const Content = () => {
     function AddMarker() {
         useMapEvents({
             click(e) {
-                setMarkers([...markers, { position: [e.latlng.lat, e.latlng.lng], popup: <div>{novaPrijava}</div>, icon: markerIcon }]);
+                setMarkers([...markers, {problemId: -1, position: [e.latlng.lat, e.latlng.lng], popup: <div>{novaPrijava}</div>, icon: markerIcon }]);
 
             }
         });
@@ -62,13 +68,13 @@ const Content = () => {
                     url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=jl7SF9AkX5d5T6Di7nm2"
                 />
                 {markers.map((marker, index) => (
-                    <Marker key={index} position={marker.position} icon={marker.icon}>
+                    <Marker key={index} position={marker.position} icon={marker.icon} eventHandlers={{click: () => handleMarkerClick(marker),}}>
                         <Popup>{marker.popup}</Popup>
                     </Marker>
                 ))}
                 <AddMarker />
             </MapContainer>
-            <ReportListComponent problemID="1"/>
+            {selectedMarkerId != -1 && <ReportListComponent problemID={selectedMarkerId} />}
         </div>
     );
 }

@@ -42,6 +42,8 @@ public class SecurityConfig {
                         .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").hasAnyRole("USER", "STAFF", "ADMIN")
                         .requestMatchers("/advanced/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

@@ -2,6 +2,7 @@ package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.service.ReportService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
@@ -25,11 +26,13 @@ public class ReportController {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Operation(summary = "Get all reports")
     @GetMapping( "/public/report/getAll")
     public List<Report> getAllReports() {
         return reportService.getAllReports();
     }
 
+    @Operation(summary = "Get a report by its id")
     @GetMapping( "/public/report/{reportId}")
     public ResponseEntity<Report> getReportById(@PathVariable("reportId") int reportId) {
         Optional<Report> reportOptional = reportService.getReportById(reportId);
@@ -38,6 +41,7 @@ public class ReportController {
 
     }
 
+    @Operation(summary = "Create a report")
     @PostMapping("/public/report")
     @Transactional
     public ResponseEntity<Report> createReport(@RequestBody Report report) {
@@ -46,6 +50,7 @@ public class ReportController {
         return ResponseEntity.ok(saved);
     }
 
+    @Operation(summary = "Update a report")
     @PatchMapping("/advanced/report/{reportId}")
     public ResponseEntity<Report> updateReport(
             @PathVariable("reportId") int reportId,
@@ -54,6 +59,7 @@ public class ReportController {
         return ResponseEntity.ok(reportService.updateReport(reportId, updatedReport));
     }
 
+    @Operation(summary = "Delete a report")
     @DeleteMapping("/advanced/report/{reportId}")
     public ResponseEntity<String> deleteReport(@PathVariable("reportId") int reportId) {
         return reportService.deleteReport(reportId);

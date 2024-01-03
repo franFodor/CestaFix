@@ -34,7 +34,7 @@ const ReportPopupComponent = ({onClose}) => {
                     {/* --------------------POPRAVIT-------------------- */}
                     </select>
                 </div>
-                <input type="submit" class="confirmButton" value="Submit" />
+                <input type="submit" className="confirmButton" value="Submit" />
             </form>
         </div>
     );

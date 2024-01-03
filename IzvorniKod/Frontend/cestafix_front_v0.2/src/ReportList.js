@@ -21,20 +21,28 @@ function ReportListComponent({problemID}) {
     return (
         <div className="report-list">
             <ul>
-                {reports.map((report, index) => (
+                {reports.map((report, index) => {
+                    let author = "Anonimni korisnik"
+                    if (report.user !== null){
+                        author = report.user.firstname + " " + report.user.lastname;
+                    }
+                    let datetime = report.reportTime.slice(0,16)
+                    datetime = datetime.split("T")[0] + " " + datetime.split("T")[1]
+                    return (
                     <li key={index} className="report-element">
                         <div className="content">
                             <h3 className="title">{report.title}</h3>
+                            <p className="time-date">{report.time} {datetime}</p>
                             <p>{report.description}</p>
-                            <p>Author: {report.author}</p>
-                            <p>Address: {report.address}</p>
-                            <p className="time-date">{report.time}, {report.date}</p>
+                            <p><b>Autor:</b> {author} </p>
+                            <p><b>Adresa:</b> {report.address}</p>
+                            
                         </div>
                         <div className="image-container">
                             <img src={report.imageUrl} alt={report.title} />
                         </div>
                     </li>
-                ))}
+                )})}
             </ul>
         </div>
     );

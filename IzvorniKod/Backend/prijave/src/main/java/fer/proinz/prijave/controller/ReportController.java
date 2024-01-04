@@ -77,8 +77,8 @@ public class ReportController {
         }
 
         Problem problem = Problem.builder()
-                .longitude(reportRequest.getProblemLongitude())
-                .latitude(reportRequest.getProblemLatitude())
+                .longitude(reportRequest.getLongitude())
+                .latitude(reportRequest.getLatitude())
                 .status(reportRequest.getProblemStatus())
                 .category(category)
                 .build();
@@ -96,8 +96,8 @@ public class ReportController {
                 .address(reportRequest.getAddress())
                 .photo(reportRequest.getPhoto())
                 .status(reportRequest.getReportStatus())
-                .longitude(reportRequest.getProblemLongitude())
-                .latitude(reportRequest.getProblemLatitude())
+                .longitude(reportRequest.getLongitude())
+                .latitude(reportRequest.getLatitude())
                 .problem(savedProblem)
                 .user(user)
                 .build();

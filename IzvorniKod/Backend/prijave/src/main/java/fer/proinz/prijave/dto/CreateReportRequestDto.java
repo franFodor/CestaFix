@@ -18,8 +18,8 @@ public class CreateReportRequestDto {
     private String reportStatus;
 
     // Problem fields
-    private Double problemLongitude;
-    private Double problemLatitude;
+    private Double longitude;
+    private Double latitude;
     private String problemStatus;
     private int categoryId;
 }

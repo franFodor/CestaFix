@@ -30,6 +30,10 @@ public class JwtService {
         Claims claims = extractAllClaims(token);
         return claims.get("role");
     }
+    public Integer extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("userId", Integer.class);
+    }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -50,11 +54,14 @@ public class JwtService {
     }
 
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        User user = (User) userDetails;
+
         Collection<? extends GrantedAuthority> authorities = userDetails.getAuthorities();
         String role = authorities.toString();
         role = role.substring(1, role.length()-1);
 
         extraClaims.put("role", role);
+        extraClaims.put("userId", user.getUserId());
 
         return Jwts
                 .builder()

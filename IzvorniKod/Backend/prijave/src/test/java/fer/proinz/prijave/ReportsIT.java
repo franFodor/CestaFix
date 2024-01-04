@@ -192,8 +192,8 @@ public class ReportsIT {
                 .photo(null)
                 .problemStatus("Osteceno")
                 .reportStatus("Osteceno2")
-                .problemLongitude(45.80666)
-                .problemLatitude(15.9696)
+                .longitude(45.80666)
+                .latitude(15.9696)
                 .categoryId(1)
                 .build();
 
@@ -217,8 +217,8 @@ public class ReportsIT {
                 .photo(null)
                 .problemStatus("Osteceno")
                 .reportStatus("Osteceno2")
-                .problemLongitude(45.80666)
-                .problemLatitude(15.9696)
+                .longitude(45.80666)
+                .latitude(15.9696)
                 .categoryId(1)
                 .build();
 

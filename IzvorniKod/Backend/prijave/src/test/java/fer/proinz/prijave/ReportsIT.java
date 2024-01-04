@@ -2,6 +2,7 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import fer.proinz.prijave.dto.CreateReportRequestDto;
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
@@ -59,6 +60,27 @@ public class ReportsIT {
         registry.add("default.enabled", () -> false);
     }
 
+    @BeforeEach
+    void setUpCategory() {
+        try (Connection connection = dataSource.getConnection()) {
+            String sqlCat = "INSERT INTO Category (category_id, category_name) VALUES (1, 'categ1')";
+            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlCat);
+            preparedStatementReport.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterEach
+    void tearDownCategory() {
+        try (Connection connection = dataSource.getConnection()) {
+            String sqlCat = "DELETE FROM Category WHERE category_id = 1";
+            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlCat);
+            preparedStatementReport.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     @BeforeEach
     void setUpReport() {
         try (Connection connection = dataSource.getConnection()) {
@@ -163,16 +185,16 @@ public class ReportsIT {
         testUser.setUserId(2);
         testUser.setRole(Role.USER);
 
-        Report report = Report.builder()
-                .reportId(15L)
-                .user(testUser)
+        CreateReportRequestDto report = CreateReportRequestDto.builder()
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
-                .status("Osteceno")
-                .longitude(45.80666)
-                .latitude(15.9696)
+                .problemStatus("Osteceno")
+                .reportStatus("Osteceno2")
+                .problemLongitude(45.80666)
+                .problemLatitude(15.9696)
+                .categoryId(1)
                 .build();
 
 
@@ -188,16 +210,16 @@ public class ReportsIT {
     @Test
     public void createReportAnonymous() throws Exception {
 
-        Report report = Report.builder()
-                .reportId(15L)
-                .user(null)
+        CreateReportRequestDto report = CreateReportRequestDto.builder()
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
                 .photo(null)
-                .status("Osteceno")
-                .longitude(45.80666)
-                .latitude(15.9696)
+                .problemStatus("Osteceno")
+                .reportStatus("Osteceno2")
+                .problemLongitude(45.80666)
+                .problemLatitude(15.9696)
+                .categoryId(1)
                 .build();
 
 

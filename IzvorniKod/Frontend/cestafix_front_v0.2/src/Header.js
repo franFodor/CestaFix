@@ -8,7 +8,7 @@ import AccountPopupComponent from './forms/AccountForm.js'
 import ReportPopupComponent from './forms/ReportForm.js'
 import CheckReportComponent from './forms/CheckReportForm.js'
 
-const Header = () => {
+const Header = ({pickMarkerLatLon}) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
   const [isReportPopupShown, setIsReportPopupShown] = useState(false);
 
@@ -38,7 +38,7 @@ const Header = () => {
       <div className="right">
         {(Cookies.get('userInfo')) ? (
           <>
-            <button className="headerBTN1" onClick={handleNovaPrijava}>Prijavi Štetu!</button>
+            <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
 
 
             <div className="dropdown reportDropdown">
@@ -86,7 +86,7 @@ const Header = () => {
 
       {/*Popup za Reportanje*/}
       {isReportPopupShown && (
-        <ReportPopupComponent onClose={handleReportBtn} />
+        <ReportPopupComponent onClose={handleReportBtn} pickMarkerLatLon={pickMarkerLatLon} />
       )}
     </header>
   );

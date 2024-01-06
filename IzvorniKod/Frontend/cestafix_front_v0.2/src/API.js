@@ -76,4 +76,35 @@ async function APIWhoAmI(token){
     const data = await response.json();
     return data;
 }
-export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI};
+
+async function APICreateReport(token, title, description, address, photo, reportStatus, problemStatus, latitude, longitude, categoryId) {
+    const formData = {
+        "longitude" : longitude,
+        "latitude" : latitude,
+        "title": title,
+        "description": description,
+        "address": address,
+        "photo": photo,
+        "reportStatus": reportStatus,
+        "problemStatus" : problemStatus,
+        "categoryId" : categoryId
+    };
+
+    if (token === null){
+        return fetch('/api/public/report', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        });
+    } else {
+        return fetch('/api/public/report', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',
+                      'Authorization' : 'Bearer ' + token
+                     },
+            body: JSON.stringify(formData)
+        });
+    }
+}
+
+export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport};

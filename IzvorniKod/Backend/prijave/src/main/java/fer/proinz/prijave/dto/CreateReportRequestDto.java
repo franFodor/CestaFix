@@ -22,4 +22,5 @@ public class CreateReportRequestDto {
     private Double latitude;
     private String problemStatus;
     private int categoryId;
+    private Integer mergeProblemId;
 }

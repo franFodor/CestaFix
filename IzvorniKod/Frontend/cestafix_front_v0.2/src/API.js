@@ -77,7 +77,7 @@ async function APIWhoAmI(token){
     return data;
 }
 
-async function APICreateReport(token, title, description, address, photo, reportStatus, problemStatus, latitude, longitude, categoryId) {
+async function APICreateReport(token, title, description, address, photo, reportStatus, problemStatus, latitude, longitude, categoryId, closest_problem_id) {
     const formData = {
         "longitude" : longitude,
         "latitude" : latitude,
@@ -87,7 +87,8 @@ async function APICreateReport(token, title, description, address, photo, report
         "photo": photo,
         "reportStatus": reportStatus,
         "problemStatus" : problemStatus,
-        "categoryId" : categoryId
+        "categoryId" : categoryId,
+        "mergeProblemId" : closest_problem_id
     };
 
     if (token === null){

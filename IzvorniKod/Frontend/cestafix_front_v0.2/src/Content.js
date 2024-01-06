@@ -7,14 +7,13 @@ import L from 'leaflet';
 import './Content.css'
 import {APIGetAllProblems} from './API.js'
 
-const Content = ({setPickMarkerLatLon, pickMarkerLatLon}) => {
+const Content = ({setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers}) => {
 
     function handleMarkerClick(markerData) {
         setSelectedMarkerId(markerData.problemId);
     }
 
     const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
-    const [markers, setMarkers] = useState([]);
 
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
@@ -39,7 +38,8 @@ const Content = ({setPickMarkerLatLon, pickMarkerLatLon}) => {
                         <p>Koordinate: {marker.latitude + " " + marker.longitude}</p>
                     </div>,
                 icon: markerIcon,
-                problemId: marker.problemId
+                problemId: marker.problemId,
+                markerJSON : marker
             })));
         };
 

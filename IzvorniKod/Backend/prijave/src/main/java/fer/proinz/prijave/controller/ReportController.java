@@ -76,17 +76,26 @@ public class ReportController {
             user = optionalUser.get();
         }
 
-        Problem problem = Problem.builder()
-                .longitude(reportRequest.getLongitude())
-                .latitude(reportRequest.getLatitude())
-                .status(reportRequest.getProblemStatus())
-                .category(category)
-                .build();
+        Problem savedProblem = null;
+        if (reportRequest.getMergeProblemId() == null) {
+            Problem problem = Problem.builder()
+                    .longitude(reportRequest.getLongitude())
+                    .latitude(reportRequest.getLatitude())
+                    .status(reportRequest.getProblemStatus())
+                    .category(category)
+                    .build();
 
-        // Save the Problem object
-        Problem savedProblem = problemService.createProblem(problem);
-        if (savedProblem == null) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nije moguce stvoriti problem objekt");
+            // Save the Problem object
+            savedProblem = problemService.createProblem(problem);
+            if (savedProblem == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nije moguce stvoriti problem objekt");
+            }
+        } else {
+            Optional<Problem> optionalProblem = problemService.getProblemById(reportRequest.getMergeProblemId());
+            if (optionalProblem.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Problem za merge nije pronaden");
+            }
+            savedProblem = optionalProblem.get();
         }
 
         // Create new Report

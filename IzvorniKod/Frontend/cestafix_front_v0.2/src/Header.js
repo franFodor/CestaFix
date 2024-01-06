@@ -9,7 +9,7 @@ import ReportPopupComponent from './forms/ReportForm.js'
 import CheckReportComponent from './forms/CheckReportForm.js'
 import { useNavigate } from 'react-router-dom';
 
-const Header = ({pickMarkerLatLon}) => {
+const Header = ({pickMarkerLatLon, markers}) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
   const [isReportPopupShown, setIsReportPopupShown] = useState(false);
 
@@ -81,7 +81,7 @@ const Header = ({pickMarkerLatLon}) => {
 
       {/*Popup za Reportanje*/}
       {isReportPopupShown && (
-        <ReportPopupComponent onClose={handleReportBtn} pickMarkerLatLon={pickMarkerLatLon} />
+        <ReportPopupComponent onClose={handleReportBtn} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
       )}
     </header>
   );

@@ -71,3 +71,38 @@ select {
   cursor: pointer;
   width: 100%;
 }
+
+/* -------------MERGE CONFIRM DIALOG---------------- */
+
+.mergeConfirmDialog {
+    background-color: white;
+    padding: 20px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.mergeConfirmDialog h3 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.mergeConfirmDialog p {
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.mergeConfirmDialog button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.mergeConfirmDialog button:hover {
+    background-color: #037a54;
+}

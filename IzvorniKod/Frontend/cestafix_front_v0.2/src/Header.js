@@ -7,6 +7,7 @@ import './Header.css';
 import AccountPopupComponent from './forms/AccountForm.js'
 import ReportPopupComponent from './forms/ReportForm.js'
 import CheckReportComponent from './forms/CheckReportForm.js'
+import { useNavigate } from 'react-router-dom';
 
 const Header = ({pickMarkerLatLon}) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
@@ -15,10 +16,6 @@ const Header = ({pickMarkerLatLon}) => {
   const handleReportBtn = () => { setIsReportPopupShown(!isReportPopupShown); }; // Switcha stanje izmedu true i false
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
 
-
-  const handleNovaPrijava = (event) => {
-    console.log("test");
-  };
 
   const handleLogout = () => {
     Cookies.remove('userInfo', { path: '/' });
@@ -39,8 +36,6 @@ const Header = ({pickMarkerLatLon}) => {
         {(Cookies.get('userInfo')) ? (
           <>
             <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
-
-
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
               <div className="dropdown-content">
@@ -52,7 +47,7 @@ const Header = ({pickMarkerLatLon}) => {
 
 
             <div className="dropdown">
-              <button className="headerBTN1 dropbtn">{getUsername()}</button>
+              <button className="headerBTN1 dropbtn" onClick={() => window.location.href = '/myAccount'}>{getUsername()}</button>
               <div className="dropdown-content">
                 <button className="headerBTNLOGOUT" onClick={handleLogout}>Logout</button>
               </div>

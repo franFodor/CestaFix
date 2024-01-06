@@ -16,7 +16,7 @@ function ReportListComponent({problemID}) {
         }
         receiveReports();
        
-    }, []);
+    }, [problemID]);
 
     return (
         <div className="report-list">

@@ -49,13 +49,13 @@ const Header = ({pickMarkerLatLon, markers}) => {
             <div className="dropdown">
               <button className="headerBTN1 dropbtn" onClick={() => window.location.href = '/myAccount'}>{getUsername()}</button>
               <div className="dropdown-content">
-                <button className="headerBTNLOGOUT" onClick={handleLogout}>Logout</button>
+                <button className="headerBTNLOGOUT" onClick={() => {window.location.href = '/'; handleLogout();}}>Logout</button>
               </div>
             </div>
           </>
         ) : (
           <>
-            <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
+            <button className="headerBTN1" onClick={handleReportBtn} href>Prijavi Štetu!</button>
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
               <div className="dropdown-content">

@@ -9,7 +9,6 @@ const RegisterFormComponent = () => {
     return (
         <div>
             <h1>Registracija</h1>
-            <div>* Za službene račune stupiti u kontakt naveden pri dnu stranice.</div>
                 <form className="form" onSubmit={handleRegister}>
                     <label htmlFor="username"><b>Korisničko ime</b></label>
                     <input type="text" placeholder="Korisničko ime" name="username" required />

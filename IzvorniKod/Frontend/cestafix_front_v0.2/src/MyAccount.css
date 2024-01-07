@@ -1,0 +1,75 @@
+.centered{
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  clear: both; /* Clear the float */
+  height: 100%;
+  align-items: flex-start; /* Align children to the start of the cross axis */
+}
+
+.account-container {
+    display: inline-block; /* or block */
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 5px;
+    height: auto; /* Allow the height to adjust to the content */
+}
+
+/* Styling for individual account details */
+.account-details p {
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Strong tag to highlight labels */
+.account-details strong {
+  color: #333;
+  margin-right: 5px;
+}
+
+/* Input fields styling */
+.account-details input[type="text"],
+.account-details input[type="email"],
+.account-details input[type="password"] {
+  padding: 5px;
+  margin-left: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Edit and Submit buttons */
+.account-details button,
+.account-container form button[type="submit"] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Button hover effect */
+.account-details button:hover,
+.account-container form button[type="submit"]:hover {
+  background-color: #037f58;
+}
+
+/* Form submission button specific style */
+.account-container form button[type="submit"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 20px;
+}

@@ -106,8 +106,11 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 <div>
                     <label htmlFor="dropdown">Odaberite Kategoriju štete</label>
                     <select id="dropdown" name="dropdown">
-                    <option value="1">Šteta Na Cesti</option>
-                    <option value="2">Sve Ostalo</option>
+                    <option value="1">Oštećenje na cesti</option>
+                    <option value="2">Nepropisno parkiranje</option>
+                    <option value="3">Oštećenje na rasvjetnom stupu</option>
+                    <option value="0">Ostalo</option>
+
                     {/* --------------------POPRAVIT-------------------- */}
                     </select>
                 </div>

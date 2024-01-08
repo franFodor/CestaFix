@@ -21,12 +21,12 @@ async function APILogout() {
 }
 
 // Funkciju triggera submit register forme. Salje podatke forme na /api/register
-async function APIRegister(username, email, password, remember) {
+async function APIRegister(firstname, lastname, email, password) {
     const formData = {
-        username: username,
+        firstname: firstname,
+        lastname: lastname,
         email: email,
-        password: password,
-        remember: remember,
+        password: password
     };
 
     return fetch('/api/auth/register', {

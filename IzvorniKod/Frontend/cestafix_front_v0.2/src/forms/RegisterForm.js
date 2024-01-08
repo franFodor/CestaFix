@@ -1,9 +1,23 @@
 import './Forms.css'
+import {APIRegister} from '../API.js'
 
 const RegisterFormComponent = () => {
     const handleRegister = (event) => {
         event.preventDefault();
-        console.log("REGISTER")
+        const form = event.target;
+        const lastname = form.lastname.value;
+        const firstname = form.firstname.value;
+        const email = form.email.value;
+        const password = form.password.value;
+        const passwordRepeat = form["password-repeat"].value;
+
+        if (password !== passwordRepeat) {
+            alert("Loznike se ne podudaraju!");
+            return;
+        }
+
+        APIRegister(firstname, lastname, email, password);
+        window.location.reload();
     }
 
     return (
@@ -11,8 +25,10 @@ const RegisterFormComponent = () => {
             <h1>Registracija</h1>
             <div>* Za službene račune stupiti u kontakt naveden pri dnu stranice.</div>
                 <form className="form" onSubmit={handleRegister}>
-                    <label htmlFor="username"><b>Korisničko ime</b></label>
-                    <input type="text" placeholder="Korisničko ime" name="username" required />
+                    <label htmlFor="firstname"><b>Ime</b></label>
+                    <input type="text" placeholder="Ime" name="firstname" required />
+                    <label htmlFor="lastname"><b>Prezime</b></label>
+                    <input type="text" placeholder="Ime" name="lastname" required />
                     <label htmlFor="email"><b>E-mail</b></label>
                     <input type="text" placeholder="Email" name="email" required />
                     <label htmlFor="password"><b>Lozinka</b></label>

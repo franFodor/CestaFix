@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, Component } from 'react';
 import Cookies from 'js-cookie';
 import './Header.css';
@@ -16,10 +13,12 @@ const Header = ({pickMarkerLatLon, markers}) => {
   const handleReportBtn = () => { setIsReportPopupShown(!isReportPopupShown); }; // Switcha stanje izmedu true i false
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
 
-
-  const handleLogout = () => {
+  const navigate = useNavigate();
+    const handleLogout = () => {
+    navigate("/");
     Cookies.remove('userInfo', { path: '/' });
     window.location.reload();
+
   }
 
 

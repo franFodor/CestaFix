@@ -113,6 +113,7 @@ public class ReportController {
 
         // Save the Report object
         Report savedReport = reportService.createReport(report);
+        entityManager.refresh(savedReport);
         return ResponseEntity.ok(savedReport);
     }
 

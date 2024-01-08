@@ -70,13 +70,13 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa cityde
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
-	\SetCell{LightGreen}user\_id & INT     & jedinstveni identifikator korisnika      \\ \hline
-	firstname                    & VARCHAR & ime korisnika                            \\ \hline
-	lastname                     & VARCHAR & prezime korisnika                        \\ \hline
-	email                        & VARCHAR & e-mail adresa korisnika                  \\ \hline
-	password                     & VARCHAR & hash lozinke korisnika                   \\ \hline
-	role                         & VARCHAR & uloga korisnika                          \\ \hline
-	citydept\_id                 & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	\SetCell{LightGreen}user\_id      & INT     & jedinstveni identifikator korisnika      \\ \hline
+	firstname                    	  & VARCHAR & ime korisnika                            \\ \hline
+	lastname                     	  & VARCHAR & prezime korisnika                        \\ \hline
+	email                             & VARCHAR & e-mail adresa korisnika                  \\ \hline
+	password                          & VARCHAR & hash lozinke korisnika                   \\ \hline
+	role                              & VARCHAR & uloga korisnika                          \\ \hline
+	\SetCell{LightBlue} citydept\_id  & INT     & jedinstveni identifikator gradskog ureda \\ \hline
 \end{longtblr}
 
 
@@ -145,8 +145,8 @@ Sastoji se od atributa: citydept\_id i citydept\_name. Povezan je vezom \textit{
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Problems}}                                                                           \\ \hline[3pt]
 	\SetCell{LightGreen}problem\_id  & INT     & jedinstveni identifikator oštećenja                                     \\ \hline
-	longitude                        & FLOAT   & geografska dužina lokacije oštećenja                                    \\ \hline
-	latitude                         & FLOAT   & geografska širina lokacije oštećenja                                    \\ \hline
+	longitude                        & DOUBLE  & geografska dužina lokacije oštećenja                                    \\ \hline
+	latitude                         & DOUBLE  & geografska širina lokacije oštećenja                                    \\ \hline
 	status                           & VARCHAR & status oštećenja                                                        \\ \hline
 	\SetCell{LightBlue} category\_id & INT     & jedinstveni identifikator kategorije oštećenja  (category.category\_id) \\ \hline
 \end{longtblr}
@@ -188,11 +188,11 @@ s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje 
 
 Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima 
 upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju 
-logiku interakcije i promjene. Kontroler LoginController omogućuje prijavu registriranog korisnika u sustav,
-dok kontroler SignUpController omogućuje registraciju neregistriranog korisnika. Kontroler ReportController
-omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje interakcije s 
-objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje interakcije i
-promjene povezane s registriranim korisnicima.
+logiku interakcije i promjene. Kontroler AuthenticationController omogućuje registraciju i prijavu korisnika. 
+Kontroler ReportController omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje 
+interakcije s objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje 
+interakcije i promjene povezane s registriranim korisnicima. Kontroler CityDepartmentController omogućuje 
+interakcije i promjene povezane s gradskim uredima. 
 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-controller} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -202,15 +202,10 @@ promjene povezane s registriranim korisnicima.
 \end{figure}
 
 Na slici 4.4 prikazani su razredi koji pripadaju DTO. Data Transfer Objects omogućavaju
-razmjenu podataka između procesa i slojeva. LoginDto i SignUpDto služe za stvaranje novog objekta
-za prijavu, odnosno registraciju korisnika. ReportDto i ProblemDto služe za stvaranje novog objekta
-prijave oštećenja, odnosno problema. ReportStatusCheckDto i ReportStatusChangeDto služe za stvaranje 
-objekta po kojem će se omogućiti provjera statusa prijave, odnosno promjena statusa prijave oštećenja.
-ReportStatusChangeDto služi za stvaranje objekta po kojem će se izvesti objedinjavanje prijava oštećenja.
-StatisticsDto služi za dogvaćanje podataka o statistici. UserDto
-služi da dohvaćanje podataka o korisničkom računu, dok RoleDto služi za stvaranje objekta po kojem
-će se izvesti promjena uloge registriranog korisnika. CityDepartmentDto služi za stvaranje objekta
-gradskog ureda. 
+razmjenu podataka između procesa i slojeva. RegisterRequestDto služi za registraciju korisnika. 
+LoginRequestDto služi za prijavu korisnika. AuthenticationResponseDto sastoji se od jwt tokena koji se vraća
+kada se korisnik registrira ili ulogira. CreateReportRequestDto služi za kreiranje podataka o prijavi prijave 
+oštećenja i problema.
 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-DTO.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -228,7 +223,7 @@ kategoriju oštećenja koju korisnik može odabrati za prijavljeno oštećenje, 
 na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više 
 kategorija oštećenja koje im je administrator dodijelio. Razred CitydepCategory predstavlja vezu između
 razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija i gradskih ureda u parovima.
-
+Enumeracija Role predstavlja ulogu koju registrirani korisnik ima.
 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-model.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike

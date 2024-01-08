@@ -16,8 +16,10 @@ const RegisterFormComponent = () => {
             return;
         }
 
-        APIRegister(firstname, lastname, email, password);
-        window.location.reload();
+        APIRegister(firstname, lastname, email, password).then(() => {
+            window.location.reload();
+        });
+        
     }
 
     return (

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Header from './Header';
 import Content from './Content';
 import Footer from './Footer';
-
 import MyAccount from './MyAccount';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 

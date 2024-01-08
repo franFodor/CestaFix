@@ -1,117 +1,51 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import './MyAccount.css'
+import './MyAccountMain.css'
+import userImage from './images/User.png';
+import EditAccountForm from './forms/EditAccountForm';
+import ReportList from './ReportList';
 
 const MyAccount = () => {
-    // State for user account details
-    const [accountInfo, setAccountInfo] = useState({
-        firstname: '',
-        lastname: '',
-        email: '',
-        username: '',
-        role: '',
-        citydept: { citydeptName: '' }
-    });
+    let loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userInfo')));
+    const [buttonClicked, setButtonClicked] = useState('');
 
-    // States for form inputs and editing
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [editing, setEditing] = useState({ firstName: false, lastName: false, email: false });
+    const handleClick = (buttonLabel) => {
+      setButtonClicked(buttonLabel);
+    };
+
+    const loggedRoleAccountContent = () => {
+        switch(loggedUser.role){
+            case 'USER':
+                return( 
+                <div className='container'>
+                    <div className='myAccLeft'>
+                <img src={userImage} alt="User" />
+                <div className='Details'>{loggedUser.firstname +' '+ loggedUser.lastname}</div>
+                <button className='headerBTNSUBMIT' onClick={() => handleClick('a')}>Uredi Profil</button>
+                <button className='headerBTNSUBMIT' onClick={() => handleClick('b')}>Pregled Mojih Prijava</button>
+                <button className='headerBTNSUBMIT' onClick={() => handleClick('c')}>Pobriši Račun!!!</button>
+                <button className='headerBTNSUBMIT' onClick={() => window.location.href = '/'}>Povratak</button>
+              </div>
     
-    useEffect(() => {
-        setAccountInfo(prevState => ({
-            ...prevState,
-            firstname: firstName,
-            lastname: lastName,
-            email: email,
-            // Don't store password in accountInfo if it's not needed there
-        }));
-    }, [firstName, lastName, email]);
-    
-    // Load user info from cookie on component mount
-    useEffect(() => {
-        const userInfo = Cookies.get('userInfo');
-        if (userInfo) {
-            const parsedInfo = JSON.parse(userInfo);
-            setAccountInfo(parsedInfo);
-            setFirstName(parsedInfo.firstname);
-            setLastName(parsedInfo.lastname);
-            setEmail(parsedInfo.email);
+              <div className='myAccRight'>
+                {buttonClicked === 'a' && <EditAccountForm />}
+                {buttonClicked === 'b' && <ReportList />}
+                {buttonClicked === 'c' && <p>Skoro sam ovo implementirao</p>}
+              </div></div>);
+
+            case 'ADMIN':
+                return <><div>Dodati implementaciju</div></>
+
+            default:
+                return <div>Doslo je do greske: Nepostojeci ili neulogirani korisnik.</div>
+
         }
-    }, []);
+    }
 
-    // Handle field edit
-    const handleEdit = (field) => {
-        setEditing({ ...editing, [field]: true });
-    };
 
-    // Handle change in form fields
-    const handleChange = (e, field) => {
-        const { value } = e.target;
-        if (field === 'firstName') setFirstName(value);
-        if (field === 'lastName') setLastName(value);
-        if (field === 'email') setEmail(value);
-        if (field === 'password') setPassword(value);
-    };
 
-    // Handle form submit
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Here you would typically make an API call to update the user details
-        console.log('Updated Info:', { firstName, lastName, email, password });
-        setEditing({ firstName: false, lastName: false, email: false });
-    };
 
-    return (
-        <div className="main">
-            <div className="account-container">
-                <h1 className="centered">Moj račun</h1>
-                <form onSubmit={handleSubmit}>
-                    <div className="account-details">
-                        <p>
-                            <strong>Ime:</strong>
-                            {editing.firstName ? (
-                                <input type="text" value={firstName} onChange={(e) => handleChange(e, 'firstName')} />
-                            ) : (
-                                firstName
-                            )}
-                            <button type="button" onClick={() => handleEdit('firstName')}>Edit</button>
-                        </p>
-                        <p>
-                            <strong>Prezime:</strong>
-                            {editing.lastName ? (
-                                <input type="text" value={lastName} onChange={(e) => handleChange(e, 'lastName')} />
-                            ) : (
-                                lastName
-                            )}
-                            <button type="button" onClick={() => handleEdit('lastName')}>Edit</button>
-                        </p>
-                        <p>
-                            <strong>Email:</strong>
-                            {editing.email ? (
-                                <input type="email" value={email} onChange={(e) => handleChange(e, 'email')} />
-                            ) : (
-                                email
-                            )}
-                            <button type="button" onClick={() => handleEdit('email')}>Edit</button>
-                        </p>
-
-                        <p>
-                        <strong>Uloga:</strong>
-                            {accountInfo.role}
-                        </p>
-                        <p>
-                            <strong>Promijeni lozinku:</strong>
-                            <input type="password" value={password} onChange={(e) => handleChange(e, 'password')} />
-                        </p>
-                    </div>
-                    <button type="submit">Spremi promjene</button>
-                </form>
-            </div>
-        </div>
-    );
-}
+    return (<>{loggedRoleAccountContent()}</>);
+     };
 
 export default MyAccount;

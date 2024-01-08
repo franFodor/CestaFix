@@ -56,6 +56,7 @@ public class ReportController {
 
     @Operation(summary = "Create a report")
     @PostMapping("/public/report")
+    @Transactional
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) {
 
         Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
@@ -113,6 +114,7 @@ public class ReportController {
 
         // Save the Report object
         Report savedReport = reportService.createReport(report);
+        entityManager.refresh(savedReport);
         return ResponseEntity.ok(savedReport);
     }
 

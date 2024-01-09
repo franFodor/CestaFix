@@ -1,6 +1,8 @@
 package fer.proinz.prijave.service;
 
+import fer.proinz.prijave.model.Problem;
 import fer.proinz.prijave.model.Report;
+import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,10 @@ import java.util.Optional;
 public class ReportService {
 
     private final ReportRepository reportRepository;
+
+    private final ProblemRepository problemRepository;
+
+    private final ProblemService problemService;
 
     public List<Report> getAllReports() {
         return reportRepository.findAll();
@@ -58,6 +64,20 @@ public class ReportService {
     public ResponseEntity<String> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
         if(reportOptional.isPresent()) {
+            Report report = reportOptional.get();
+            Problem problem = report.getProblem();
+
+            if (problem != null) {
+                problem.getReports().remove(report);
+                report.setProblem(null);
+                problemService.updateProblem(problem.getProblemId(), problem);
+                reportRepository.save(report);
+
+                if (problem.getReports().isEmpty()) {
+                    problemService.deleteProblem(problem.getProblemId());
+                }
+            }
+
             reportRepository.deleteById(reportId);
             return ResponseEntity.ok("Report with id " + reportId + " is deleted.");
         } else {

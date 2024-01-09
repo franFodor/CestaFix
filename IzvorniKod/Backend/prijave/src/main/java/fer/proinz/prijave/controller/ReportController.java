@@ -120,11 +120,11 @@ public class ReportController {
 
     @Operation(summary = "Update a report")
     @PatchMapping("/advanced/report/{reportId}")
-    public ResponseEntity<Report> updateReport(
+    public ResponseEntity<?> updateReport(
             @PathVariable("reportId") int reportId,
             @RequestBody Report updatedReport
         ) {
-        return ResponseEntity.ok(reportService.updateReport(reportId, updatedReport));
+        return reportService.updateReport(reportId, updatedReport);
     }
 
     @Operation(summary = "Delete a report")

@@ -63,7 +63,7 @@ public class ProblemsIT {
                     "VALUES (?, ?, ?, ?)";
 
             Problem problem = Problem.builder()
-                    .problemId(15L)
+                    .problemId(15)
                     .longitude(45.1234)
                     .latitude(27.3857)
                     .status("Oštećeno")
@@ -71,7 +71,7 @@ public class ProblemsIT {
 
 
             PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setLong(1, problem.getProblemId());
+            preparedStatementProblem.setInt(1, problem.getProblemId());
             preparedStatementProblem.setDouble(2, problem.getLongitude());
             preparedStatementProblem.setDouble(3, problem.getLatitude());
             preparedStatementProblem.setString(4, problem.getStatus());
@@ -112,7 +112,7 @@ public class ProblemsIT {
         try (Connection connection = dataSource.getConnection()) {
             String sqlProblem = "DELETE FROM Problems WHERE problem_id = ?";
             PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setLong(1, 15L);
+            preparedStatementProblem.setInt(1, 15);
             preparedStatementProblem.executeUpdate();
 
             String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
@@ -144,7 +144,7 @@ public class ProblemsIT {
         testCategory.setCategoryName("Kolnik");
 
         Problem problem = Problem.builder()
-                .problemId(15L)
+                .problemId(15)
                 .longitude(45.1234)
                 .latitude(27.3857)
                 .status("Oštećeno")
@@ -166,7 +166,7 @@ public class ProblemsIT {
         testCategory.setCategoryName("Kolnik");
 
         Problem problem = Problem.builder()
-                .problemId(15L)
+                .problemId(15)
                 .longitude(45.1234)
                 .latitude(27.3857)
                 .status("Popravljeno")

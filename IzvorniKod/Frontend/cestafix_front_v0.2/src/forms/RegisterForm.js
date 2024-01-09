@@ -31,7 +31,7 @@ const RegisterFormComponent = () => {
                     <label htmlFor="firstname"><b>Ime</b></label>
                     <input type="text" placeholder="Ime" name="firstname" required />
                     <label htmlFor="lastname"><b>Prezime</b></label>
-                    <input type="text" placeholder="Ime" name="lastname" required />
+                    <input type="text" placeholder="Prezime" name="lastname" required />
                     <label htmlFor="email"><b>E-mail</b></label>
                     <input type="text" placeholder="Email" name="email" required />
                     <label htmlFor="password"><b>Lozinka</b></label>

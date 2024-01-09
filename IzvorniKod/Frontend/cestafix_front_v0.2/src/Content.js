@@ -16,6 +16,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
 
     const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
     const [showReportForm, setShowReportForm] = useState(false);
+    const [showReportList, setShowReportlist] = useState(false);
 
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
@@ -53,6 +54,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         useMapEvents({
             click(e) {
                 setPickMarkerLatLon([e.latlng.lat, e.latlng.lng]);
+                setShowReportlist(false);
             },
         });
 
@@ -71,8 +73,11 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                     url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=jl7SF9AkX5d5T6Di7nm2"
                 />
                 {markers.map((marker, index) => (
-                    <Marker key={index} position={marker.position} icon={marker.icon} eventHandlers={{ click: () => handleMarkerClick(marker), }}>
-                        <Popup>{marker.popup}</Popup>
+                    <Marker key={index} 
+                    position={marker.position} 
+                    icon={marker.icon} 
+                    eventHandlers={{ click: () => {handleMarkerClick(marker); setShowReportlist(true);}}}>
+                    <Popup>{marker.popup}</Popup>
                     </Marker>
                 ))}
 
@@ -87,7 +92,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
             {showReportForm && (
         <ReportPopupComponent onClose={() => setShowReportForm(false)} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
       )}
-            {selectedMarkerId != -1 && <ReportListComponent problemID={selectedMarkerId} />}
+            {selectedMarkerId !== -1 && showReportList && <ReportListComponent problemID={selectedMarkerId} />}
         </div>
     );
 }

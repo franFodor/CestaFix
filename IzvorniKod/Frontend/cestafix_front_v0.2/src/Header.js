@@ -17,7 +17,10 @@ const Header = ({pickMarkerLatLon, markers}) => {
 
   const navigate = useNavigate();
     const handleLogout = () => {
-    navigate("/");
+    navigate("/"); 
+    //Pozvati LogoutAPI kojim ce se javit BE  da je sesh token xprd
+
+    Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });
     window.location.reload();
 

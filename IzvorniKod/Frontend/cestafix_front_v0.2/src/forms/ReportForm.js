@@ -9,9 +9,17 @@ function haversineDistance(latlon1, latlon2) {
     const dLat = toRad(latlon2[0] - latlon1[0]);
     const dLon = toRad(latlon2[1] - latlon1[1]);
     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-              Math.cos(toRad(latlon1[0])) * Math.cos(toRad(latlon2[0])) *
-              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        Math.cos(toRad(latlon1[0])) * Math.cos(toRad(latlon2[0])) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
     return 6371e3 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
 }
 
 const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
@@ -32,16 +40,23 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         return closestMarker;
     };
 
-    const handleSubmitReport = (event) => {
+    const handleSubmitReport = async (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
+
+        let photos = [];
+        const photoFiles = formData.getAll("photo");
+        for (let file of photoFiles) {
+            const base64String = await fileToBase64(file);
+            photos.push(base64String);
+        }
 
         const data = {
             title: formData.get("name"),
             description: formData.get("description"),
             address: formData.get("address"),
             categoryId: formData.get("dropdown"),
-            photo: formData.get("photo").size === 0 ? null : formData.get("photo"),
+            photo: photos.length > 0 ? photos : null,
             token: Cookies.get("sessionToken") || null
         };
 
@@ -55,6 +70,9 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             APICreateReport(data.token, data.title, data.description, data.address, data.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], data.categoryId, null);
             onClose();
         }
+
+        //Dodati Popup sa confirmationom Uspjesnosti reporta, IDjem ukoliko je bitan i klikom njega ide reload
+        window.location.reload();
     };
 
     const submitReport = (closest_problem_id) => {
@@ -83,7 +101,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             <button onClick={() => handleMergeDecision(false)}>Stvori novu</button>
         </div>
     );
-
+    const [address, setAddress] = useState(pickMarkerLatLon || '');
     const reportContent = (
         <div className="reportContent" >
             <form className="form" onSubmit={handleSubmitReport}>
@@ -101,23 +119,30 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 </div>
                 <div>
                     <label htmlFor="address">Geografske Koordinate ili Adresa</label>
-                    <input id="address" type="text" name="address" value={pickMarkerLatLon || ''} required />
+                    <input
+                        id="address"
+                        type="text"
+                        name="address"
+                        value={address}
+                        onChange={(e) => setAddress(e.target.value)}
+                        required
+                    />
                 </div>
                 <div>
                     <label htmlFor="dropdown">Odaberite Kategoriju štete</label>
                     <select id="dropdown" name="dropdown">
-                    <option value="1">Oštećenje na cesti</option>
-                    <option value="2">Nepropisno parkiranje</option>
-                    <option value="3">Oštećenje na rasvjetnom stupu</option>
-                    <option value="0">Ostalo</option>
+                        <option value="1">Oštećenje na cesti</option>
+                        <option value="2">Nepropisno parkiranje</option>
+                        <option value="3">Oštećenje na rasvjetnom stupu</option>
+                        <option value="0">Ostalo</option>
 
-                    {/* --------------------POPRAVIT-------------------- */}
+                        {/* --------------------POPRAVIT-------------------- */}
                     </select>
                 </div>
                 <input type="submit" className="confirmButton" value="Submit" />
             </form>
         </div>
-);
+    );
 
     return (
         <PopupComponent onClose={onClose}>

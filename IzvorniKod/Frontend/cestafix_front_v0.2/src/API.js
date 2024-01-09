@@ -90,6 +90,7 @@ async function APICreateReport(token, title, description, address, photo, report
         "categoryId" : categoryId,
         "mergeProblemId" : closest_problem_id
     };
+    console.log("Report Data:>>",formData);
 
     if (token === null){
         return fetch('/api/public/report', {

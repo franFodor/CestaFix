@@ -12,7 +12,7 @@ const RegisterFormComponent = () => {
         const passwordRepeat = form["password-repeat"].value;
 
         if (password !== passwordRepeat) {
-            alert("Loznike se ne podudaraju!");
+            alert("Lozinke se ne podudaraju!");
             return;
         }
 

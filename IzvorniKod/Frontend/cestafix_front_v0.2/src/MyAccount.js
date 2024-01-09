@@ -6,7 +6,8 @@ import EditAccountForm from './forms/EditAccountForm';
 import ReportList from './ReportList';
 
 const MyAccount = () => {
-    let loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userInfo')));
+    let loggedUser;
+if(Cookies.get('userInfo'))loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userInfo')));
     const [buttonClicked, setButtonClicked] = useState('');
 
     const handleClick = (buttonLabel) => {
@@ -14,23 +15,23 @@ const MyAccount = () => {
     };
 
     const loggedRoleAccountContent = () => {
-        switch(loggedUser.role){
+        switch(loggedUser ? loggedUser.role : null){
             case 'USER':
                 return( 
-                <div className='container'>
+                <div className='container min-w-full'>
                     <div className='myAccLeft'>
                 <img src={userImage} alt="User" />
                 <div className='Details'>{loggedUser.firstname +' '+ loggedUser.lastname}</div>
-                <button className='headerBTNSUBMIT' onClick={() => handleClick('a')}>Uredi Profil</button>
-                <button className='headerBTNSUBMIT' onClick={() => handleClick('b')}>Pregled Mojih Prijava</button>
-                <button className='headerBTNSUBMIT' onClick={() => handleClick('c')}>Pobriši Račun!!!</button>
-                <button className='headerBTNSUBMIT' onClick={() => window.location.href = '/'}>Povratak</button>
+                <button className='confirmButton' style={{display: 'inline-block', width: 'fit-content'}} onClick={() => handleClick('a')}>Uredi Profil</button>
+                <button className='confirmButton' style={{display: 'inline-block', width: 'fit-content'}} onClick={() => handleClick('b')}>Pregled Mojih Prijava</button>
+                <button className='confirmButton' style={{display: 'inline-block', width: 'fit-content', background: 'red'}} onClick={() => handleClick('c')}>Pobriši Račun!!!</button>
+                <button className='confirmButton' style={{display: 'inline-block', width: 'fit-content'}} onClick={() => window.location.href = '/'}>Povratak</button>
               </div>
     
               <div className='myAccRight'>
                 {buttonClicked === 'a' && <EditAccountForm />}
                 {buttonClicked === 'b' && <ReportList />}
-                {buttonClicked === 'c' && <p>Skoro sam ovo implementirao</p>}
+                {buttonClicked === 'c' && <p>Zahtjev za Brisanjem računa odabran.</p>}
               </div></div>);
 
             case 'ADMIN':

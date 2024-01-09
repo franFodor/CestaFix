@@ -1,14 +1,16 @@
 .container {
     background-color: rgb(222, 222, 222);
     display: flex;
+    flex-grow: 1;
     align-items: center;
     justify-content: space-between;
-    height: 100vh;
+    height: 25%;
     width: 100%;
  }
  
  .myAccLeft,
  .myAccRight {
+   
    height: 50%;
    width: 50%;
    display: flex;
@@ -18,12 +20,12 @@
  }
  
  .myAccLeft img {
-    width: 50%;
+   margin-top: 50px;
+    width: 25%;
     height: auto;
  }
  
  .Details {
     margin-bottom: 40px;
-    text-rendering: optimizeSpeed;
  }
  

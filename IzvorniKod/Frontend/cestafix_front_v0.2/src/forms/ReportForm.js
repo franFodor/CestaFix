@@ -101,7 +101,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 </div>
                 <div>
                     <label htmlFor="address">Geografske Koordinate ili Adresa</label>
-                    <input id="address" type="text" name="address" value={pickMarkerLatLon || ''} required />{pickMarkerLatLon || ''}
+                    <input id="address" type="text" name="address" value={pickMarkerLatLon || ''} required />
                 </div>
                 <div>
                     <label htmlFor="dropdown">Odaberite Kategoriju štete</label>

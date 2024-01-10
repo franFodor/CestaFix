@@ -47,8 +47,11 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         let photos = [];
         const photoFiles = formData.getAll("photo");
         for (let file of photoFiles) {
-            const base64String = await fileToBase64(file);
-            photos.push(base64String);
+            if (file.size>0){
+                const base64String = await fileToBase64(file);
+                photos.push(base64String);
+            }
+            
         }
 
         const data = {

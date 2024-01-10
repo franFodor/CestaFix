@@ -65,4 +65,8 @@ public class ProblemService {
             throw new RuntimeException("Problem with id " + problemId + " does not exists!");
         }
     }
+
+    public List<Problem> getProblemsByCategoryId(int categoryId) {
+        return problemRepository.findByCategory_CategoryId(categoryId);
+    }
 }

@@ -1,8 +1,12 @@
 package fer.proinz.prijave.service;
 
 
+import fer.proinz.prijave.model.CitydepCategory;
+import fer.proinz.prijave.model.Problem;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
+import fer.proinz.prijave.repository.CityDeptCategoryRepository;
+import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +20,16 @@ import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final CityDeptCategoryRepository cityDeptCategoryRepository;
+    private final ProblemRepository problemRepository;
     private final PasswordEncoder passwordEncoder;
 
     public List<User> getAllUsers() {
@@ -79,6 +87,25 @@ public class UserService {
         } else {
             throw new RuntimeException("user with id " + userId + " does not exists!");
         }
+    }
+
+    public List<Problem> getProblemsForUser(User user) {
+        // Fetch CitydepCategory instances related to the user's CityDepartment
+        List<CitydepCategory> citydepCategories = cityDeptCategoryRepository.findByCityDepartment(user.getCitydept());
+
+        // Extract Category IDs from CitydepCategory instances
+        List<Integer> categoryIds = citydepCategories.stream()
+                .map(citydepCategory -> citydepCategory.getCategory().getCategoryId())
+                .collect(Collectors.toList());
+
+        // Fetch problems for each category ID and flatten the result
+
+        List<Problem> userProblems = categoryIds.stream()
+                .flatMap(categoryId -> problemRepository.findByCategory_CategoryId(categoryId).stream())
+                .distinct()
+                .collect(Collectors.toList());
+
+        return userProblems;
     }
 
 }

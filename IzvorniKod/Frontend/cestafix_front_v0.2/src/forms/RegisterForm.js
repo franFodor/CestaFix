@@ -2,6 +2,17 @@ import './Forms.css'
 import {APIRegister} from '../API.js'
 
 const RegisterFormComponent = () => {
+    const validatePassword = (password) => {
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        return passwordRegex.test(password);
+    };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+
     const handleRegister = (event) => {
         event.preventDefault();
         const form = event.target;
@@ -10,9 +21,24 @@ const RegisterFormComponent = () => {
         const email = form.email.value;
         const password = form.password.value;
         const passwordRepeat = form["password-repeat"].value;
-
+        let divElement = document.querySelector('.registerFail');
+        
         if (password !== passwordRepeat) {
-            alert("Lozinke se ne podudaraju!");
+            divElement.innerText = 'Greška: lozinke se ne podudaraju';
+            divElement.style.color = 'red';
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            divElement.innerText = 'Greška: neispravan email format';
+            divElement.style.color = 'red';
+            return;
+        }
+
+
+        if (!validatePassword(password)) {
+            divElement.innerText = 'Greška: lozinka mora sadržavati barem 8 znakova, 1 veliko slovo, 1 malo slovo i specijalni znak.';
+            divElement.style.color = 'red';
             return;
         }
 

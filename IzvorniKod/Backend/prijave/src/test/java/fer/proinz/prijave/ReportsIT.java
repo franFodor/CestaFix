@@ -88,7 +88,7 @@ public class ReportsIT {
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             Report report = Report.builder()
-                    .reportId(15L)
+                    .reportId(15)
                     .title("Pukotina na cesti")
                     .description("kwerwoirwsnfsffowefsg")
                     .address("Ulica grada Vukovara 3")
@@ -99,7 +99,7 @@ public class ReportsIT {
                     .build();
 
             PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
-            preparedStatementReport.setLong(1, report.getReportId());
+            preparedStatementReport.setInt(1, report.getReportId());
             preparedStatementReport.setString(2, report.getTitle());
             preparedStatementReport.setString(3, report.getDescription());
             preparedStatementReport.setString(4, report.getAddress());
@@ -132,7 +132,7 @@ public class ReportsIT {
             this.jwtToken = jwtService.generateToken(userDetails);
 
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
-            preparedStatementUser.setLong(1, user.getUserId());
+            preparedStatementUser.setInt(1, user.getUserId());
             preparedStatementUser.setString(2, user.getFirstname());
             preparedStatementUser.setString(3, user.getLastname());
             preparedStatementUser.setString(4, user.getEmail());
@@ -152,7 +152,7 @@ public class ReportsIT {
         try (Connection connection = dataSource.getConnection()) {
             String sqlReport = "DELETE FROM Reports WHERE report_id = ?";
             PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
-            preparedStatementReport.setLong(1, 15L);
+            preparedStatementReport.setInt(1, 15);
             preparedStatementReport.executeUpdate();
 
             String sqlUser = "DELETE FROM Users WHERE user_id = ?";
@@ -236,7 +236,7 @@ public class ReportsIT {
     @Test
     public void updateReportAndExpect200OK() throws Exception {
         Report report = Report.builder()
-                .reportId(15L)
+                .reportId(15)
                 .title("Pukotina na trotoaru")
                 .description("nsjgaowjsks")
                 .address("Ulica grada Vukovara 5")

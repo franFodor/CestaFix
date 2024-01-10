@@ -28,4 +28,9 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.login(request));
     }
 
+    /*@PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestBody String token) {
+
+    }*/
+
 }

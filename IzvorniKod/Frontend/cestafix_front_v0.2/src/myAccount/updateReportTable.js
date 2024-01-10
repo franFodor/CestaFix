@@ -1,10 +1,14 @@
-const updateReportTable = () => {
+import '../API'
 
 
+const UpdateReportTable = () => {
 
     return (
-        <div>h</div>
+        <div className="updateTable">
+       
+        </div>
     );
-}
-
-export default updateReportTable;
+ }
+ 
+ export default UpdateReportTable;
+ 

@@ -78,6 +78,26 @@ public class ReportService {
         }
     }
 
+    public ResponseEntity<?> groupReports(int problemId, List<Report> reportList) {
+        Optional<Problem> problemOptional = problemRepository.findById(problemId);
+        if (problemOptional.isPresent()) {
+            Problem problem = problemOptional.get();
+            for (Report report : reportList) {
+                problem.getReports().remove(report);
+                report.setProblem(problem);
+                problemService.updateProblem(problem.getProblemId(), problem);
+                reportRepository.save(report);
+
+                if (problem.getReports().isEmpty()) {
+                    problemService.deleteProblem(problem.getProblemId());
+                }
+            }
+            return ResponseEntity.ok(problemRepository.findById(problemId));
+        } else {
+            return ResponseEntity.internalServerError().body("Report grouping didn't work");
+        }
+    }
+
     public ResponseEntity<String> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
         if (reportOptional.isPresent()) {

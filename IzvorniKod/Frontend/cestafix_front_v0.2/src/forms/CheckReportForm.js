@@ -1,5 +1,3 @@
-import ReportPopupComponent from "./ReportForm";
-
 function CheckReportComponent() {
   const handleSubmit = event => {
     event.preventDefault();

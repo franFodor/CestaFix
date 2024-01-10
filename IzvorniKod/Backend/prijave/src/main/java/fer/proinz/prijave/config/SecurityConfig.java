@@ -39,9 +39,17 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll()
 
                         .requestMatchers("/public/**").permitAll()
+
                         .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF", "ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").hasAnyRole("USER", "STAFF", "ADMIN")
+
+                        .requestMatchers(HttpMethod.PATCH, "/advanced/report/{reportId}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/advanced/report/{reportId}").authenticated()
+
                         .requestMatchers("/advanced/**").hasAnyRole("STAFF", "ADMIN")
+
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/api-docs/**").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

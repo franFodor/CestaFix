@@ -59,30 +59,12 @@ public class ProblemsIT {
     @BeforeEach
     void setUpProblem() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlProblem = "INSERT INTO Problems (problem_id, longitude, latitude, status) " +
-                    "VALUES (?, ?, ?, ?)";
-
-            Problem problem = Problem.builder()
-                    .problemId(15L)
-                    .longitude(45.1234)
-                    .latitude(27.3857)
-                    .status("Oštećeno")
-                    .build();
-
-
-            PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setLong(1, problem.getProblemId());
-            preparedStatementProblem.setDouble(2, problem.getLongitude());
-            preparedStatementProblem.setDouble(3, problem.getLatitude());
-            preparedStatementProblem.setString(4, problem.getStatus());
-            preparedStatementProblem.executeUpdate();
-
             String sqlCategory = "INSERT INTO Category (category_id, category_name) " +
                     "VALUES (?, ?)";
 
             Category category = Category.builder()
                     .categoryId(1)
-                    .categoryName("Kolnik")
+                    .categoryName("cat_1")
                     .build();
 
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
@@ -102,6 +84,26 @@ public class ProblemsIT {
 
             this.jwtToken = jwtService.generateToken(userDetails);
 
+            String sqlProblem = "INSERT INTO Problems (problem_id, longitude, latitude, status, category_id) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+
+            Problem problem = Problem.builder()
+                    .problemId(15)
+                    .longitude(45.1234)
+                    .latitude(27.3857)
+                    .status("Oštećeno")
+                    .category(category)
+                    .build();
+
+
+            PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
+            preparedStatementProblem.setInt(1, problem.getProblemId());
+            preparedStatementProblem.setDouble(2, problem.getLongitude());
+            preparedStatementProblem.setDouble(3, problem.getLatitude());
+            preparedStatementProblem.setString(4, problem.getStatus());
+            preparedStatementProblem.setInt(5, problem.getCategory().getCategoryId());
+            preparedStatementProblem.executeUpdate();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -112,7 +114,7 @@ public class ProblemsIT {
         try (Connection connection = dataSource.getConnection()) {
             String sqlProblem = "DELETE FROM Problems WHERE problem_id = ?";
             PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setLong(1, 15L);
+            preparedStatementProblem.setInt(1, 15);
             preparedStatementProblem.executeUpdate();
 
             String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
@@ -141,10 +143,10 @@ public class ProblemsIT {
     public void createProblemAndExpect200OK() throws Exception {
         Category testCategory = new Category();
         testCategory.setCategoryId(1);
-        testCategory.setCategoryName("Kolnik");
+        testCategory.setCategoryName("cat_1");
 
         Problem problem = Problem.builder()
-                .problemId(15L)
+                .problemId(15)
                 .longitude(45.1234)
                 .latitude(27.3857)
                 .status("Oštećeno")
@@ -163,10 +165,10 @@ public class ProblemsIT {
     public void updateProblemAndExpect200OK() throws Exception {
         Category testCategory = new Category();
         testCategory.setCategoryId(1);
-        testCategory.setCategoryName("Kolnik");
+        testCategory.setCategoryName("cat_1");
 
         Problem problem = Problem.builder()
-                .problemId(15L)
+                .problemId(15)
                 .longitude(45.1234)
                 .latitude(27.3857)
                 .status("Popravljeno")

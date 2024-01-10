@@ -2,6 +2,7 @@ package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.model.CityDepartment;
 import fer.proinz.prijave.service.CityDepartmentService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +17,13 @@ public class CityDepartmentController {
 
     private final CityDepartmentService cityDepartmentService;
 
+    @Operation(summary = "Get all city departments")
     @GetMapping("/public/cityDept/getAll")
     public List<CityDepartment> getAllCityDepartments() {
         return cityDepartmentService.getAllCityDepartments();
     }
 
+    @Operation(summary = "Get a city department by its id")
     @GetMapping("/public/cityDept/{cityDeptId}")
     public ResponseEntity<CityDepartment> getCityDepartmentById(
             @PathVariable("cityDeptId") int cityDeptId
@@ -30,6 +33,7 @@ public class CityDepartmentController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Create a city department")
     @PostMapping("/advanced/cityDept")
     public ResponseEntity<CityDepartment> createCityDepartment(
             @RequestBody CityDepartment cityDepartment
@@ -38,6 +42,7 @@ public class CityDepartmentController {
         return ResponseEntity.ok(saved);
     }
 
+    @Operation(summary = "Update a city department")
     @PatchMapping("/advanced/cityDept/{citydeptId}")
     public ResponseEntity<CityDepartment> updateCityDepartment(
             @PathVariable("citydeptId") int citydeptId,
@@ -46,6 +51,7 @@ public class CityDepartmentController {
         return ResponseEntity.ok(cityDepartmentService.updateCityDepartment(citydeptId, cityDepartment));
     }
 
+    @Operation(summary = "Delete a city department")
     @DeleteMapping("/advanced/cityDept/{citydeptId}")
     public ResponseEntity<String> deleteCityDepartment(@PathVariable("citydeptId") int citydeptId) {
         return cityDepartmentService.deleteCityDepartment(citydeptId);

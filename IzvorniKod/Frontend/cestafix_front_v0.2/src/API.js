@@ -21,12 +21,12 @@ async function APILogout() {
 }
 
 // Funkciju triggera submit register forme. Salje podatke forme na /api/register
-async function APIRegister(username, email, password, remember) {
+async function APIRegister(firstname, lastname, email, password) {
     const formData = {
-        username: username,
+        firstname: firstname,
+        lastname: lastname,
         email: email,
-        password: password,
-        remember: remember,
+        password: password
     };
 
     return fetch('/api/auth/register', {
@@ -64,6 +64,18 @@ async function APIGetAllReports(problem_id){
     return data.reports;
 }
 
+async function APIGetStaffProblems(user_ID){
+    const response = await fetch('/api/advanced//' + user_ID, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const data = await response.json();
+    return data;
+}
+
 async function APIWhoAmI(token){
     const response = await fetch('/api/normal/user/whoAmI', {
         method: 'GET',
@@ -76,4 +88,37 @@ async function APIWhoAmI(token){
     const data = await response.json();
     return data;
 }
-export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI};
+
+async function APICreateReport(token, title, description, address, photo, reportStatus, problemStatus, latitude, longitude, categoryId, closest_problem_id) {
+    const formData = {
+        "longitude" : longitude,
+        "latitude" : latitude,
+        "title": title,
+        "description": description,
+        "address": address,
+        "photo": photo,
+        "reportStatus": reportStatus,
+        "problemStatus" : problemStatus,
+        "categoryId" : categoryId,
+        "mergeProblemId" : closest_problem_id
+    };
+    console.log("Report Data:>>",formData);
+
+    if (token === null){
+        return fetch('/api/public/report', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        });
+    } else {
+        return fetch('/api/public/report', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json',
+                      'Authorization' : 'Bearer ' + token
+                     },
+            body: JSON.stringify(formData)
+        });
+    }
+}
+
+export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport, APIGetStaffProblems};

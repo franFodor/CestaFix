@@ -23,7 +23,7 @@ public class Problem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long problemId;
+    private int problemId;
 
     private Double longitude;
 

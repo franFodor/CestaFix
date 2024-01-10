@@ -38,10 +38,10 @@ CREATE TABLE Category (
 
 CREATE TABLE Problems (
     problem_id SERIAL PRIMARY KEY,
-    longitude FLOAT NOT NULL,
-    latitude FLOAT NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL,
+    latitude DOUBLE PRECISION NOT NULL,
     status VARCHAR(50) NOT NULL,
-    category_id INT,
+    category_id INT NOT NULL,
     FOREIGN KEY(category_id) REFERENCES Category(category_id)
 );
 

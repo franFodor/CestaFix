@@ -47,9 +47,9 @@ public class Report implements Serializable {
 
     private String status;
 
-    private double longitude;
+    private Double longitude;
 
-    private double latitude;
+    private Double latitude;
 
     @JsonIgnoreProperties("reports")
     @ManyToOne

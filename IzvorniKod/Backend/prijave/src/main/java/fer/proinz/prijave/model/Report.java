@@ -7,12 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @Builder
@@ -24,7 +22,7 @@ public class Report implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long reportId;
+    private int reportId;
 
     @Column(name = "business_id", columnDefinition = "uuid", nullable = false, updatable = false, insertable = false)
     private UUID businessId;
@@ -55,6 +53,22 @@ public class Report implements Serializable {
     @ManyToOne
     @JoinColumn(name = "problem_id")
     private Problem problem;
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Report report = (Report) o;
+
+        return Objects.equals(reportId, report.reportId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(reportId);
+    }
 
 }
 

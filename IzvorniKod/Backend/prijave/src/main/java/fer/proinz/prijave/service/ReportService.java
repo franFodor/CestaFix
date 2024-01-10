@@ -81,15 +81,19 @@ public class ReportService {
     public ResponseEntity<?> groupReports(int problemId, List<Report> reportList) {
         Optional<Problem> problemOptional = problemRepository.findById(problemId);
         if (problemOptional.isPresent()) {
-            Problem problem = problemOptional.get();
+            Problem problemToGroupTo = problemOptional.get();
             for (Report report : reportList) {
-                problem.getReports().remove(report);
-                report.setProblem(problem);
-                problemService.updateProblem(problem.getProblemId(), problem);
-                reportRepository.save(report);
+                Optional<Problem> reportProblemOptional = problemRepository.findById(report.getProblem().getProblemId());
+                if (reportProblemOptional.isPresent()) {
+                    Problem reportProblem = reportProblemOptional.get();
+                    reportProblem.getReports().remove(report);
+                    report.setProblem(problemToGroupTo);
+                    problemService.updateProblem(reportProblem.getProblemId(), reportProblem);
+                    reportRepository.save(report);
 
-                if (problem.getReports().isEmpty()) {
-                    problemService.deleteProblem(problem.getProblemId());
+                    if (reportProblem.getReports().isEmpty()) {
+                        problemService.deleteProblem(reportProblem.getProblemId());
+                    }
                 }
             }
             return ResponseEntity.ok(problemRepository.findById(problemId));
@@ -97,6 +101,34 @@ public class ReportService {
             return ResponseEntity.internalServerError().body("Report grouping didn't work");
         }
     }
+
+    /*public ResponseEntity<?> groupReports(int problemId, List<Integer> reportIds) {
+        Optional<Problem> problemOptional = problemRepository.findById(problemId);
+        if (problemOptional.isPresent()) {
+            Problem problemToGroupTo = problemOptional.get();
+            for (Integer reportId : reportIds) {
+                Optional<Report> reportOptional = reportRepository.findById(reportId);
+                if (reportOptional.isPresent()) {
+                    Report report = reportOptional.get();
+                    Optional<Problem> reportProblemOptional = problemRepository.findById(report.getProblem().getProblemId());
+                    if (reportProblemOptional.isPresent()) {
+                        Problem reportProblem = reportProblemOptional.get();
+                        reportProblem.getReports().remove(report);
+                        report.setProblem(problemToGroupTo);
+                        problemService.updateProblem(reportProblem.getProblemId(), reportProblem);
+                        reportRepository.save(report);
+
+                        if (reportProblem.getReports().isEmpty()) {
+                            problemService.deleteProblem(reportProblem.getProblemId());
+                        }
+                    }
+                }
+            }
+            return ResponseEntity.ok(problemRepository.findById(problemId));
+        } else {
+            return ResponseEntity.internalServerError().body("Report grouping didn't work");
+        }
+    }*/
 
     public ResponseEntity<String> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);

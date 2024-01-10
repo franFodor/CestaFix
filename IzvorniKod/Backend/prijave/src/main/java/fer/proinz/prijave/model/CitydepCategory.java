@@ -6,15 +6,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "CitydepCategory")
+@Table(name = "citydeptcategory")
+@IdClass(CitydepCategoryId.class) // Use the composite key class
 public class CitydepCategory {
 
     @Id

@@ -64,11 +64,12 @@ async function APIGetAllReports(problem_id){
     return data.reports;
 }
 
-async function APIGetStaffProblems(user_ID){
-    const response = await fetch('/api/advanced//' + user_ID, {
+async function APIGetStaffProblems(token,user_ID){
+    const response = await fetch('/api/advanced/getStaffProblems/' + user_ID, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization' : 'Bearer ' + token
         },
     });
 

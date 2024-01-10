@@ -72,7 +72,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
 
         //Dodati Popup sa confirmationom Uspjesnosti reporta, IDjem ukoliko je bitan i klikom njega ide reload
-        window.location.reload();
+        //window.location.reload();
     };
 
     const submitReport = (closest_problem_id) => {

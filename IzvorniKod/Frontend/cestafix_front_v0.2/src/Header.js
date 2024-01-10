@@ -20,7 +20,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
     navigate("/"); 
     //Pozvati LogoutAPI kojim ce se javit BE  da je sesh token xprd
 
-    Cookies.remove('sessionToken', { path: '/' });
+     Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });
     window.location.reload();
 

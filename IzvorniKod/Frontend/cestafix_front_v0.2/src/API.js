@@ -64,6 +64,18 @@ async function APIGetAllReports(problem_id){
     return data.reports;
 }
 
+async function APIGetStaffProblems(user_ID){
+    const response = await fetch('/api/advanced//' + user_ID, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    const data = await response.json();
+    return data;
+}
+
 async function APIWhoAmI(token){
     const response = await fetch('/api/normal/user/whoAmI', {
         method: 'GET',
@@ -109,4 +121,4 @@ async function APICreateReport(token, title, description, address, photo, report
     }
 }
 
-export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport};
+export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport, APIGetStaffProblems};

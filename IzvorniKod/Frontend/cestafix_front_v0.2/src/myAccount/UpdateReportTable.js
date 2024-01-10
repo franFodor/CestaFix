@@ -4,7 +4,7 @@ import '../API'
 const UpdateReportTable = () => {
 
     return (
-        <div className="updateTableeee">
+        <div className="updateTableee">
        
         </div>
     );

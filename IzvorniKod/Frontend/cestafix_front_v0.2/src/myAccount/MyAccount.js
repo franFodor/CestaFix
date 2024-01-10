@@ -4,8 +4,9 @@ import "./MyAccountMain.css";
 import userImage from "../images/User.png";
 import EditAccountForm from "./EditAccountForm";
 import ReportList from "../ReportList";
-import UpdateReportTable from "./updateReportTable";
-import MergeReportTable from "./mergeReportTable";
+import UpdateReportTable from "./UpdateReportTable";
+import MergeReportTable from "./MergeReportTable";
+import UserReportTable from "./UserReportTable";
 
 const MyAccount = () => {
   let loggedUser;
@@ -65,7 +66,7 @@ const MyAccount = () => {
 
             <div className="myAccRight">
               {buttonClicked === "a" && <EditAccountForm />}
-              {buttonClicked === "b" && <ReportList />}
+              {buttonClicked === "b" && <UserReportTable />}
               {buttonClicked === "c" && (
                 <div className="deletionDiv">
                 <p>

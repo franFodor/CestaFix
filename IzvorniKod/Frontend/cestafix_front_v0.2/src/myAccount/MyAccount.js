@@ -3,9 +3,8 @@ import Cookies from "js-cookie";
 import "./MyAccountMain.css";
 import userImage from "../images/User.png";
 import EditAccountForm from "./EditAccountForm";
-import ReportList from "../ReportList";
 import UpdateReportTable from "./UpdateReportTable";
-import MergeReportTable from "./MergeReportTable";
+import MergeReportTable_ from "./MergeReportTable";
 import UserReportTable from "./UserReportTable";
 
 const MyAccount = () => {
@@ -74,7 +73,7 @@ const MyAccount = () => {
                   može biti poništena.
                 </p>
                 <br></br>
-                <button className="deleteButton" onClick={handleDeletion}>Confirm Deletion</button>
+                <button className="deleteButton" onClick={handleDeletion}>POTVRDI</button>
               </div>
               )}
             </div>
@@ -128,7 +127,7 @@ const MyAccount = () => {
 
             <div className="myAccRight">
               {buttonClicked === "a" && <UpdateReportTable />}
-              {buttonClicked === "b" && <MergeReportTable />}
+              {buttonClicked === "b" && <MergeReportTable_ />}
               {buttonClicked === "c" && (
                 <div className="deletionDiv">
                 <p>
@@ -136,7 +135,7 @@ const MyAccount = () => {
                   može biti poništena.
                 </p>
                 <br></br>
-                <button className="deleteButton" onClick={handleDeletion}>Confirm Deletion</button>
+                <button className="deleteButton" onClick={handleDeletion}>POTVRDI</button>
               </div>
               )}
             </div>

@@ -4,7 +4,7 @@ import './MyAccountMain.css'
 import userImage from '../images/User.png';
 import EditAccountForm from './EditAccountForm';
 import ReportList from '../ReportList';
-import updateReportTable from './updateReportTable';
+import updateReportTable  from './updateReportTable';
 import mergeReportTable from './mergeReportTable';
 
 

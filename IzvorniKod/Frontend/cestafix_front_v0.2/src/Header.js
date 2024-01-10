@@ -13,7 +13,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
 
   const handleReportBtn = () => { setIsReportPopupShown(!isReportPopupShown); }; // Switcha stanje izmedu true i false
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
-  const handleStatBtn = () => { isStatPopupShown(!isReportPopupShown); };
+  const handleStatBtn = () => { setIsStatPopupShown(!isReportPopupShown); };
 
   const navigate = useNavigate();
     const handleLogout = () => {
@@ -90,8 +90,8 @@ const Header = ({pickMarkerLatLon, markers}) => {
         <ReportPopupComponent onClose={handleReportBtn} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
       )}
       {/*Popup za Statistiku*/}
-      {isReportPopupShown && (
-        <ReportPopupComponent onClose={handleReportBtn} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
+      {isStatPopupShown && (
+        <></>
       )}
     </header>
   );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import '../EditAccountForm.css'
+import './EditAccountForm.css'
 
 const EditAccountForm = () => {
     // State for user account details

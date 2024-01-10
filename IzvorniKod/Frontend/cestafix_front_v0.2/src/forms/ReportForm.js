@@ -47,8 +47,11 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         let photos = [];
         const photoFiles = formData.getAll("photo");
         for (let file of photoFiles) {
-            const base64String = await fileToBase64(file);
-            photos.push(base64String);
+            if (file.size>0){
+                const base64String = await fileToBase64(file);
+                photos.push(base64String);
+            }
+            
         }
 
         const data = {
@@ -72,7 +75,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
 
         //Dodati Popup sa confirmationom Uspjesnosti reporta, IDjem ukoliko je bitan i klikom njega ide reload
-        window.location.reload();
+        //window.location.reload();
     };
 
     const submitReport = (closest_problem_id) => {

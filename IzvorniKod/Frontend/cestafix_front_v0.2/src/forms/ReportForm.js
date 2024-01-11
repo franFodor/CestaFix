@@ -16,7 +16,11 @@ function haversineDistance(latlon1, latlon2) {
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
+        reader.onloadend = () => {
+            const base64String = reader.result.split(',')[1];
+            resolve(base64String);
+
+        }
         reader.onerror = reject;
         reader.readAsDataURL(file);
     });
@@ -47,11 +51,11 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         let photos = [];
         const photoFiles = formData.getAll("photo");
         for (let file of photoFiles) {
-            if (file.size>0){
+            if (file.size > 0) {
                 const base64String = await fileToBase64(file);
                 photos.push(base64String);
             }
-            
+
         }
 
         const data = {
@@ -71,14 +75,14 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             setShowMergeConfirm(true);
         } else {
             APICreateReport(data.token, data.title, data.description, data.address, data.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], data.categoryId, null)
-            .then(response => {
-                if (response.status === 200) {
-                    window.location.reload();
-                    // popup 
-                } else if (response.status === 403) {
-                    // popup
-                }
-            });;
+                .then(response => {
+                    if (response.status === 200) {
+                        window.location.reload();
+                        // popup 
+                    } else if (response.status === 403) {
+                        // popup
+                    }
+                });;
             onClose();
         }
 

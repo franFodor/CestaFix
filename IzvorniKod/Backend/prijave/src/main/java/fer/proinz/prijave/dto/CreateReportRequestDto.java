@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.*;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class CreateReportRequestDto {
     private String title;
     private String description;
     private String address;
-    private byte[] photo;
+    private List<String> base64Photos;
     private String reportStatus;
 
     // Problem fields

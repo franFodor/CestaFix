@@ -1,10 +1,7 @@
 package fer.proinz.prijave.controller;
 
 import fer.proinz.prijave.dto.CreateReportRequestDto;
-import fer.proinz.prijave.model.Category;
-import fer.proinz.prijave.model.Problem;
-import fer.proinz.prijave.model.Report;
-import fer.proinz.prijave.model.User;
+import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.service.*;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityManager;
@@ -17,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +35,8 @@ public class ReportController {
     private JwtService jwtService;
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private PhotoService photoService;
 
     @Operation(summary = "Get all reports")
     @GetMapping( "/public/report/getAll")
@@ -46,10 +47,7 @@ public class ReportController {
     @Operation(summary = "Get a report by its id")
     @GetMapping( "/public/report/{reportId}")
     public ResponseEntity<Report> getReportById(@PathVariable("reportId") int reportId) {
-        Optional<Report> reportOptional = reportService.getReportById(reportId);
-        return reportOptional.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-
+        return reportService.getReportById(reportId);
     }
 
     @Operation(summary = "Create a report")
@@ -102,13 +100,38 @@ public class ReportController {
                 .title(reportRequest.getTitle())
                 .description(reportRequest.getDescription())
                 .address(reportRequest.getAddress())
-                .photo(reportRequest.getPhoto())
+                .base64Photos(reportRequest.getBase64Photos())
                 .status(reportRequest.getReportStatus())
                 .longitude(reportRequest.getLongitude())
                 .latitude(reportRequest.getLatitude())
                 .problem(savedProblem)
                 .user(user)
                 .build();
+
+        //
+        if (report.getBase64Photos() != null) {
+            List<Photo> photos = new ArrayList<>();
+            for (int i = 0; i < report.getBase64Photos().size(); i++) {
+                String base64Photo = report.getBase64Photos().get(i);
+
+                // Check if the string is long enough before attempting to substring
+                if (base64Photo.length() > 22) {
+                    base64Photo = base64Photo.substring(22);
+                    report.getBase64Photos().set(i, base64Photo);
+                }
+
+                Photo photo = Photo.builder()
+                        .photoData(Base64.getDecoder().decode(base64Photo))
+                        .report(report)
+                        .build();
+                photoService.createPhoto(photo);
+                photos.add(photo);
+            }
+
+            report.setPhotos(photos);
+        } else {
+            report.setPhotos(null);
+        }
 
         // Save the Report object
         Report savedReport = reportService.createReport(report);
@@ -125,6 +148,7 @@ public class ReportController {
         return reportService.updateReport(reportId, updatedReport);
     }
 
+    @Operation(summary = "Staff member groups reports")
     @PatchMapping("/advanced/report/group/{problemId}")
     public ResponseEntity<?> groupReports(
             @PathVariable("problemId") int problemId,

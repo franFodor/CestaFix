@@ -1,9 +1,6 @@
 package fer.proinz.prijave.service;
 
-import fer.proinz.prijave.model.Problem;
-import fer.proinz.prijave.model.Report;
-import fer.proinz.prijave.model.Role;
-import fer.proinz.prijave.model.User;
+import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -27,11 +22,34 @@ public class ReportService {
     private final ProblemService problemService;
 
     public List<Report> getAllReports() {
-        return reportRepository.findAll();
+        List<Report> reports = reportRepository.findAll();
+
+        for (Report report : reports) {
+            getReportById(report.getReportId());
+        }
+
+        return reports;
     }
 
-    public Optional<Report> getReportById(int reportId) {
-        return reportRepository.findById(reportId);
+    public ResponseEntity<Report> getReportById(int reportId) {
+        Optional<Report> reportOptional = reportRepository.findById(reportId);
+        if (reportOptional.isPresent()) {
+            Report report = reportOptional.get();
+            List<String> base64Photos = new ArrayList<>();
+
+            if (report.getPhotos() != null) {
+                for (Photo photo : report.getPhotos()) {
+                    base64Photos.add(Base64.getEncoder().encodeToString(photo.getPhotoData()));
+                }
+                report.setBase64Photos(base64Photos);
+            } else {
+                report.setBase64Photos(null);
+            }
+
+            return ResponseEntity.ok(report);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     public Report createReport(Report report) {
@@ -62,8 +80,8 @@ public class ReportService {
                             if (updatedReport.getAddress() != null) {
                                 rep.setAddress(updatedReport.getAddress());
                             }
-                            if (updatedReport.getPhoto() != null) {
-                                rep.setPhoto(updatedReport.getPhoto());
+                            if (updatedReport.getPhotos() != null) {
+                                rep.setPhotos(updatedReport.getPhotos());
                             }
                             if (updatedReport.getStatus() != null) {
                                 rep.setStatus(updatedReport.getStatus());

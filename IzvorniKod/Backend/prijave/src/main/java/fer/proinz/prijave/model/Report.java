@@ -1,5 +1,6 @@
 package fer.proinz.prijave.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -7,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -38,16 +41,23 @@ public class Report implements Serializable {
 
     private String address;
 
-    private byte[] photo;
+    @JsonIgnore
+    @JsonIgnoreProperties("report")
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @Fetch(FetchMode.JOIN)
+    private List<Photo> photos = new ArrayList<>();
+
+    @Transient
+    private List<String> base64Photos;
 
     @Column(name = "report_time", nullable = false, updatable = false, insertable = false)
     private Timestamp reportTime;
 
     private String status;
 
-    private Double longitude;
-
     private Double latitude;
+
+    private Double longitude;
 
     @JsonIgnoreProperties("reports")
     @ManyToOne

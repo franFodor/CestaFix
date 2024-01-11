@@ -25,9 +25,9 @@ public class Problem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int problemId;
 
-    private Double longitude;
-
     private Double latitude;
+
+    private Double longitude;
 
     private String status;
 

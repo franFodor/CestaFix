@@ -1,6 +1,5 @@
 package fer.proinz.prijave.controller;
 
-import fer.proinz.prijave.model.CitydepCategory;
 import fer.proinz.prijave.model.Problem;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.ProblemService;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 public class ProblemController {
 
     private final ProblemService problemService;
+
     private final UserService userService;
 
     @Operation(summary = "Get all problems")
@@ -40,8 +40,8 @@ public class ProblemController {
     @Operation(summary = "Create a problem")
     @PostMapping("/public/problem")
     public ResponseEntity<Problem> createProblem(@RequestBody Problem problem) {
-        Problem saved = problemService.createProblem(problem);
-        return ResponseEntity.ok(saved);
+        Problem savedProblem = problemService.createProblem(problem);
+        return ResponseEntity.ok(savedProblem);
     }
 
     @Operation(summary = "Update a problem")
@@ -68,7 +68,7 @@ public class ProblemController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Korisnik nije pronaden");
         }
         User user = userOptional.get();
-        return ResponseEntity.ok(userService.getProblemsForUser(user));
+        return ResponseEntity.ok(problemService.getProblemsForUser(user));
     }
 
 }

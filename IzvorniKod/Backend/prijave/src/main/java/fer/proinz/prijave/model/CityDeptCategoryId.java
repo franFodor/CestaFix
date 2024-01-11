@@ -3,16 +3,16 @@ package fer.proinz.prijave.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class CitydepCategoryId implements Serializable {
+public class CityDeptCategoryId implements Serializable {
     private int category; // This type should match the type of the primary key of Category
     private int cityDepartment; // This type should match the type of the primary key of CityDepartment
 
     // Default constructor
-    public CitydepCategoryId() {
+    public CityDeptCategoryId() {
     }
 
     // All-args constructor
-    public CitydepCategoryId(int category, int cityDepartment) {
+    public CityDeptCategoryId(int category, int cityDepartment) {
         this.category = category;
         this.cityDepartment = cityDepartment;
     }
@@ -22,7 +22,7 @@ public class CitydepCategoryId implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CitydepCategoryId that = (CitydepCategoryId) o;
+        CityDeptCategoryId that = (CityDeptCategoryId) o;
         return category == that.category && cityDepartment == that.cityDepartment;
     }
 

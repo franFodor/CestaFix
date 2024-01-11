@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "citydeptcategory")
-@IdClass(CitydepCategoryId.class) // Use the composite key class
-public class CitydepCategory {
+@IdClass(CityDeptCategoryId.class) // Use the composite key class
+public class CityDeptCategory {
 
     @Id
     @ManyToOne

@@ -77,7 +77,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
 
       </div >
       <div className="left">
-        <h1 className="text-2xl font-bold">CestaFIX</h1>
+        <h1 className="text-2xl font-bold"><a href="/">CestaFIX</a></h1>
       </div>
 
       {/*Popup za Login/Register*/}

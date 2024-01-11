@@ -70,7 +70,15 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             setClosestMarkerData(closestMarker.markerJSON);
             setShowMergeConfirm(true);
         } else {
-            APICreateReport(data.token, data.title, data.description, data.address, data.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], data.categoryId, null);
+            APICreateReport(data.token, data.title, data.description, data.address, data.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], data.categoryId, null)
+            .then(response => {
+                if (response.status === 200) {
+                    window.location.reload();
+                    // popup 
+                } else if (response.status === 403) {
+                    // popup
+                }
+            });;
             onClose();
         }
 
@@ -80,7 +88,14 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
     const submitReport = (closest_problem_id) => {
         if (reportData) {
-            APICreateReport(reportData.token, reportData.title, reportData.description, reportData.address, reportData.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], reportData.categoryId, closest_problem_id);
+            APICreateReport(reportData.token, reportData.title, reportData.description, reportData.address, reportData.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], reportData.categoryId, closest_problem_id).then(response => {
+                if (response.status === 200) {
+                    window.location.reload();
+                    // popup
+                } else if (response.status === 403) {
+                    //popup
+                }
+            });;
         }
         onClose();
     };

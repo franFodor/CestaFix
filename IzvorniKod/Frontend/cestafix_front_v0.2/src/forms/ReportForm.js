@@ -89,37 +89,44 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 null)
                 .then(response => {
                     if (response.status === 200) {
-                        let user = Cookies.get("userInfo");
-                        if (user) {
-                            setReportContent(
-                                <div>
-                                    <h2>Prijava je uspješno prijavljena!</h2>
-                                    <p>Id vaše prijave je:</p>
-                                    <p>{response.json || "undefined"}</p>
-                                    <p>Placeholder text</p>
-                                    <button onClick={window.location.reload()}>Reload Page</button>
-                                </div>
-                            );
-                        }
-                        else {
-                            setReportContent(
-                                <div>
-                                    <h2>Prijava je uspješno prijavljena!</h2>
-                                    <button onClick={window.location.reload()}>Reload Page</button>
-                                </div>
-                            );
-                        }
+                        return response.json(); // Parse the response body as JSON
                     } else {
                         setReportContent(
                             <>
-                                {baseReport}
-                                <div style={{ color: 'red' }}>
-                                    Nekaj ne valja
-                                </div>
+                              {baseReport}
+                              <div style={{ color: 'red' }}>
+                                  Nekaj ne valja
+                              </div>
                             </>
-
+              
+                        );
+                        return;
+                    }
+                })
+                .then(apiResponse => {
+                    let user = Cookies.get("userInfo");
+                    console.log("uspjeh! ",user);
+                    if (!user) {
+                        setReportContent(
+                            <div>
+                               <h2>Prijava je uspješno prijavljena!</h2>
+                               <p>Id vaše prijave je:</p>
+                               <p>{apiResponse.businessId}</p> 
+                               <br></br>
+                               <button className='SubmitButton' onClick={()=>window.location.reload()}>Potvrdi</button>
+                            </div>
+                        );
+                        return;
+                    }
+                    else {
+                        setReportContent(
+                            <div>
+                               <h2>Prijava je uspješno prijavljena!</h2>
+                               <button onClick={()=>window.location.reload()}>Potvrdi</button>
+                            </div>
                         );
                     }
+                    return;
                 });
 
         }

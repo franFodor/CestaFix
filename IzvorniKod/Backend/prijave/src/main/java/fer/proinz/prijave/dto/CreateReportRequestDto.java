@@ -20,8 +20,8 @@ public class CreateReportRequestDto {
     private String reportStatus;
 
     // Problem fields
-    private Double longitude;
     private Double latitude;
+    private Double longitude;
     private String problemStatus;
     private int categoryId;
     private Integer mergeProblemId;

@@ -95,47 +95,42 @@ public class ReportController {
             savedProblem = optionalProblem.get();
         }
 
-        // Create new Report
+        // Create photos
+        List<Photo> photos = new ArrayList<>();
+        if (reportRequest.getBase64Photos() != null) {
+            for (String base64Photo : reportRequest.getBase64Photos()) {
+                Photo photo = Photo.builder()
+                        .photoData(Base64.getDecoder().decode(base64Photo))
+                        .report(null)
+                        .build();
+                photoService.createPhoto(photo);
+                photos.add(photo);
+            }
+        }
+
+        // Build a new Report
         Report report = Report.builder()
+                .user(user)
                 .title(reportRequest.getTitle())
                 .description(reportRequest.getDescription())
                 .address(reportRequest.getAddress())
                 .base64Photos(reportRequest.getBase64Photos())
                 .status(reportRequest.getReportStatus())
-                .longitude(reportRequest.getLongitude())
                 .latitude(reportRequest.getLatitude())
+                .longitude(reportRequest.getLongitude())
                 .problem(savedProblem)
-                .user(user)
                 .build();
 
-        //
-        if (report.getBase64Photos() != null) {
-            List<Photo> photos = new ArrayList<>();
-            for (int i = 0; i < report.getBase64Photos().size(); i++) {
-                String base64Photo = report.getBase64Photos().get(i);
-
-                // Check if the string is long enough before attempting to substring
-                if (base64Photo.length() > 22) {
-                    base64Photo = base64Photo.substring(22);
-                    report.getBase64Photos().set(i, base64Photo);
-                }
-
-                Photo photo = Photo.builder()
-                        .photoData(Base64.getDecoder().decode(base64Photo))
-                        .report(report)
-                        .build();
-                photoService.createPhoto(photo);
-                photos.add(photo);
-            }
-
-            report.setPhotos(photos);
-        } else {
-            report.setPhotos(null);
-        }
-
-        // Save the Report object
         Report savedReport = reportService.createReport(report);
+
+        for (Photo photo : photos) {
+            photo.setReport(savedReport);
+            photoService.updatePhoto(photo.getPhotoId(), photo);
+        }
         entityManager.refresh(savedReport);
+        savedReport.setPhotos(photos);
+        reportService.createReport(savedReport);
+
         return ResponseEntity.ok(savedReport);
     }
 

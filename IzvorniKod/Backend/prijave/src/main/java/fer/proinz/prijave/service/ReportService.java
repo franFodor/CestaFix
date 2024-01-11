@@ -42,8 +42,10 @@ public class ReportService {
                     base64Photos.add(Base64.getEncoder().encodeToString(photo.getPhotoData()));
                 }
                 report.setBase64Photos(base64Photos);
+                reportRepository.save(report);
             } else {
                 report.setBase64Photos(null);
+                reportRepository.save(report);
             }
 
             return ResponseEntity.ok(report);

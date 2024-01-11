@@ -32,6 +32,9 @@ public class PhotoService {
                     if (updatedPhoto.getPhotoData() != null) {
                         photo.setPhotoData(updatedPhoto.getPhotoData());
                     }
+                    if (updatedPhoto.getReport() != null) {
+                        photo.setReport(updatedPhoto.getReport());
+                    }
                     return photoRepository.save(photo);
                 })
                 .orElseThrow(RuntimeException::new);

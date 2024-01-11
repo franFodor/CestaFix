@@ -43,7 +43,7 @@ public class Report implements Serializable {
 
     @JsonIgnore
     @JsonIgnoreProperties("report")
-    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Fetch(FetchMode.JOIN)
     private List<Photo> photos = new ArrayList<>();
 

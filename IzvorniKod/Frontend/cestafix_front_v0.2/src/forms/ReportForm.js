@@ -27,9 +27,12 @@ function fileToBase64(file) {
 }
 
 const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
+
+
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
     const [reportData, setReportData] = useState(null);
+    const [address, setAddress] = useState(pickMarkerLatLon || '');
 
     const getNearbyMarker = (latlon, categoryId) => {
         let closestMarker = null;
@@ -66,7 +69,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             photo: photos.length > 0 ? photos : null,
             token: Cookies.get("sessionToken") || null
         };
-
         setReportData(data);
 
         let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
@@ -74,57 +76,59 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             setClosestMarkerData(closestMarker.markerJSON);
             setShowMergeConfirm(true);
         } else {
-            APICreateReport(data.token, data.title, data.description, data.address, data.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], data.categoryId, null)
+            APICreateReport(data.token,
+                data.title,
+                data.description,
+                data.address,
+                data.photo,
+                "U obradi",
+                "U obradi",
+                pickMarkerLatLon[0],
+                pickMarkerLatLon[1],
+                data.categoryId,
+                null)
                 .then(response => {
                     if (response.status === 200) {
-                        window.location.reload();
-                        // popup 
-                    } else if (response.status === 403) {
-                        // popup
+                        let user = Cookies.get("userInfo");
+                        if (user) {
+                            setReportContent(
+                                <div>
+                                    <h2>Prijava je uspješno prijavljena!</h2>
+                                    <p>Id vaše prijave je:</p>
+                                    <p>{response.json || "undefined"}</p>
+                                    <p>Placeholder text</p>
+                                    <button onClick={window.location.reload()}>Reload Page</button>
+                                </div>
+                            );
+                        }
+                        else {
+                            setReportContent(
+                                <div>
+                                    <h2>Prijava je uspješno prijavljena!</h2>
+                                    <button onClick={window.location.reload()}>Reload Page</button>
+                                </div>
+                            );
+                        }
+                    } else {
+                        setReportContent(
+                            <>
+                                {baseReport}
+                                <div style={{ color: 'red' }}>
+                                    Nekaj ne valja
+                                </div>
+                            </>
+
+                        );
                     }
-                });;
-            onClose();
+                });
+
         }
 
         //Dodati Popup sa confirmationom Uspjesnosti reporta, IDjem ukoliko je bitan i klikom njega ide reload
         //window.location.reload();
     };
 
-    const submitReport = (closest_problem_id) => {
-        if (reportData) {
-            APICreateReport(reportData.token, reportData.title, reportData.description, reportData.address, reportData.photo, "U obradi", "U obradi", pickMarkerLatLon[0], pickMarkerLatLon[1], reportData.categoryId, closest_problem_id).then(response => {
-                if (response.status === 200) {
-                    window.location.reload();
-                    // popup
-                } else if (response.status === 403) {
-                    //popup
-                }
-            });;
-        }
-        onClose();
-    };
-
-    const handleMergeDecision = (merge) => {
-        setShowMergeConfirm(false);
-        if (merge) {
-            submitReport(closestMarkerData.problemId);
-        } else {
-            submitReport(null);
-        }
-    };
-
-    const mergeConfirmDialog = showMergeConfirm && (
-        <div className="mergeConfirmDialog">
-            <h3>Već postoji bliska prijava. Detalji prijave:</h3>
-            <p>{`Naslov: ${closestMarkerData.reports[0].title}`}</p>
-            <p>{`Opis: ${closestMarkerData.reports[0].description}`}</p>
-            <p>{`Adresa: ${closestMarkerData.reports[0].address}`}</p>
-            <button onClick={() => handleMergeDecision(true)}>Spoji s postojećom</button>
-            <button onClick={() => handleMergeDecision(false)}>Stvori novu</button>
-        </div>
-    );
-    const [address, setAddress] = useState(pickMarkerLatLon || '');
-    const reportContent = (
+    const baseReport = (
         <div className="reportContent" >
             <form className="form" onSubmit={handleSubmitReport}>
                 <div>
@@ -166,6 +170,46 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             </form>
         </div>
     );
+
+    const [reportContent, setReportContent] = useState(baseReport);
+
+
+    const submitReport = (closest_problem_id) => {
+        if (reportData) {
+            APICreateReport(reportData.token,
+                reportData.title,
+                reportData.description,
+                reportData.address,
+                reportData.photo,
+                "U obradi",
+                "U obradi",
+                pickMarkerLatLon[0],
+                pickMarkerLatLon[1],
+                reportData.categoryId,
+                closest_problem_id)
+                .then(response => {
+                    if (response.status === 200) {
+                        // popup
+                    } else if (response.status === 403) {
+                        //popup
+                    }
+                });;
+        }
+    };
+
+
+    const mergeConfirmDialog = showMergeConfirm && (
+        <div className="mergeConfirmDialog">
+            <h3>Već postoji bliska prijava. Detalji prijave:</h3>
+            <p>{`Naslov: ${closestMarkerData.reports[0].title}`}</p>
+            <p>{`Opis: ${closestMarkerData.reports[0].description}`}</p>
+            <p>{`Adresa: ${closestMarkerData.reports[0].address}`}</p>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData.problemId); }}>Spoji s postojećom</button>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(null); }}>Stvori novu</button>
+        </div>
+    );
+
+
 
     return (
         <PopupComponent onClose={onClose}>

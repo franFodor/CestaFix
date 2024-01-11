@@ -3,6 +3,7 @@ package fer.proinz.prijave;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import fer.proinz.prijave.dto.CreateReportRequestDto;
+import fer.proinz.prijave.model.Category;
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
@@ -61,86 +62,59 @@ public class ReportsIT {
     }
 
     @BeforeEach
-    void setUpCategory() {
-        try (Connection connection = dataSource.getConnection()) {
-            String sqlCat = "INSERT INTO Category (category_id, category_name) VALUES (1, 'categ1')";
-            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlCat);
-            preparedStatementReport.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @AfterEach
-    void tearDownCategory() {
-        try (Connection connection = dataSource.getConnection()) {
-            String sqlCat = "DELETE FROM Category WHERE category_id = 1";
-            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlCat);
-            preparedStatementReport.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    @BeforeEach
     void setUpReport() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlReport = "INSERT INTO Reports (report_id, title, description, address, photo, status, longitude, latitude) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-            Report report = Report.builder()
-                    .reportId(15)
-                    .title("Pukotina na cesti")
-                    .description("kwerwoirwsnfsffowefsg")
-                    .address("Ulica grada Vukovara 3")
-                    .photo(null)
-                    .status("Osteceno")
-                    .longitude(45.80666)
-                    .latitude(15.9696)
+            String sqlCategory = "INSERT INTO Category (category_name) " +
+                    "VALUES (?)";
+            Category category = Category.builder()
+                    .categoryName("cat_1")
                     .build();
+            PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
+            preparedStatementCategory.setString(1, category.getCategoryName());
+            preparedStatementCategory.executeUpdate();
 
+            String sqlReport = "INSERT INTO Reports (title, description, address, status, latitude, longitude) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+            Report report = Report.builder()
+                    .title("Prva prijava")
+                    .description("Opis prijave")
+                    .address("Unska ulica 3")
+                    .status("U obradi")
+                    .latitude(45.80666)
+                    .longitude(15.9696)
+                    .build();
             PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
-            preparedStatementReport.setInt(1, report.getReportId());
-            preparedStatementReport.setString(2, report.getTitle());
-            preparedStatementReport.setString(3, report.getDescription());
-            preparedStatementReport.setString(4, report.getAddress());
-            preparedStatementReport.setBytes(5, report.getPhoto());
-            preparedStatementReport.setString(6, report.getStatus());
-            preparedStatementReport.setDouble(7, report.getLongitude());
-            preparedStatementReport.setDouble(8, report.getLatitude());
-
+            preparedStatementReport.setString(1, report.getTitle());
+            preparedStatementReport.setString(2, report.getDescription());
+            preparedStatementReport.setString(3, report.getAddress());
+            preparedStatementReport.setString(4, report.getStatus());
+            preparedStatementReport.setDouble(5, report.getLatitude());
+            preparedStatementReport.setDouble(6, report.getLongitude());
             preparedStatementReport.executeUpdate();
 
-            String sqlUser = "INSERT INTO Users (user_id, firstname, lastname, email, password, role) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
-
+            String sqlUser = "INSERT INTO Users (firstname, lastname, email, password, role) " +
+                    "VALUES (?, ?, ?, ?, ?)";
             User user = User.builder()
-                    .userId(2)
                     .firstname("John")
                     .lastname("Doe")
                     .email("john.doe@gmail.com")
                     .password(passwordEncoder.encode("qwertz"))
                     .role(Role.USER)
                     .build();
-
             UserDetails userDetails = User.builder()
                     .firstname("John")
                     .lastname("Doe")
                     .password(passwordEncoder.encode("qwertz"))
                     .role(Role.USER)
                     .build();
-
             this.jwtToken = jwtService.generateToken(userDetails);
-
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
-            preparedStatementUser.setInt(1, user.getUserId());
-            preparedStatementUser.setString(2, user.getFirstname());
-            preparedStatementUser.setString(3, user.getLastname());
-            preparedStatementUser.setString(4, user.getEmail());
-            preparedStatementUser.setString(5, user.getPassword());
-            preparedStatementUser.setString(6, String.valueOf(user.getRole()));
-
+            preparedStatementUser.setString(1, user.getFirstname());
+            preparedStatementUser.setString(2, user.getLastname());
+            preparedStatementUser.setString(3, user.getEmail());
+            preparedStatementUser.setString(4, user.getPassword());
+            preparedStatementUser.setString(5, String.valueOf(user.getRole()));
             preparedStatementUser.executeUpdate();
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,14 +124,19 @@ public class ReportsIT {
     @AfterEach
     void tearDownReport() {
         try (Connection connection = dataSource.getConnection()) {
+            String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
+            PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
+            preparedStatementCategory.setInt(1, 1);
+            preparedStatementCategory.executeUpdate();
+
             String sqlReport = "DELETE FROM Reports WHERE report_id = ?";
             PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
-            preparedStatementReport.setInt(1, 15);
+            preparedStatementReport.setInt(1, 1);
             preparedStatementReport.executeUpdate();
 
             String sqlUser = "DELETE FROM Users WHERE user_id = ?";
             PreparedStatement preparedStatementUser = connection.prepareStatement(sqlUser);
-            preparedStatementUser.setInt(1, 2);
+            preparedStatementUser.setInt(1, 1);
             preparedStatementUser.executeUpdate();
 
         } catch (Exception e) {
@@ -175,7 +154,7 @@ public class ReportsIT {
 
     @Test
     public void getReportByIdAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/public/report/15"))
+        mockMvc.perform(get("/public/report/1"))
                 .andExpect(status().isOk());
     }
 
@@ -189,15 +168,13 @@ public class ReportsIT {
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
-                .photo(null)
                 .mergeProblemId(null)
                 .problemStatus("Osteceno")
                 .reportStatus("Osteceno2")
-                .longitude(45.80666)
                 .latitude(15.9696)
+                .longitude(45.80666)
                 .categoryId(1)
                 .build();
-
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
@@ -215,15 +192,13 @@ public class ReportsIT {
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
-                .photo(null)
                 .mergeProblemId(null)
                 .problemStatus("Osteceno")
                 .reportStatus("Osteceno2")
-                .longitude(45.80666)
                 .latitude(15.9696)
+                .longitude(45.80666)
                 .categoryId(1)
                 .build();
-
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
@@ -236,14 +211,11 @@ public class ReportsIT {
     @Test
     public void updateReportAndExpect200OK() throws Exception {
         Report report = Report.builder()
-                .reportId(15)
                 .title("Pukotina na trotoaru")
                 .description("nsjgaowjsks")
                 .address("Ulica grada Vukovara 5")
-                .photo(null)
                 .status("Osteceno")
                 .build();
-
 
         String jsonReport = objectMapper.writeValueAsString(report);
 
@@ -267,10 +239,10 @@ public class ReportsIT {
     public void deleteReportAndExpect200OK() throws Exception {
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(delete("/advanced/report/15"))
+            mockMvc.perform(delete("/advanced/report/1"))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(delete("/advanced/report/15"))
+            mockMvc.perform(delete("/advanced/report/1"))
                     .andExpect(status().isForbidden());
         }
 

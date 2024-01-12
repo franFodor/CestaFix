@@ -139,19 +139,19 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         <div className="reportContent" >
             <form className="form" onSubmit={handleSubmitReport}>
                 <div>
-                    <label htmlFor="name">Name</label>
+                    <b><label htmlFor="name">Naslov</label></b>
                     <input id="name" type="text" name="name" required />
                 </div>
                 <div>
-                    <label htmlFor="description">Kratki Opis</label>
+                    <b><label htmlFor="description">Kratki Opis</label></b>
                     <textarea id="description" name="description" required />
                 </div>
                 <div>
-                    <label htmlFor="photo">Dodaj Slike</label>
+                    <b><label htmlFor="photo">Dodaj Slike</label></b>
                     <input id="photo" type="file" name="photo" accept="image/*" multiple />
                 </div>
                 <div>
-                    <label htmlFor="address">Geografske Koordinate ili Adresa</label>
+                    <b><label htmlFor="address">Geografske Koordinate ili Adresa</label></b>
                     <input
                         id="address"
                         type="text"
@@ -162,7 +162,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     />
                 </div>
                 <div>
-                    <label htmlFor="dropdown">Odaberite Kategoriju štete</label>
+                    <b><label htmlFor="dropdown">Odaberite Kategoriju štete</label></b>
                     <select id="dropdown" name="dropdown">
                         <option value="1">Oštećenje na cesti</option>
                         <option value="2">Oštećenje na vodovodnoj infrastrukturi</option>

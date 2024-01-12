@@ -7,10 +7,6 @@
     box-sizing: border-box;
 }
 
-.form > label {
-
-}
-
 .login-button,.signupbtn {
   background-color: #04AA6D;
   color: white;
@@ -31,8 +27,12 @@
 
 /* -------------REPORT FORM---------------- */
 
+div > input[type=file] {
+    margin-bottom: 15px;
+}
+
 .reportContent {
-    width: 300px;
+    width: 20%;
     display: flex;
 }
 
@@ -44,8 +44,9 @@ textarea {
     box-sizing: border-box;
 }
 
-.form > div > label {
-
+.form > div {
+    display: flex;
+    flex-direction: column;
 }
 
 select {

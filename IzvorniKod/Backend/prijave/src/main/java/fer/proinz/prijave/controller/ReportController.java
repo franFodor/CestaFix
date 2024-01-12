@@ -1,5 +1,9 @@
 package fer.proinz.prijave.controller;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.dto.CreateReportRequestDto;
 import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.service.*;
@@ -9,15 +13,13 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,6 +39,8 @@ public class ReportController {
     private EntityManager entityManager;
     @Autowired
     private PhotoService photoService;
+    @Autowired
+    private GeoConversionService geoConversionService;
 
     @Operation(summary = "Get all reports")
     @GetMapping( "/public/report/getAll")
@@ -50,10 +54,22 @@ public class ReportController {
         return reportService.getReportById(reportId);
     }
 
+    @Operation(summary = "Get statistics")
+    @GetMapping("/public/statistics")
+    public Map<String, Integer> reportStatistics() {
+        return reportService.getReportsStatistics();
+    }
+
+    @Operation(summary = "Anonymous user gets it's report")
+    @GetMapping("/public/lookup/{businessId}")
+    public ResponseEntity<Report> getReportByBusinessId(@PathVariable("businessId") UUID businessId) {
+        return reportService.getReportByBusinessId(businessId);
+    }
+
     @Operation(summary = "Create a report")
     @PostMapping("/public/report")
     @Transactional
-    public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) {
+    public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) throws JsonProcessingException {
 
         Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
         if (optionalCategory.isEmpty()) {
@@ -106,6 +122,18 @@ public class ReportController {
                 photoService.createPhoto(photo);
                 photos.add(photo);
             }
+        }
+
+        // Fill in the address
+        if (reportRequest.getAddress() == null && reportRequest.getLatitude() != null && reportRequest.getLongitude() != null) {
+            String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(address);
+            address = jsonNode.get("display_name").asText();
+            reportRequest.setAddress(address);
+        } else if (reportRequest.getAddress() != null && reportRequest.getLatitude() == null && reportRequest.getLongitude() == null) {
+            String coordinates = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
+            System.out.println(coordinates);
         }
 
         // Build a new Report

@@ -23,11 +23,9 @@ public class ReportService {
 
     public List<Report> getAllReports() {
         List<Report> reports = reportRepository.findAll();
-
         for (Report report : reports) {
             getReportById(report.getReportId());
         }
-
         return reports;
     }
 
@@ -48,6 +46,16 @@ public class ReportService {
                 reportRepository.save(report);
             }
 
+            return ResponseEntity.ok(report);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    public ResponseEntity<Report> getReportByBusinessId(UUID businessId) {
+        Optional<Report> reportOptional = reportRepository.findByBusinessId(businessId);
+        if (reportOptional.isPresent()) {
+            Report report = reportOptional.get();
             return ResponseEntity.ok(report);
         } else {
             return ResponseEntity.notFound().build();
@@ -181,6 +189,16 @@ public class ReportService {
         } else {
             throw new RuntimeException("Report with id " + reportId + " does not exists!");
         }
+    }
+
+    public Map<String, Integer> getReportsStatistics() {
+        Map<String, Integer> statistics = new HashMap<>();
+
+        statistics.put("Broj prijava koje cekaju obradu", reportRepository.countByStatus("Ceka obradu"));
+        statistics.put("Broj prijava koje su u obradi", reportRepository.countByStatus("U obradi"));
+        statistics.put("Broj prijava koje su zavrsene", reportRepository.countByStatus("Zavrseno"));
+
+        return statistics;
     }
 
 }

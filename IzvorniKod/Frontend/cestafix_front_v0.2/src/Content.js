@@ -6,9 +6,15 @@ import { useMapEvents } from 'react-leaflet/hooks';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import './Content.css'
-import { APIGetAllProblems } from './API.js'
+import { APIGetAllProblems, APIGetProblemIDFromBusinessId } from './API.js'
+import { useParams } from 'react-router-dom';
+
 
 const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers }) => {
+    const businessIdActive = useParams();
+    //console.log(businessIdActive);
+  
+    
 
     function handleMarkerClick(markerData) {
         setSelectedMarkerId(markerData.problemId);
@@ -60,7 +66,13 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
 
         return null; // This component does not render anything
     };
-
+    async function loadSelectedReport(){
+        if(businessIdActive){
+            console.log("Businsess Id>>",businessIdActive);
+            setSelectedMarkerId((await APIGetProblemIDFromBusinessId(businessIdActive.id)).problem.problemId);
+        }
+    }
+    loadSelectedReport();
 
 
     return (

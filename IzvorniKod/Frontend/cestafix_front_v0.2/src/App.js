@@ -5,6 +5,7 @@ import Footer from './Footer';
 import MyAccount from './myAccount/MyAccount';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
+
 function App() {
   const [pickMarkerLatLon, setPickMarkerLatLon] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -17,9 +18,7 @@ function App() {
           <Route path="/myAccount" element={<MyAccount />} />
           <Route path="/" element={<Content setPickMarkerLatLon={setPickMarkerLatLon} pickMarkerLatLon={pickMarkerLatLon}
             markers={markers} setMarkers={setMarkers} />} />
-          <Route path="/prijava/:id" component={Content} />
-
-        </Routes>
+          <Route path="/prijava/:id" element={<Content setPickMarkerLatLon={setPickMarkerLatLon} pickMarkerLatLon={pickMarkerLatLon} markers={markers} setMarkers={setMarkers} />} />        </Routes>
         <Footer />
       </div>
     </Router>

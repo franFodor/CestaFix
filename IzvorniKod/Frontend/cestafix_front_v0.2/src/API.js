@@ -76,6 +76,18 @@ async function APIGetStaffProblems(token,user_ID){
     const data = await response.json();
     return data;
 }
+async function APIGetProblemIDFromBusinessId(businessId){
+    const response = await fetch('/api/public/lookup/' + businessId, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    });
+
+    const data = await response.json();
+    console.log("Api Repns>",data);
+    return data;
+}
 
 async function APIWhoAmI(token){
     const response = await fetch('/api/normal/user/whoAmI', {
@@ -122,4 +134,4 @@ async function APICreateReport(token, title, description, address, base64Photos,
     }
 }
 
-export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport, APIGetStaffProblems};
+export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport, APIGetStaffProblems, APIGetProblemIDFromBusinessId};

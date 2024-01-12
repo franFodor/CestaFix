@@ -10,7 +10,7 @@ const UserReportTable = () => {
     setReports(
       dbMarkers
         .flatMap((problem) => problem.reports) // Flatten the array of reports
-        .filter((report) => report.user.userId === loggedUser.userId)
+        .filter((report) => report.user?.userId === loggedUser.userId)
     );
   }
   useEffect(() => {
@@ -29,7 +29,7 @@ const UserReportTable = () => {
         <div className="Report">
           <div
             onClick={() =>
-              (window.location.href = `/report/id/${report.reportId}`)
+              (window.location.href = `/prijava/${report.businessId}`)
             }
           >
             <h2>{report.title}</h2>

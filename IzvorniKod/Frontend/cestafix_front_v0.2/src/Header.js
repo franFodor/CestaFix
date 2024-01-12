@@ -5,6 +5,7 @@ import AccountPopupComponent from './forms/AccountForm.js'
 import ReportPopupComponent from './forms/ReportForm.js'
 import CheckReportComponent from './forms/CheckReportForm.js'
 import { useNavigate } from 'react-router-dom';
+import StatisticsComponent from './StatisticsComponent.js';
 
 const Header = ({pickMarkerLatLon, markers}) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
@@ -13,7 +14,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
 
   const handleReportBtn = () => { setIsReportPopupShown(!isReportPopupShown); }; // Switcha stanje izmedu true i false
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
-  const handleStatBtn = () => { setIsStatPopupShown(!isReportPopupShown); };
+  const handleStatBtn = () => { setIsStatPopupShown(!isStatPopupShown); };
 
   const navigate = useNavigate();
     const handleLogout = () => {
@@ -91,7 +92,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
       )}
       {/*Popup za Statistiku*/}
       {isStatPopupShown && (
-        <></>
+        <StatisticsComponent onClose={handleStatBtn}/>
       )}
     </header>
   );

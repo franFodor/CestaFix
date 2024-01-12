@@ -35,7 +35,7 @@
     background-color: #f0e9f5;
   }
   
-  button {
+  td button {
     background-color: #04AA6D;
     color: white;
     padding: 3px 7px; /* Reduced button padding */

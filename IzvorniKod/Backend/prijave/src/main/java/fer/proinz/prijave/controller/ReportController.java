@@ -13,6 +13,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.antlr.v4.runtime.misc.Pair;
 import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -71,6 +72,25 @@ public class ReportController {
     @Transactional
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) throws JsonProcessingException {
 
+        // Fill in the address
+        if (reportRequest.getAddress() == null && reportRequest.getLatitude() != null && reportRequest.getLongitude() != null) {
+            String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(address);
+            address = jsonNode.get("display_name").asText();
+            reportRequest.setAddress(address);
+        } else if (reportRequest.getAddress() != null &&
+                reportRequest.getLatitude() == null &&
+                reportRequest.getLongitude() == null) {
+            String location = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode[] jsonNodes = objectMapper.readValue(location, JsonNode[].class);
+            Double latitude = jsonNodes[0].get("lat").asDouble();
+            Double longitude = jsonNodes[0].get("lon").asDouble();
+            reportRequest.setLatitude(latitude);
+            reportRequest.setLongitude(longitude);
+        }
+
         Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
         if (optionalCategory.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Kategorija nije pronadena");
@@ -122,18 +142,6 @@ public class ReportController {
                 photoService.createPhoto(photo);
                 photos.add(photo);
             }
-        }
-
-        // Fill in the address
-        if (reportRequest.getAddress() == null && reportRequest.getLatitude() != null && reportRequest.getLongitude() != null) {
-            String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(address);
-            address = jsonNode.get("display_name").asText();
-            reportRequest.setAddress(address);
-        } else if (reportRequest.getAddress() != null && reportRequest.getLatitude() == null && reportRequest.getLongitude() == null) {
-            String coordinates = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
-            System.out.println(coordinates);
         }
 
         // Build a new Report

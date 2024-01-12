@@ -63,7 +63,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         const data = {
             title: formData.get("name"),
             description: formData.get("description"),
-            address: formData.get("address"),
+            address: formData.get("address")!=="" ? formData.get("address") : null,
             categoryId: formData.get("dropdown"),
             photo: photos.length > 0 ? photos : null,
             token: Cookies.get("sessionToken") || null

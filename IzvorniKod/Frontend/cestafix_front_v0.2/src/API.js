@@ -85,7 +85,7 @@ async function APIGetProblemIDFromBusinessId(businessId){
     });
 
     const data = await response.json();
-    console.log("Api Repns>",data);
+    //console.log("Api Repns>",data);
     return data;
 }
 
@@ -115,7 +115,7 @@ async function APICreateReport(token, title, description, address, base64Photos,
         "categoryId" : categoryId,
         "mergeProblemId" : closest_problem_id
     };
-    console.log("Report Data:>>",formData);
+    //console.log("Report Data:>>",formData);
 
     if (token === null){
         return fetch('/api/public/report', {

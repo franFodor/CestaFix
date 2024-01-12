@@ -18,11 +18,13 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
 
     function handleMarkerClick(markerData) {
         setSelectedMarkerId(markerData.problemId);
+        setInit(false);
     }
 
     const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
     const [showReportForm, setShowReportForm] = useState(false);
     const [showReportList, setShowReportlist] = useState(false);
+    const [init,setInit] = useState(null);
 
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
@@ -53,6 +55,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         };
 
         fetchAndPopulateMarkers();
+        loadSelectedReport();
     }, []);
 
 
@@ -61,18 +64,22 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
             click(e) {
                 setPickMarkerLatLon([e.latlng.lat, e.latlng.lng]);
                 setShowReportlist(false);
+                if(init)window.history.pushState({}, '', '/');
+                setInit(false);
             },
         });
 
         return null; // This component does not render anything
     };
     async function loadSelectedReport(){
-        if(businessIdActive){
-            console.log("Businsess Id>>",businessIdActive);
-            setSelectedMarkerId((await APIGetProblemIDFromBusinessId(businessIdActive.id)).problem.problemId);
+        if(businessIdActive.id){
+            let apiResponse = await APIGetProblemIDFromBusinessId(businessIdActive.id);
+            //console.log("Trayeni ID:",apiResponse.problem.problemId);
+            setSelectedMarkerId(apiResponse.problem.problemId);
+            console.log("Inicilajiziran....",selectedMarkerId);
+             setInit(apiResponse.problem.problemId);
         }
     }
-    loadSelectedReport();
 
 
     return (
@@ -104,7 +111,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
             {showReportForm && (
         <ReportPopupComponent onClose={() => setShowReportForm(false)} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
       )}
-            {selectedMarkerId !== -1 && showReportList && <ReportListComponent problemID={selectedMarkerId} />}
+            {selectedMarkerId !== -1 && (showReportList || init) && <ReportListComponent problemID={init || selectedMarkerId} />}
         </div>
     );
 }

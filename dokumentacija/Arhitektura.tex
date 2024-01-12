@@ -23,8 +23,8 @@
 \newline
 \textbf{\\Web aplikacija} Web aplikacija je kompleksni softverski sustav koji se sastoji od frontend i backend dijelova:
 \begin{itemize}
-	\item \textbf{Frontend} (Klijent) predstavlja korisničko sučelje putem kojeg korisnici ostvaruju interakciju sa sustavom. Ostvaren je korištenjem JavaScript programskog jezika, za potrebu upravljanja događajima na korisničkom sučelju, i React radnog okvira, što omogućuje kreiranje dinamičnog i intuitivnog korisničkog sučelja, čime se ostvaruje ugodno korisničko iskustvo. Frontend je strukturiran u komponente, što olakšava održavanje i ponovnu uporabu koda. Komunicira s backendom kroz HTTPS zahtjeve te pritom omogućuje prijenos podataka i ažuriranje informacija o prijavama šteta. Kroz klijentsku logiku, frontend provodi validaciju unesenih podataka kako bi osigurao ispravnost prije slanja na backend. Responsivni dizajn osigurava konzistentno korisničko iskustvo na različitim uređajima.	
-	\item \textbf{Backend} (Poslužitelj) je dio sustava unutar kojeg se obrađuju zahtjevi i izvršavaju daljnje radnje. Kako bi se postiglo "razdvajanje zabrinutosti", organiziran je na kontrolere, servise i repozitorije. Controlleri imaju ključnu ulogu u obradi ulaznih zahtjeva (HTTP zahtjeva) omogučujući organizaciju i upravljanje tijekom rukovanja zahtjevima u backend dijelu aplikacije kao i pozivanje odgovarajućih metoda u Modelu te slanje odgovora klijentskom dijelu. Servisi u backendu na učinkovit i organiziran način obavljaju poslovnu logiku i specifične funkcionalnosti koje su potrebne za obradu zahtjeva, koji dolaze s frontend dijela aplikacije. Repozitoriji imaju ključnu ulogu u komunikaciji s bazom podataka, odnosno omogućuju servisima da abstrahiraju detalje interakcije s bazom podataka, pružajući im jednostavan i konzistentan način komunikacije s podacima. Backend je ostvaren korištenjem Java programskog jezika i Spring Boot radnog okvira. Također, pruža RESTful API-je koji omogućuju komunikaciju između klijenta i servera te definiraju kako resursi (poput prijava šteta) mogu biti stvoreni, ažurirani i dohvaćeni. Osim toga backend sadrži i DTO-e (Data Transfer Objects) za prijenos podataka između različitih dijelova sustava odnosno slojeva aplikacije. 
+	\item \textbf{Frontend} (Klijent) predstavlja korisničko sučelje putem kojeg korisnici ostvaruju interakciju sa sustavom. Ostvaren je korištenjem JavaScript programskog jezika, za potrebu upravljanja događajima na korisničkom sučelju, i React radnog okvira, što omogućuje kreiranje dinamičnog i intuitivnog korisničkog sučelja, čime se ostvaruje ugodno korisničko iskustvo. Frontend je strukturiran u komponente, što olakšava održavanje i ponovnu uporabu koda. Komunicira s backendom kroz HTTPS zahtjeve te pritom omogućuje prijenos podataka i ažuriranje informacija o prijavama šteta. Kroz klijentsku logiku, frontend provodi validaciju unesenih podataka kako bi osigurao ispravnost prije slanja na backend. Responsivni dizajn osigurava konzistentno korisničko iskustvo na različitim uređajima.
+	\item \textbf{Backend} (Poslužitelj) je dio sustava unutar kojeg se obrađuju zahtjevi i izvršavaju daljnje radnje. Kako bi se postiglo "razdvajanje zabrinutosti", organiziran je na kontrolere, servise i repozitorije. Controlleri imaju ključnu ulogu u obradi ulaznih zahtjeva (HTTP zahtjeva) omogučujući organizaciju i upravljanje tijekom rukovanja zahtjevima u backend dijelu aplikacije kao i pozivanje odgovarajućih metoda u Modelu te slanje odgovora klijentskom dijelu. Servisi u backendu na učinkovit i organiziran način obavljaju poslovnu logiku i specifične funkcionalnosti koje su potrebne za obradu zahtjeva, koji dolaze s frontend dijela aplikacije. Repozitoriji imaju ključnu ulogu u komunikaciji s bazom podataka, odnosno omogućuju servisima da abstrahiraju detalje interakcije s bazom podataka, pružajući im jednostavan i konzistentan način komunikacije s podacima. Backend je ostvaren korištenjem Java programskog jezika i Spring Boot radnog okvira. Također, pruža RESTful API-je koji omogućuju komunikaciju između klijenta i servera te definiraju kako resursi (poput prijava šteta) mogu biti stvoreni, ažurirani i dohvaćeni. Osim toga backend sadrži i DTO-e (Data Transfer Objects) za prijenos podataka između različitih dijelova sustava odnosno slojeva aplikacije.
 \end{itemize}
 
 \noindent \textbf{Baza podataka} je podatkovni sloj koji se koristi za sigurnu pohranu podataka te je detaljnije opisana u sljedećem poglavlju.
@@ -69,14 +69,14 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa cityde
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Users}}                                           \\ \hline[3pt]
-	\SetCell{LightGreen}user\_id      & INT     & jedinstveni identifikator korisnika      \\ \hline
-	firstname                    	  & VARCHAR & ime korisnika                            \\ \hline
-	lastname                     	  & VARCHAR & prezime korisnika                        \\ \hline
-	email                             & VARCHAR & e-mail adresa korisnika                  \\ \hline
-	password                          & VARCHAR & hash lozinke korisnika                   \\ \hline
-	role                              & VARCHAR & uloga korisnika                          \\ \hline
-	\SetCell{LightBlue} citydept\_id  & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Users}}                                               \\ \hline[3pt]
+	\SetCell{LightGreen}user\_id     & INT     & jedinstveni identifikator korisnika      \\ \hline
+	firstname                        & VARCHAR & ime korisnika                            \\ \hline
+	lastname                         & VARCHAR & prezime korisnika                        \\ \hline
+	email                            & VARCHAR & e-mail adresa korisnika                  \\ \hline
+	password                         & VARCHAR & hash lozinke korisnika                   \\ \hline
+	role                             & VARCHAR & uloga korisnika                          \\ \hline
+	\SetCell{LightBlue} citydept\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
 \end{longtblr}
 
 
@@ -90,19 +90,19 @@ Sastoji se od atributa: report\_id, user\_id, title, description, address, photo
 	colspec={|X[13,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                 \\ \hline[3pt]
-	\SetCell{LightGreen}report\_id  & INT        & jedinstveni identifikator prijave                          \\ \hline
-	\SetCell{LightBlue} user\_id    & INT        & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
-	title                           & VARCHAR    & naziv prijave/oštećenja                                    \\ \hline
-	description                     & TEXT       & opis oštećenja                                             \\ \hline
-	address                         & VARCHAR    & adresa oštećenja                                           \\ \hline
-	photo                           & BYTEA      & slika oštećenja                                            \\ \hline
-	report\_time                    & TIMESTAMP  & vrijeme podnošenja prijave                                 \\ \hline
-	status                          & VARCHAR    & status prijave                                             \\ \hline
-	longitude                       & DOUBLE     & geografska dužina lokacije oštećenja                       \\ \hline
-	latitude                        & DOUBLE     & geografska širina lokacije oštećenja                       \\ \hline
-	business\_id                    & UUID       & jedinstveni identifikator anonimne prijave                 \\ \hline 
-	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                \\ \hline[3pt]
+	\SetCell{LightGreen}report\_id  & INT       & jedinstveni identifikator prijave                          \\ \hline
+	\SetCell{LightBlue} user\_id    & INT       & jedinstveni identifikator korisnika (users.user\_id)       \\ \hline
+	title                           & VARCHAR   & naziv prijave/oštećenja                                    \\ \hline
+	description                     & TEXT      & opis oštećenja                                             \\ \hline
+	address                         & VARCHAR   & adresa oštećenja                                           \\ \hline
+	photo                           & BYTEA     & slika oštećenja                                            \\ \hline
+	report\_time                    & TIMESTAMP & vrijeme podnošenja prijave                                 \\ \hline
+	status                          & VARCHAR   & status prijave                                             \\ \hline
+	longitude                       & DOUBLE    & geografska dužina lokacije oštećenja                       \\ \hline
+	latitude                        & DOUBLE    & geografska širina lokacije oštećenja                       \\ \hline
+	business\_id                    & UUID      & jedinstveni identifikator anonimne prijave                 \\ \hline
+	\SetCell{LightBlue} problem\_id & INT       & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 \end{longtblr}
 
 \noindent\textbf{Citydept} je entitet koji sadrži sve bitne informacije o gradskim uredima.
@@ -163,9 +163,9 @@ Sastoji se od atributa: citydept\_id i category\_id. Povezan je vezom \textit{Ma
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{CitydeptCategory}}                                                              \\ \hline[3pt]
-	\SetCell{LightBlue}citydept\_id  & INT & jedinstveni identifikator gradskog ureda (citydept.citydept\_id)         \\ \hline
-	\SetCell{LightBlue}category\_id  & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{CitydeptCategory}}                                                             \\ \hline[3pt]
+	\SetCell{LightBlue}citydept\_id & INT & jedinstveni identifikator gradskog ureda (citydept.citydept\_id)       \\ \hline
+	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
 \end{longtblr}
 
 \subsection{Dijagram baze podataka}
@@ -182,17 +182,17 @@ Sastoji se od atributa: citydept\_id i category\_id. Povezan je vezom \textit{Ma
 
 \section{Dijagram razreda}
 
-Na slikama 4.3, 4.4 i 4.5 su prikazani razredi koji pripadaju \textit{backend} dijelu 
-s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje DTO 
+Na slikama 4.3, 4.4 i 4.5 su prikazani razredi koji pripadaju \textit{backend} dijelu
+s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje DTO
 (Data Transfer Object) i modele. \newline
 
-Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima 
-upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju 
-logiku interakcije i promjene. Kontroler AuthenticationController omogućuje registraciju i prijavu korisnika. 
-Kontroler ReportController omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje 
-interakcije s objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje 
-interakcije i promjene povezane s registriranim korisnicima. Kontroler CityDepartmentController omogućuje 
-interakcije i promjene povezane s gradskim uredima. 
+Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima
+upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju
+logiku interakcije i promjene. Kontroler AuthenticationController omogućuje registraciju i prijavu korisnika.
+Kontroler ReportController omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje
+interakcije s objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje
+interakcije i promjene povezane s registriranim korisnicima. Kontroler CityDepartmentController omogućuje
+interakcije i promjene povezane s gradskim uredima.
 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-controller} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -202,9 +202,9 @@ interakcije i promjene povezane s gradskim uredima.
 \end{figure}
 
 Na slici 4.4 prikazani su razredi koji pripadaju DTO. Data Transfer Objects omogućavaju
-razmjenu podataka između procesa i slojeva. RegisterRequestDto služi za registraciju korisnika. 
+razmjenu podataka između procesa i slojeva. RegisterRequestDto služi za registraciju korisnika.
 LoginRequestDto služi za prijavu korisnika. AuthenticationResponseDto sastoji se od jwt tokena koji se vraća
-kada se korisnik registrira ili ulogira. CreateReportRequestDto služi za kreiranje podataka o prijavi prijave 
+kada se korisnik registrira ili ulogira. CreateReportRequestDto služi za kreiranje podataka o prijavi prijave
 oštećenja i problema.
 
 \begin{figure}[H]
@@ -218,9 +218,9 @@ Na slici 4.5 prikazi su razredi koji pripadaju Model razredima. Oni preslikavaju
 u aplikaciji. Komuniciraju s bazom podataka te vraćaju podatke iz nje. Razred User predstavlja registriranog
 korisnika koji je unio nužne podatke u sustav. Razred Report predstavlja prijavu oštećenja za koju je korisnik
 unio potrebne i opcionalne podatke. Razred Problem predstavlja prijavu problema koja predstavlja jednu ili više
-prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja 
+prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja
 kategoriju oštećenja koju korisnik može odabrati za prijavljeno oštećenje, odnosno koju gradski ured može dobiti
-na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više 
+na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više
 kategorija oštećenja koje im je administrator dodijelio. Razred CitydepCategory predstavlja vezu između
 razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija i gradskih ureda u parovima.
 Enumeracija Role predstavlja ulogu koju registrirani korisnik ima.
@@ -256,6 +256,13 @@ Enumeracija Role predstavlja ulogu koju registrirani korisnik ima.
 \textbf{\textit{dio 2. revizije}}\\
 
 \textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
+
+\begin{figure}[H]
+	\includegraphics[scale=0.5]{slike/Dijagram aktivnosti - prijava štete_v1.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\centering
+	\caption{Dijagram aktivnosti v1}
+	\label{fig:DijagramAktivnosti}
+\end{figure}
 
 \eject
 \section{Dijagram komponenti}

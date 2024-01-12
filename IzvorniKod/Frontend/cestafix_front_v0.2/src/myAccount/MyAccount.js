@@ -4,7 +4,7 @@ import "./MyAccountMain.css";
 import userImage from "../images/User.png";
 import EditAccountForm from "./EditAccountForm";
 import UpdateReportTable from "./UpdateReportTable";
-import MergeReportTable_ from "./MergeReportTable";
+import MergeReportTable from "./MergeReportTable";
 import UserReportTable from "./UserReportTable";
 
 const MyAccount = () => {
@@ -127,7 +127,7 @@ const MyAccount = () => {
 
             <div className="myAccRight">
               {buttonClicked === "a" && <UpdateReportTable />}
-              {buttonClicked === "b" && <MergeReportTable_ />}
+              {buttonClicked === "b" && <MergeReportTable />}
               {buttonClicked === "c" && (
                 <div className="deletionDiv">
                 <p>

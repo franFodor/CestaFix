@@ -10,8 +10,7 @@
  
  .myAccLeft,
  .myAccRight {
-   
-   height: 50%;
+   height: 90%;
    width: 50%;
    display: flex;
    flex-direction: column;

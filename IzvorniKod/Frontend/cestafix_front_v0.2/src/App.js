@@ -11,15 +11,17 @@ function App() {
 
   return (
     <Router>
-    <div className='flex flex-col h-screen'>
-      <Header pickMarkerLatLon={pickMarkerLatLon} markers={markers}/ >
-      <Routes>
-        <Route path="/myAccount" element={<MyAccount />} />
-        <Route path="/" element={<Content setPickMarkerLatLon={setPickMarkerLatLon} pickMarkerLatLon={pickMarkerLatLon}
-                                          markers={markers} setMarkers={setMarkers}/>} />
-      </Routes>
-      <Footer />
-    </div>
+      <div className='flex flex-col h-screen'>
+        <Header pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
+        <Routes>
+          <Route path="/myAccount" element={<MyAccount />} />
+          <Route path="/" element={<Content setPickMarkerLatLon={setPickMarkerLatLon} pickMarkerLatLon={pickMarkerLatLon}
+            markers={markers} setMarkers={setMarkers} />} />
+          <Route path="/prijava/:id" component={Content} />
+
+        </Routes>
+        <Footer />
+      </div>
     </Router>
   );
 }

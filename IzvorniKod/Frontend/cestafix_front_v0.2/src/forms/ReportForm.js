@@ -32,7 +32,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
     const [reportData, setReportData] = useState(null);
-    const [address, setAddress] = useState(pickMarkerLatLon || '');
 
     const getNearbyMarker = (latlon, categoryId) => {
         let closestMarker = null;
@@ -95,15 +94,15 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                             <>
                               {baseReport}
                               <div style={{ color: 'red' }}>
-                                  Nekaj ne valja
+                                  Došlo je do greške, provjerite unos adrese prijave!
                               </div>
                             </>
               
                         );
-                        return;
-                    }
+                        console.log("izlali");                 }
                 })
                 .then(apiResponse => {
+                    if(apiResponse){
                     let user = Cookies.get("userInfo");
                     console.log("uspjeh! ",user);
                     if (!user) {
@@ -113,7 +112,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                                <p>Id vaše prijave je:</p>
                                <p>{apiResponse.businessId}</p> 
                                <br></br>
-                               <button className='SubmitButton' onClick={()=>window.location.reload()}>Potvrdi</button>
+                               <button className='loginbtn' onClick={()=>window.location.reload()}>Potvrdi</button>
                             </div>
                         );
                         return;
@@ -126,6 +125,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                             </div>
                         );
                     }
+                }
                     return;
                 });
 
@@ -151,16 +151,20 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     <input id="photo" type="file" name="photo" accept="image/*" multiple />
                 </div>
                 <div>
-                    <b><label htmlFor="address">Geografske Koordinate ili Adresa</label></b>
+                    <b><label htmlFor="address">Adresa Prijave:</label></b>
                     <input
                         id="address"
                         type="text"
                         name="address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        required
                     />
                 </div>
+                <div>
+                {!pickMarkerLatLon && (<button className="signupbtn"onClick={onClose}>Odaberite lokaciju na karti!</button>)}
+                {pickMarkerLatLon && (<div>Odabrane Koodinate na mapi!</div>)}
+
+                </div>
+
+                
                 <div>
                     <b><label htmlFor="dropdown">Odaberite Kategoriju štete</label></b>
                     <select id="dropdown" name="dropdown">

@@ -64,7 +64,6 @@ public class Report implements Serializable {
     @JoinColumn(name = "problem_id")
     private Problem problem;
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -5,12 +5,12 @@ import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -40,7 +40,7 @@ public class ReportService {
 
             if (report.getPhotos() != null) {
                 for (Photo photo : report.getPhotos()) {
-                    base64Photos.add(Base64.getEncoder().encodeToString(photo.getPhotoData()));
+                    base64Photos.add(Base64.encodeBase64String(photo.getPhotoData()));
                 }
                 report.setBase64Photos(base64Photos);
                 reportRepository.save(report);
@@ -65,7 +65,19 @@ public class ReportService {
         }
     }
 
+    public Map<String, Integer> getReportsStatistics() {
+        Map<String, Integer> statistics = new HashMap<>();
+
+        statistics.put("Broj prijava koje cekaju obradu", reportRepository.countByStatus("Ceka obradu"));
+        statistics.put("Broj prijava koje su u obradi", reportRepository.countByStatus("U obradi"));
+        statistics.put("Broj prijava koje su zavrsene", reportRepository.countByStatus("Zavrseno"));
+
+        return statistics;
+    }
+
     public Report createReport(Report report) {
+        
+
         return reportRepository.save(report);
     }
 
@@ -132,31 +144,7 @@ public class ReportService {
         }
     }
 
-    public ResponseEntity<?> groupReports(int problemId, List<Report> reportList) {
-        Optional<Problem> problemOptional = problemRepository.findById(problemId);
-        if (problemOptional.isPresent()) {
-            Problem problemToGroupTo = problemOptional.get();
-            for (Report report : reportList) {
-                Optional<Problem> reportProblemOptional = problemRepository.findById(report.getProblem().getProblemId());
-                if (reportProblemOptional.isPresent()) {
-                    Problem reportProblem = reportProblemOptional.get();
-                    reportProblem.getReports().remove(report);
-                    report.setProblem(problemToGroupTo);
-                    problemService.updateProblem(reportProblem.getProblemId(), reportProblem);
-                    reportRepository.save(report);
-
-                    if (reportProblem.getReports().isEmpty()) {
-                        problemService.deleteProblem(reportProblem.getProblemId());
-                    }
-                }
-            }
-            return ResponseEntity.ok(problemRepository.findById(problemId));
-        } else {
-            return ResponseEntity.internalServerError().body("Report grouping didn't work");
-        }
-    }
-
-    /*public ResponseEntity<?> groupReports(int problemId, List<Integer> reportIds) {
+    public ResponseEntity<?> groupReports(int problemId, List<Integer> reportIds) {
         Optional<Problem> problemOptional = problemRepository.findById(problemId);
         if (problemOptional.isPresent()) {
             Problem problemToGroupTo = problemOptional.get();
@@ -182,7 +170,7 @@ public class ReportService {
         } else {
             return ResponseEntity.internalServerError().body("Report grouping didn't work");
         }
-    }*/
+    }
 
     public ResponseEntity<String> deleteReport(int reportId) {
         Optional<Report> reportOptional = reportRepository.findById(reportId);
@@ -215,16 +203,6 @@ public class ReportService {
         } else {
             throw new RuntimeException("Report with id " + reportId + " does not exists!");
         }
-    }
-
-    public Map<String, Integer> getReportsStatistics() {
-        Map<String, Integer> statistics = new HashMap<>();
-
-        statistics.put("Broj prijava koje cekaju obradu", reportRepository.countByStatus("Ceka obradu"));
-        statistics.put("Broj prijava koje su u obradi", reportRepository.countByStatus("U obradi"));
-        statistics.put("Broj prijava koje su zavrsene", reportRepository.countByStatus("Zavrseno"));
-
-        return statistics;
     }
 
 }

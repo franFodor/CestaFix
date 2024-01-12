@@ -1,6 +1,10 @@
 package fer.proinz.prijave.controller;
 
-import com.fasterxml.jackson.core.JsonParser;
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.GpsDirectory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,13 +17,14 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.antlr.v4.runtime.misc.Pair;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.apache.tomcat.util.codec.binary.Base64;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
@@ -31,17 +36,17 @@ public class ReportController {
     @Autowired
     private final ProblemService problemService;
     @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
     @Autowired
-    private UserService userService;
+    private final UserService userService;
     @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
     @Autowired
-    private PhotoService photoService;
+    private final PhotoService photoService;
     @Autowired
-    private GeoConversionService geoConversionService;
+    private final GeoConversionService geoConversionService;
 
     @Operation(summary = "Get all reports")
     @GetMapping( "/public/report/getAll")
@@ -55,16 +60,16 @@ public class ReportController {
         return reportService.getReportById(reportId);
     }
 
-    @Operation(summary = "Get statistics")
-    @GetMapping("/public/statistics")
-    public Map<String, Integer> reportStatistics() {
-        return reportService.getReportsStatistics();
-    }
-
     @Operation(summary = "Anonymous user gets it's report")
     @GetMapping("/public/lookup/{businessId}")
     public ResponseEntity<Report> getReportByBusinessId(@PathVariable("businessId") UUID businessId) {
         return reportService.getReportByBusinessId(businessId);
+    }
+
+    @Operation(summary = "Get statistics")
+    @GetMapping("/public/statistics")
+    public Map<String, Integer> reportStatistics() {
+        return reportService.getReportsStatistics();
     }
 
     @Operation(summary = "Create a report")
@@ -73,15 +78,17 @@ public class ReportController {
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) throws JsonProcessingException {
 
         // Fill in the address
-        if (reportRequest.getAddress() == null && reportRequest.getLatitude() != null && reportRequest.getLongitude() != null) {
+        if (reportRequest.getAddress() == null &&
+                reportRequest.getLatitude() != null &&
+                reportRequest.getLongitude() != null) {
             String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(address);
             address = jsonNode.get("display_name").asText();
             reportRequest.setAddress(address);
-        } else if (reportRequest.getAddress() != null &&
-                reportRequest.getLatitude() == null &&
-                reportRequest.getLongitude() == null) {
+        } else if (reportRequest.getLatitude() == null &&
+                reportRequest.getLongitude() == null &&
+                reportRequest.getAddress() != null) {
             String location = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode[] jsonNodes = objectMapper.readValue(location, JsonNode[].class);
@@ -89,11 +96,47 @@ public class ReportController {
             Double longitude = jsonNodes[0].get("lon").asDouble();
             reportRequest.setLatitude(latitude);
             reportRequest.setLongitude(longitude);
+        } else if (reportRequest.getAddress() == null &&
+                reportRequest.getLatitude() == null &&
+                reportRequest.getLongitude() == null &&
+                reportRequest.getBase64Photos() != null) {
+            if (reportRequest.getBase64Photos().isEmpty()) {
+                return ResponseEntity.badRequest().body("No address, photo or coordinates given");
+            }
+
+            for (String base64Photo : reportRequest.getBase64Photos()) {
+                byte[] decodedBytes = Base64.decodeBase64(base64Photo);
+
+                try {
+                    // Extract EXIF metadata
+                    Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(decodedBytes));
+
+                    // Get the GPS directory from the metadata
+                    GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+
+                    if (gpsDir != null) {
+                        GeoLocation geoLocation = gpsDir.getGeoLocation();
+                        double latitude = geoLocation.getLatitude();
+                        double longitude = geoLocation.getLongitude();
+                        reportRequest.setLatitude(latitude);
+                        reportRequest.setLongitude(longitude);
+                        String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        JsonNode jsonNode = objectMapper.readTree(address);
+                        address = jsonNode.get("display_name").asText();
+                        reportRequest.setAddress(address);
+                    } else {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No EXIF data found in the photo.");
+                    }
+                } catch (ImageProcessingException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
         if (optionalCategory.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Kategorija nije pronadena");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
         }
         Category category = optionalCategory.get();
 
@@ -104,7 +147,7 @@ public class ReportController {
             Integer userId = jwtService.extractUserId(token);
             Optional<User> optionalUser = userService.getUserById(userId);
             if (optionalUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Korisnik tokena nije pronaden.");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token user not found");
             }
             user = optionalUser.get();
         }
@@ -121,12 +164,12 @@ public class ReportController {
             // Save the Problem object
             savedProblem = problemService.createProblem(problem);
             if (savedProblem == null) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Nije moguce stvoriti problem objekt");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problem object cannot be initialized");
             }
         } else {
             Optional<Problem> optionalProblem = problemService.getProblemById(reportRequest.getMergeProblemId());
             if (optionalProblem.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Problem za merge nije pronaden");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nearby problem couldn't be found");
             }
             savedProblem = optionalProblem.get();
         }
@@ -136,7 +179,7 @@ public class ReportController {
         if (reportRequest.getBase64Photos() != null) {
             for (String base64Photo : reportRequest.getBase64Photos()) {
                 Photo photo = Photo.builder()
-                        .photoData(Base64.getDecoder().decode(base64Photo))
+                        .photoData(Base64.decodeBase64(base64Photo))
                         .report(null)
                         .build();
                 photoService.createPhoto(photo);
@@ -188,9 +231,9 @@ public class ReportController {
     @PatchMapping("/advanced/report/group/{problemId}")
     public ResponseEntity<?> groupReports(
             @PathVariable("problemId") int problemId,
-            @RequestBody List<Report> reportList
+            @RequestBody List<Integer> reportIdList
     ) {
-        return reportService.groupReports(problemId, reportList);
+        return reportService.groupReports(problemId, reportIdList);
     }
 
     @Operation(summary = "Delete a report")

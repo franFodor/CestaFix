@@ -146,7 +146,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     />
                 </div>
                 <div>
-                {!pickMarkerLatLon && (<button className="signupbtn"onClick={onClose}>Odaberite lokaciju na karti!</button>)}
+                {!pickMarkerLatLon && (<button className="signupbtn"onClick={()=>onClose()}>Odaberite lokaciju na karti!</button>)}
                 {pickMarkerLatLon && (<div>Odabrane Koodinate na mapi!</div>)}
 
                 </div>
@@ -161,7 +161,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                         <option value="4">Oštećenje na eletroenergetskoj infrastrukturi</option>
                         <option value="0">Ostalo</option>
 
-                        {/* --------------------POPRAVIT-------------------- */}
                     </select>
                 </div>
                 <input type="submit" className="confirmButton" value="Submit" />

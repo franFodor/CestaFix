@@ -13,8 +13,8 @@ import { useParams } from 'react-router-dom';
 const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers }) => {
     const businessIdActive = useParams();
     //console.log(businessIdActive);
-  
-    
+
+
 
     function handleMarkerClick(markerData) {
         setSelectedMarkerId(markerData.problemId);
@@ -22,9 +22,9 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
     }
 
     const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
-    const [showReportForm, setShowReportForm] = useState(false);
     const [showReportList, setShowReportlist] = useState(false);
-    const [init,setInit] = useState(null);
+    const [init, setInit] = useState(null);
+    const [showOverrideDiv, setShowOverrideDiv] = useState(false);
 
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
@@ -64,22 +64,23 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
             click(e) {
                 setPickMarkerLatLon([e.latlng.lat, e.latlng.lng]);
                 setShowReportlist(false);
-                if(init)window.history.pushState({}, '', '/');
+                if (init) window.history.pushState({}, '', '/');
                 setInit(false);
             },
         });
 
         return null; // This component does not render anything
     };
-    async function loadSelectedReport(){
-        if(businessIdActive.id){
+    async function loadSelectedReport() {
+        if (businessIdActive.id) {
             let apiResponse = await APIGetProblemIDFromBusinessId(businessIdActive.id);
             //console.log("Trayeni ID:",apiResponse.problem.problemId);
             setSelectedMarkerId(apiResponse.problem.problemId);
-            console.log("Inicilajiziran....",selectedMarkerId);
-             setInit(apiResponse.problem.problemId);
+            console.log("Inicilajiziran....", selectedMarkerId);
+            setInit(apiResponse.problem.problemId);
         }
     }
+
 
 
     return (
@@ -92,11 +93,11 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                     url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=jl7SF9AkX5d5T6Di7nm2"
                 />
                 {markers.map((marker, index) => (
-                    <Marker key={index} 
-                    position={marker.position} 
-                    icon={marker.icon} 
-                    eventHandlers={{ click: () => {handleMarkerClick(marker); setShowReportlist(true);}}}>
-                    <Popup>{marker.popup}</Popup>
+                    <Marker key={index}
+                        position={marker.position}
+                        icon={marker.icon}
+                        eventHandlers={{ click: () => { handleMarkerClick(marker); setShowReportlist(true); } }}>
+                        <Popup>{marker.popup}</Popup>
                     </Marker>
                 ))}
 
@@ -104,13 +105,15 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                     key={-1}
                     position={pickMarkerLatLon}
                     icon={blueMarkerIcon}
-                    eventHandlers={{ click: () =>  setShowReportForm(true)}}
+                    eventHandlers={{ click: () => setShowOverrideDiv(true) }}
                 />}
 
             </MapContainer>
-            {showReportForm && (
-        <ReportPopupComponent onClose={() => setShowReportForm(false)} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
-      )}
+
+            <div id="OverrideDiv" style={showOverrideDiv ? {} : { display: 'none' }}>
+                <ReportPopupComponent onClose={() => setShowOverrideDiv(false)} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
+            </div>
+
             {selectedMarkerId !== -1 && (showReportList || init) && <ReportListComponent problemID={init || selectedMarkerId} />}
         </div>
     );

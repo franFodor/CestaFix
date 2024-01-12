@@ -103,9 +103,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 })
                 .then(apiResponse => {
                     if(apiResponse){
-                    let user = Cookies.get("userInfo");
-                    console.log("uspjeh! ",user);
-                    if (!user) {
                         setReportContent(
                             <div>
                                <h2>Prijava je uspješno prijavljena!</h2>
@@ -115,18 +112,8 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                                <button className='loginbtn' onClick={()=>window.location.reload()}>Potvrdi</button>
                             </div>
                         );
-                        return;
-                    }
-                    else {
-                        setReportContent(
-                            <div>
-                               <h2>Prijava je uspješno prijavljena!</h2>
-                               <button onClick={()=>window.location.reload()}>Potvrdi</button>
-                            </div>
-                        );
-                    }
+                    
                 }
-                    return;
                 });
 
         }

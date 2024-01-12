@@ -1,5 +1,6 @@
 package fer.proinz.prijave.service;
 
+import fer.proinz.prijave.dto.CreateReportRequestDto;
 import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
@@ -9,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.*;
 
 @Service
@@ -24,6 +26,7 @@ public class ReportService {
     public List<Report> getAllReports() {
         List<Report> reports = reportRepository.findAll();
         for (Report report : reports) {
+            // convert photos from byte[] to base64 String
             getReportById(report.getReportId());
         }
         return reports;
@@ -64,6 +67,29 @@ public class ReportService {
 
     public Report createReport(Report report) {
         return reportRepository.save(report);
+    }
+
+    // function to calculate the distance of nearbyReport
+    public double haversineDistance(CreateReportRequestDto reportRequest, Report report) {
+        double dLat = (reportRequest.getLatitude() - report.getLatitude()) * Math.PI / 180;
+        double dLon = (reportRequest.getLongitude() - report.getLongitude()) * Math.PI / 180;
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(reportRequest.getLatitude()) * Math.cos(report.getLatitude()) *
+                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return 6371e3 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+    public Integer getNearbyReport(CreateReportRequestDto reportRequest) {
+        List<Report> reportList = getAllReports();
+        for (Report report : reportList) {
+            double distance = haversineDistance(reportRequest, report);
+            if (distance < 100 &&
+                    Math.abs(report.getReportTime().getTime() - System.currentTimeMillis()) < 604800000 &&
+                    report.getProblem().getCategory().getCategoryId() == reportRequest.getCategoryId()) {
+                return report.getProblem().getProblemId();
+            }
+        }
+        return null;
     }
 
     public ResponseEntity<?> updateReport(int reportId, Report updatedReport) {

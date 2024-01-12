@@ -162,6 +162,11 @@ public class ReportController {
         return ResponseEntity.ok(savedReport);
     }
 
+    @PostMapping("/public/nearbyReport")
+    public ResponseEntity<?> getNearbyReport(@RequestBody CreateReportRequestDto reportRequest) {
+        return ResponseEntity.ok(reportService.getNearbyReport(reportRequest));
+    }
+
     @Operation(summary = "Update a report")
     @PatchMapping("/advanced/report/{reportId}")
     public ResponseEntity<?> updateReport(

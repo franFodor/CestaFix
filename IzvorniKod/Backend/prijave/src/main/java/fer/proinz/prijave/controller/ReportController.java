@@ -60,6 +60,12 @@ public class ReportController {
         return reportService.getReportsStatistics();
     }
 
+    @Operation(summary = "Anonymous user gets it's report")
+    @GetMapping("/public/lookup/{businessId}")
+    public ResponseEntity<Report> getReportByBusinessId(@PathVariable("businessId") UUID businessId) {
+        return reportService.getReportByBusinessId(businessId);
+    }
+
     @Operation(summary = "Create a report")
     @PostMapping("/public/report")
     @Transactional

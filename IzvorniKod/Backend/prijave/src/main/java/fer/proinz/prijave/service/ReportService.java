@@ -52,6 +52,16 @@ public class ReportService {
         }
     }
 
+    public ResponseEntity<Report> getReportByBusinessId(UUID businessId) {
+        Optional<Report> reportOptional = reportRepository.findByBusinessId(businessId);
+        if (reportOptional.isPresent()) {
+            Report report = reportOptional.get();
+            return ResponseEntity.ok(report);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     public Report createReport(Report report) {
         return reportRepository.save(report);
     }

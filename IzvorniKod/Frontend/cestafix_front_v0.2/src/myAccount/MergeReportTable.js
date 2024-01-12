@@ -68,10 +68,7 @@ const MergeReportTable = () => {
               </tr>
               {problem.reports.map(report => (
                 <tr key={report.reportId} className={`report-row ${selectedReports.has(report.reportId) ? 'selected' : ''}`}>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  <td className="noborders" colSpan="4"></td>
                   <td>{report.title}</td>
                   <td>{report.description}</td>
                   <td>{report.address}</td>

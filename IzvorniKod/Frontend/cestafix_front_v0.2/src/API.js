@@ -90,14 +90,14 @@ async function APIWhoAmI(token){
     return data;
 }
 
-async function APICreateReport(token, title, description, address, photo, reportStatus, problemStatus, latitude, longitude, categoryId, closest_problem_id) {
+async function APICreateReport(token, title, description, address, base64Photos, reportStatus, problemStatus, latitude, longitude, categoryId, closest_problem_id) {
     const formData = {
         "longitude" : longitude,
         "latitude" : latitude,
         "title": title,
         "description": description,
         "address": address,
-        "photo": photo,
+        "base64Photos": base64Photos,
         "reportStatus": reportStatus,
         "problemStatus" : problemStatus,
         "categoryId" : categoryId,

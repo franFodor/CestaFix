@@ -13,9 +13,9 @@ async function APILogin(email, password) {
         });
 }
 
-async function APILogout() {
-    return fetch('/api/auth/logout', {
-        method: 'POST',
+async function APIDeleteUser(id) {
+    return fetch(`/advanced/user/${id}`, {
+        method: 'DELETE',
         headers: {'Content-Type': 'application/json'}
     });
 }
@@ -173,7 +173,7 @@ async function APICheckNearbyReport(title,
         });
     }
 export {APILogin, 
-        APILogout, 
+        APIDeleteUser, 
         APIRegister, 
         APIGetAllProblems, 
         APIGetAllReports, 

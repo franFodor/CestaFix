@@ -49,7 +49,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
         //neispravna implementacija!! let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
         let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
-        let checkNearby = JSON.parse(await APICheckNearbyReport(data.title,
+        let checkNearby = await APICheckNearbyReport(data.title,
             data.description,
             data.address,
             data.photo,
@@ -58,7 +58,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             getFinalMapMarker ? getFinalMapMarker[0] : null,
             getFinalMapMarker ? getFinalMapMarker[1] : null,
             data.categoryId,
-            null));
+            null);
             console.log("odčekiram>>>",checkNearby);
 
         //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea

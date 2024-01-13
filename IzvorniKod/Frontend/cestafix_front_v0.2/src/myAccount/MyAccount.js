@@ -6,6 +6,7 @@ import EditAccountForm from "./EditAccountForm";
 import UpdateReportTable from "./UpdateReportTable";
 import MergeReportTable from "./MergeReportTable";
 import UserReportTable from "./UserReportTable";
+import { APIDeleteUser } from "../API";
 
 const MyAccount = () => {
   let loggedUser;
@@ -17,7 +18,17 @@ const MyAccount = () => {
     setButtonClicked(buttonLabel);
   };
 
-  function handleDeletion() {}
+  async function handleDeletion() {
+    console.log("You have chosen death-");
+    let holder =await APIDeleteUser(loggedUser.userId);
+
+
+    Cookies.remove('sessionToken', { path: '/' });
+    Cookies.remove('userInfo', { path: '/' });
+    window.location.href = "/";   
+
+
+  }
 
   const loggedRoleAccountContent = () => {
     switch (loggedUser ? loggedUser.role : null) {
@@ -68,13 +79,13 @@ const MyAccount = () => {
               {buttonClicked === "b" && <UserReportTable />}
               {buttonClicked === "c" && (
                 <div className="deletionDiv">
-                <p>
-                  Jeste li sigurni da želite probrisati račun? Ova radnja ne
-                  može biti poništena.
-                </p>
-                <br></br>
-                <button className="deleteButton" onClick={handleDeletion}>POTVRDI</button>
-              </div>
+                  <p>
+                    Jeste li sigurni da želite probrisati račun? Ova radnja ne
+                    može biti poništena.
+                  </p>
+                  <br></br>
+                  <button className="deleteButton" onClick={() => handleDeletion()}>POTVRDI</button>
+                </div>
               )}
             </div>
           </div>
@@ -130,13 +141,13 @@ const MyAccount = () => {
               {buttonClicked === "b" && <MergeReportTable />}
               {buttonClicked === "c" && (
                 <div className="deletionDiv">
-                <p>
-                  Jeste li sigurni da želite probrisati račun? Ova radnja ne
-                  može biti poništena.
-                </p>
-                <br></br>
-                <button className="deleteButton" onClick={handleDeletion}>POTVRDI</button>
-              </div>
+                  <p>
+                    Jeste li sigurni da želite probrisati račun? Ova radnja ne
+                    može biti poništena.
+                  </p>
+                  <br></br>
+                  <button className="deleteButton" onClick={handleDeletion}>POTVRDI</button>
+                </div>
               )}
             </div>
           </div>

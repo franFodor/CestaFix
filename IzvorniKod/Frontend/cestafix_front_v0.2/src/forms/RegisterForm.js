@@ -1,9 +1,10 @@
 import './Forms.css'
-import {APIRegister} from '../API.js'
+import {APIRegister,APIWhoAmI} from '../API.js'
+import Cookies from 'js-cookie'
 
 const RegisterFormComponent = () => {
     const validatePassword = (password) => {
-        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
         return passwordRegex.test(password);
     };
 
@@ -43,9 +44,24 @@ const RegisterFormComponent = () => {
         }
 
         APIRegister(firstname, lastname, email, password).then(response => {
-            return response.json()
-        }).then(() => {
-            window.location.reload();
+            if (response.status === 403) {
+                divElement.innerText = 'Korsnik sa ovim E-Mailom vec postoji!';
+                divElement.style.color = 'red';
+                return;
+            }
+            return response.json();
+        })
+        .then(respJson => {
+            if (respJson && respJson.token) {
+                Cookies.set('sessionToken', respJson.token);
+                return APIWhoAmI(respJson.token);
+            }
+        })
+        .then(userInfo => {
+            if (userInfo) {
+                Cookies.set('userInfo', JSON.stringify(userInfo));  
+                window.location.reload();
+            }
         });
         
     }

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import './Header.css';
 import AccountPopupComponent from './forms/AccountForm.js'
-import ReportPopupComponent from './forms/ReportForm.js'
 import CheckReportComponent from './forms/CheckReportForm.js'
 import { useNavigate } from 'react-router-dom';
 import StatisticsComponent from './StatisticsComponent.js';
@@ -27,7 +26,6 @@ const Header = ({ pickMarkerLatLon, markers }) => {
   const navigate = useNavigate();
   const handleLogout = () => {
     navigate("/");
-    //Pozvati LogoutAPI kojim ce se javit BE  da je sesh token xprd
 
     Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });

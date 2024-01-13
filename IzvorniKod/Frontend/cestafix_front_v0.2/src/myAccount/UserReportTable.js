@@ -1,6 +1,7 @@
 import { APIGetAllProblems } from "../API";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import './UserReportTable.css'
 
 const UserReportTable = () => {
   const [reports, setReports] = useState([]);

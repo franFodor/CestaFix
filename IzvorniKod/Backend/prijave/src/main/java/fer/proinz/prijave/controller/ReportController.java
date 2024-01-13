@@ -54,13 +54,13 @@ public class ReportController {
         return reportService.getAllReports();
     }
 
-    @Operation(summary = "Get a report by its id")
+    @Operation(summary = "Get a report by it's report_id")
     @GetMapping( "/public/report/{reportId}")
     public ResponseEntity<Report> getReportById(@PathVariable("reportId") int reportId) {
         return reportService.getReportById(reportId);
     }
 
-    @Operation(summary = "Anonymous user gets it's report")
+    @Operation(summary = "Get a report by it's business_id")
     @GetMapping("/public/lookup/{businessId}")
     public ResponseEntity<Report> getReportByBusinessId(@PathVariable("businessId") UUID businessId) {
         return reportService.getReportByBusinessId(businessId);
@@ -77,61 +77,9 @@ public class ReportController {
     @Transactional
     public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) throws JsonProcessingException {
 
-        // Fill in the address
-        if (reportRequest.getAddress() == null &&
-                reportRequest.getLatitude() != null &&
-                reportRequest.getLongitude() != null) {
-            String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(address);
-            address = jsonNode.get("display_name").asText();
-            reportRequest.setAddress(address);
-        } else if (reportRequest.getLatitude() == null &&
-                reportRequest.getLongitude() == null &&
-                reportRequest.getAddress() != null) {
-            String location = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode[] jsonNodes = objectMapper.readValue(location, JsonNode[].class);
-            Double latitude = jsonNodes[0].get("lat").asDouble();
-            Double longitude = jsonNodes[0].get("lon").asDouble();
-            reportRequest.setLatitude(latitude);
-            reportRequest.setLongitude(longitude);
-        } else if (reportRequest.getAddress() == null &&
-                reportRequest.getLatitude() == null &&
-                reportRequest.getLongitude() == null &&
-                reportRequest.getBase64Photos() != null) {
-            if (reportRequest.getBase64Photos().isEmpty()) {
-                return ResponseEntity.badRequest().body("No address, photo or coordinates given");
-            }
-
-            for (String base64Photo : reportRequest.getBase64Photos()) {
-                byte[] decodedBytes = Base64.decodeBase64(base64Photo);
-
-                try {
-                    // Extract EXIF metadata
-                    Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(decodedBytes));
-
-                    // Get the GPS directory from the metadata
-                    GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-
-                    if (gpsDir != null) {
-                        GeoLocation geoLocation = gpsDir.getGeoLocation();
-                        double latitude = geoLocation.getLatitude();
-                        double longitude = geoLocation.getLongitude();
-                        reportRequest.setLatitude(latitude);
-                        reportRequest.setLongitude(longitude);
-                        String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        JsonNode jsonNode = objectMapper.readTree(address);
-                        address = jsonNode.get("display_name").asText();
-                        reportRequest.setAddress(address);
-                    } else {
-                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No EXIF data found in the photo.");
-                    }
-                } catch (ImageProcessingException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        reportRequest = reportService.validateLocation(reportRequest);
+        if (reportRequest == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No address, photo or coordinates given.");
         }
 
         Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
@@ -213,8 +161,9 @@ public class ReportController {
         return ResponseEntity.ok(savedReport);
     }
 
+    @Operation(summary = "See if there is a nearbyReport")
     @PostMapping("/public/nearbyReport")
-    public ResponseEntity<?> getNearbyReport(@RequestBody CreateReportRequestDto reportRequest) {
+    public ResponseEntity<Integer> getNearbyReport(@RequestBody CreateReportRequestDto reportRequest) throws JsonProcessingException {
         return ResponseEntity.ok(reportService.getNearbyReport(reportRequest));
     }
 

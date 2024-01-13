@@ -46,6 +46,7 @@ public class PhotoController {
         return ResponseEntity.ok(photoService.updatePhoto(photoId, updatedPhoto));
     }
 
+    @Operation(summary = "Delete a photo")
     @DeleteMapping("/advanced/photo/{photoId}")
     public ResponseEntity<String> deletePhoto(@PathVariable("photoId") int photoId) {
         return photoService.deletePhoto(photoId);

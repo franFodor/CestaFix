@@ -1,16 +1,28 @@
 package fer.proinz.prijave.service;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.GpsDirectory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.dto.CreateReportRequestDto;
 import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -22,6 +34,8 @@ public class ReportService {
     private final ProblemRepository problemRepository;
 
     private final ProblemService problemService;
+
+    private final GeoConversionService geoConversionService;
 
     public List<Report> getAllReports() {
         List<Report> reports = reportRepository.findAll();
@@ -75,6 +89,66 @@ public class ReportService {
         return statistics;
     }
 
+    public CreateReportRequestDto validateLocation(@RequestBody CreateReportRequestDto reportRequest) throws JsonProcessingException {
+        if (reportRequest.getAddress() == null &&
+                reportRequest.getLatitude() != null &&
+                reportRequest.getLongitude() != null) {
+            String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(address);
+            address = jsonNode.get("display_name").asText();
+            reportRequest.setAddress(address);
+        } else if (reportRequest.getLatitude() == null &&
+                reportRequest.getLongitude() == null &&
+                reportRequest.getAddress() != null) {
+            String location = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode[] jsonNodes = objectMapper.readValue(location, JsonNode[].class);
+            Double latitude = jsonNodes[0].get("lat").asDouble();
+            Double longitude = jsonNodes[0].get("lon").asDouble();
+            reportRequest.setLatitude(latitude);
+            reportRequest.setLongitude(longitude);
+        } else if (reportRequest.getAddress() == null &&
+                reportRequest.getLatitude() == null &&
+                reportRequest.getLongitude() == null &&
+                reportRequest.getBase64Photos() != null) {
+            if (reportRequest.getBase64Photos().isEmpty()) {
+                return null;
+            }
+
+            for (String base64Photo : reportRequest.getBase64Photos()) {
+                byte[] decodedBytes = Base64.decodeBase64(base64Photo);
+
+                try {
+                    // Extract EXIF metadata
+                    Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(decodedBytes));
+
+                    // Get the GPS directory from the metadata
+                    GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
+
+                    if (gpsDir != null) {
+                        GeoLocation geoLocation = gpsDir.getGeoLocation();
+                        double latitude = geoLocation.getLatitude();
+                        double longitude = geoLocation.getLongitude();
+                        reportRequest.setLatitude(latitude);
+                        reportRequest.setLongitude(longitude);
+                        String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        JsonNode jsonNode = objectMapper.readTree(address);
+                        address = jsonNode.get("display_name").asText();
+                        reportRequest.setAddress(address);
+                    } else {
+                        return null;
+                        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No EXIF data found in the photo.");
+                    }
+                } catch (ImageProcessingException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return reportRequest;
+    }
+
     public Report createReport(Report report) {
         
 
@@ -91,7 +165,11 @@ public class ReportService {
         return 6371e3 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
-    public Integer getNearbyReport(CreateReportRequestDto reportRequest) {
+    public Integer getNearbyReport(CreateReportRequestDto reportRequest) throws JsonProcessingException {
+        reportRequest = validateLocation(reportRequest);
+        if (reportRequest == null) {
+            return null;
+        }
         List<Report> reportList = getAllReports();
         for (Report report : reportList) {
             double distance = haversineDistance(reportRequest, report);

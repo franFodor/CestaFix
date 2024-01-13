@@ -24,7 +24,6 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
     const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
     const [showReportList, setShowReportlist] = useState(false);
     const [init, setInit] = useState(null);
-    const [showOverrideDiv, setShowOverrideDiv] = useState(false);
 
     const markerIcon = new L.Icon({
         iconUrl: require("./images/R.png"),
@@ -63,6 +62,16 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         useMapEvents({
             click(e) {
                 setPickMarkerLatLon([e.latlng.lat, e.latlng.lng]);
+
+                //Kliknuto je na mapu i postavljene su koordinate 
+                //Iskomentirat cu i objasnik ovo smece kad se oporavim od fixanja ovog buga
+                var div = document.getElementById("selectedMarker");
+                if (div) {
+                div.innerText = `[${e.latlng.lat}, ${e.latlng.lng}]`;}
+                var div2 = document.getElementById("reportOnMap");
+                if (div2) {
+                    div2.innerHTML = '<div>Odabrane Koodinate na mapi!</div>';
+            }
                 setShowReportlist(false);
                 if (init) window.history.pushState({}, '', '/');
                 setInit(false);
@@ -81,7 +90,23 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         }
     }
 
-
+    function closeReport(){
+        var div = document.getElementById("OverrideDiv");
+        if (div) {
+          console.log("hideam div,");
+          div.style.display = "none";
+        return null;}
+    }function openReport(){
+        var div = document.getElementById("OverrideDiv");
+        if (div) {
+          console.log("otvaram div,");
+          div.style.display = "block";
+        
+        
+        
+        
+          return null;}
+    }
 
     return (
         <div className='main flex-grow w-full'>
@@ -105,13 +130,15 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                     key={-1}
                     position={pickMarkerLatLon}
                     icon={blueMarkerIcon}
-                    eventHandlers={{ click: () => setShowOverrideDiv(true) }}
+                    eventHandlers={{ click: () => openReport() }}
                 />}
 
             </MapContainer>
-
-            <div id="OverrideDiv" style={showOverrideDiv ? {} : { display: 'none' }}>
-                <ReportPopupComponent onClose={() => setShowOverrideDiv(false)} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
+                    
+                {/*Iskomentirat cu i objasnik ovo smece kad se oporavim od fixanja ovog buga NE DIRAJ*/}
+            <div id="OverrideDiv" style={{ display: 'none' }}> 
+                    <div id='selectedMarker' style={{ display: 'none' }}>false</div>
+                <ReportPopupComponent onClose={() => {closeReport();}} pickMarkerLatLon={null} markers={markers} />
             </div>
 
             {selectedMarkerId !== -1 && (showReportList || init) && <ReportListComponent problemID={init || selectedMarkerId} />}

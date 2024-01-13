@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import PopupComponent from "../PopupComponent.js";
 import "./Forms.css";
 import { APICreateReport } from "../API.js";
@@ -28,6 +28,10 @@ function fileToBase64(file) {
 
 const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
+
+
+
+    
 
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
@@ -63,7 +67,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         const data = {
             title: formData.get("name"),
             description: formData.get("description"),
-            address: formData.get("address")!=="" ? formData.get("address") : null,
+            address: formData.get("address") !== "" ? formData.get("address") : null,
             categoryId: formData.get("dropdown"),
             photo: photos.length > 0 ? photos : null,
             token: Cookies.get("sessionToken") || null
@@ -75,6 +79,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             setClosestMarkerData(closestMarker.markerJSON);
             setShowMergeConfirm(true);
         } else {
+            let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText);
             APICreateReport(data.token,
                 data.title,
                 data.description,
@@ -82,8 +87,8 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 data.photo,
                 "U obradi",
                 "U obradi",
-                pickMarkerLatLon[0],
-                pickMarkerLatLon[1],
+                getFinalMapMarker ? getFinalMapMarker[0] : pickMarkerLatLon[0],
+                getFinalMapMarker ? getFinalMapMarker[1] : pickMarkerLatLon[1],
                 data.categoryId,
                 null)
                 .then(response => {
@@ -92,28 +97,29 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     } else {
                         setReportContent(
                             <>
-                              {baseReport}
-                              <div style={{ color: 'red' }}>
-                                  Došlo je do greške, provjerite unos adrese prijave!
-                              </div>
+                                {baseReport}
+                                <div style={{ color: 'red' }}>
+                                    Došlo je do greške, provjerite unos adrese prijave!
+                                </div>
                             </>
-              
+
                         );
-                        console.log("izlali");                 }
+                        console.log("izlali");
+                    }
                 })
                 .then(apiResponse => {
-                    if(apiResponse){
+                    if (apiResponse) {
                         setReportContent(
                             <div>
-                               <h2>Prijava je uspješno prijavljena!</h2>
-                               <p>Id vaše prijave je:</p>
-                               <p>{apiResponse.businessId}</p> 
-                               <br></br>
-                               <button className='loginbtn' onClick={()=>window.location.reload()}>Potvrdi</button>
+                                <h2>Prijava je uspješno prijavljena!</h2>
+                                <p>Id vaše prijave je:</p>
+                                <p>{apiResponse.businessId}</p>
+                                <br></br>
+                                <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
                             </div>
                         );
-                    
-                }
+
+                    }
                 });
 
         }
@@ -121,6 +127,12 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         //Dodati Popup sa confirmationom Uspjesnosti reporta, IDjem ukoliko je bitan i klikom njega ide reload
         //window.location.reload();
     };
+
+
+
+
+
+
 
     const baseReport = (
         <div className="reportContent" >
@@ -145,13 +157,11 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                         name="address"
                     />
                 </div>
-                <div>
-                {!pickMarkerLatLon && (<button className="signupbtn"onClick={()=>onClose()}>Odaberite lokaciju na karti!</button>)}
-                {pickMarkerLatLon && (<div>Odabrane Koodinate na mapi!</div>)}
-
+                <div id='reportOnMap'>
+                    <button className="signupbtn" onClick={() => onClose()}>Odaberite lokaciju na karti!</button>
                 </div>
 
-                
+
                 <div>
                     <b><label htmlFor="dropdown">Odaberite Kategoriju štete</label></b>
                     <select id="dropdown" name="dropdown">
@@ -210,7 +220,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
     return (
         <PopupComponent onClose={onClose}>
-            {!mergeConfirmDialog && reportContent}
+            {!mergeConfirmDialog && reportContent} {/*mergeConfirmDialog ? reportConent : MergeReportDialog*/}
             {mergeConfirmDialog}
         </PopupComponent>
     );

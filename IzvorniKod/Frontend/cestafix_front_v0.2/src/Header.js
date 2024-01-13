@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import './Header.css';
 import AccountPopupComponent from './forms/AccountForm.js'
@@ -7,21 +7,29 @@ import CheckReportComponent from './forms/CheckReportForm.js'
 import { useNavigate } from 'react-router-dom';
 import StatisticsComponent from './StatisticsComponent.js';
 
-const Header = ({pickMarkerLatLon, markers}) => {
+const Header = ({ pickMarkerLatLon, markers }) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
-  const [isReportPopupShown, setIsReportPopupShown] = useState(false);
   const [isStatPopupShown, setIsStatPopupShown] = useState(false);
 
-  const handleReportBtn = () => { setIsReportPopupShown(!isReportPopupShown); }; // Switcha stanje izmedu true i false
+  const handleReportBtn = () => {
+    var div = document.getElementById("OverrideDiv");
+    if (div) {
+      console.log("showam div,");
+      div.style.display = "block";
+    }
+  }; // Switcha stanje izmedu true i false
+
+
+
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
   const handleStatBtn = () => { setIsStatPopupShown(!isStatPopupShown); };
 
   const navigate = useNavigate();
-    const handleLogout = () => {
-    navigate("/"); 
+  const handleLogout = () => {
+    navigate("/");
     //Pozvati LogoutAPI kojim ce se javit BE  da je sesh token xprd
 
-     Cookies.remove('sessionToken', { path: '/' });
+    Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });
     window.location.reload();
 
@@ -40,7 +48,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
       <div className="right">
         {(Cookies.get('userInfo')) ? (
           <>
-          <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
+            <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
             <button className="headerBTN1" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
@@ -55,7 +63,7 @@ const Header = ({pickMarkerLatLon, markers}) => {
             <div className="dropdown">
               <button className="headerBTN1 dropbtn" onClick={() => window.location.href = '/myAccount'}>{getUsername()}</button>
               <div className="dropdown-content">
-                <button className="headerBTNLOGOUT" onClick={() => {window.location.href = '/'; handleLogout();}}>Logout</button>
+                <button className="headerBTNLOGOUT" onClick={() => { window.location.href = '/'; handleLogout(); }}>Logout</button>
               </div>
             </div>
           </>
@@ -86,13 +94,10 @@ const Header = ({pickMarkerLatLon, markers}) => {
         <AccountPopupComponent onClose={handleAccountBtn} />
       )}
 
-      {/*Popup za Reportanje*/}
-      {isReportPopupShown && (
-        <ReportPopupComponent onClose={handleReportBtn} pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
-      )}
+     
       {/*Popup za Statistiku*/}
       {isStatPopupShown && (
-        <StatisticsComponent onClose={handleStatBtn}/>
+        <StatisticsComponent onClose={handleStatBtn} />
       )}
     </header>
   );

@@ -102,7 +102,17 @@ async function APIWhoAmI(token){
     return data;
 }
 
-async function APICreateReport(token, title, description, address, base64Photos, reportStatus, problemStatus, latitude, longitude, categoryId, closest_problem_id) {
+async function APICreateReport(token, 
+                               title, 
+                               description, 
+                               address, 
+                               base64Photos,
+                                reportStatus, 
+                                problemStatus, 
+                                latitude, 
+                                longitude, 
+                                categoryId, 
+                                closest_problem_id) {
     const formData = {
         "longitude" : longitude,
         "latitude" : latitude,
@@ -133,5 +143,42 @@ async function APICreateReport(token, title, description, address, base64Photos,
         });
     }
 }
-
-export {APILogin, APILogout, APIRegister, APIGetAllProblems, APIGetAllReports, APIWhoAmI, APICreateReport, APIGetStaffProblems, APIGetProblemIDFromBusinessId};
+async function APICheckNearbyReport(title, 
+                                    description, 
+                                    address, 
+                                    base64Photos, 
+                                    reportStatus, 
+                                    problemStatus, 
+                                    latitude, 
+                                    longitude, 
+                                    categoryId, 
+                                    closest_problem_id) {
+    const formData = {
+        "longitude" : longitude,
+        "latitude" : latitude,
+        "title": title,
+        "description": description,
+        "address": address,
+        "base64Photos": base64Photos,
+        "reportStatus": reportStatus,
+        "problemStatus" : problemStatus,
+        "categoryId" : categoryId,
+        "mergeProblemId" : closest_problem_id
+    };
+    //console.log("Report Data:>>",formData);
+        return fetch('/api/public/nearbyReport', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(formData)
+        });
+    }
+export {APILogin, 
+        APILogout, 
+        APIRegister, 
+        APIGetAllProblems, 
+        APIGetAllReports, 
+        APIWhoAmI, 
+        APICreateReport, 
+        APIGetStaffProblems, 
+        APIGetProblemIDFromBusinessId,
+        APICheckNearbyReport};

@@ -1,18 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import PopupComponent from "../PopupComponent.js";
 import "./Forms.css";
-import { APICreateReport } from "../API.js";
+import { APICreateReport, APICheckNearbyReport } from "../API.js";
 import Cookies from 'js-cookie';
 
-function haversineDistance(latlon1, latlon2) {
-    const toRad = x => x * Math.PI / 180;
-    const dLat = toRad(latlon2[0] - latlon1[0]);
-    const dLon = toRad(latlon2[1] - latlon1[1]);
-    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(latlon1[0])) * Math.cos(toRad(latlon2[0])) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    return 6371e3 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -27,33 +18,15 @@ function fileToBase64(file) {
 }
 
 const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
-
-
-
-
-    
-
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
     const [reportData, setReportData] = useState(null);
 
-    const getNearbyMarker = (latlon, categoryId) => {
-        let closestMarker = null;
-        let minDistance = 100; // Distance in meters
-        for (const marker of markers) {
-            const distance = haversineDistance(latlon, marker.position);
-            if (distance < minDistance && marker.markerJSON.category.categoryId === parseInt(categoryId)) {
-                closestMarker = marker;
-                minDistance = distance;
-            }
-        }
-        return closestMarker;
-    };
 
     const handleSubmitReport = async (event) => {
         event.preventDefault();
+        //Parsanje Report Objekta iz Forma
         const formData = new FormData(event.target);
-
         let photos = [];
         const photoFiles = formData.getAll("photo");
         for (let file of photoFiles) {
@@ -63,7 +36,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             }
 
         }
-
         const data = {
             title: formData.get("name"),
             description: formData.get("description"),
@@ -72,67 +44,31 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             photo: photos.length > 0 ? photos : null,
             token: Cookies.get("sessionToken") || null
         };
+        //Postavi Parsani objekt u Hook
         setReportData(data);
 
-        let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
-        if (closestMarker !== null) {
-            setClosestMarkerData(closestMarker.markerJSON);
+        //neispravna implementacija!! let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
+        let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
+        let checkNearby = JSON.parse(await APICheckNearbyReport(data.title,
+            data.description,
+            data.address,
+            data.photo,
+            "U obradi",
+            "U obradi",
+            getFinalMapMarker ? getFinalMapMarker[0] : null,
+            getFinalMapMarker ? getFinalMapMarker[1] : null,
+            data.categoryId,
+            null));
+            console.log("odčekiram>>>",checkNearby);
+
+        //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
+        if (checkNearby) {
+            setClosestMarkerData(checkNearby);
             setShowMergeConfirm(true);
         } else {
-            let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText);
-            APICreateReport(data.token,
-                data.title,
-                data.description,
-                data.address,
-                data.photo,
-                "U obradi",
-                "U obradi",
-                getFinalMapMarker ? getFinalMapMarker[0] : pickMarkerLatLon[0],
-                getFinalMapMarker ? getFinalMapMarker[1] : pickMarkerLatLon[1],
-                data.categoryId,
-                null)
-                .then(response => {
-                    if (response.status === 200) {
-                        return response.json(); // Parse the response body as JSON
-                    } else {
-                        setReportContent(
-                            <>
-                                {baseReport}
-                                <div style={{ color: 'red' }}>
-                                    Došlo je do greške, provjerite unos adrese prijave!
-                                </div>
-                            </>
-
-                        );
-                        console.log("izlali");
-                    }
-                })
-                .then(apiResponse => {
-                    if (apiResponse) {
-                        setReportContent(
-                            <div>
-                                <h2>Prijava je uspješno prijavljena!</h2>
-                                <p>Id vaše prijave je:</p>
-                                <p>{apiResponse.businessId}</p>
-                                <br></br>
-                                <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
-                            </div>
-                        );
-
-                    }
-                });
-
+            submitReport(null);
         }
-
-        //Dodati Popup sa confirmationom Uspjesnosti reporta, IDjem ukoliko je bitan i klikom njega ide reload
-        //window.location.reload();
     };
-
-
-
-
-
-
 
     const baseReport = (
         <div className="reportContent" >
@@ -158,7 +94,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     />
                 </div>
                 <div id='reportOnMap'>
-                    <button className="signupbtn" onClick={() => onClose()}>Odaberite lokaciju na karti!</button>
+                    <button className="signupbtn" onClick={() => {document.getElementById("selectedMarker").innerText = "flag";onClose(); }}>Odaberite lokaciju na karti!</button>
                 </div>
 
 
@@ -182,37 +118,55 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
 
     const submitReport = (closest_problem_id) => {
-        if (reportData) {
-            APICreateReport(reportData.token,
-                reportData.title,
-                reportData.description,
-                reportData.address,
-                reportData.photo,
-                "U obradi",
-                "U obradi",
-                pickMarkerLatLon[0],
-                pickMarkerLatLon[1],
-                reportData.categoryId,
-                closest_problem_id)
-                .then(response => {
-                    if (response.status === 200) {
-                        // popup
-                    } else if (response.status === 403) {
-                        //popup
-                    }
-                });;
-        }
+        let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
+        APICreateReport(reportData.token,
+            reportData.title,
+            reportData.description,
+            reportData.address,
+            reportData.photo,
+            "U obradi",
+            "U obradi",
+            getFinalMapMarker ? getFinalMapMarker[0] : null,
+            getFinalMapMarker ? getFinalMapMarker[1] : null,
+            reportData.categoryId,
+            closest_problem_id).then(response => {
+                if (response.status === 200) {
+                    return response.json(); // Parse the response body as JSON
+                } else {
+                    setReportContent(
+                        <>
+                            {baseReport}
+                            <div style={{ color: 'red' }}>
+                                Došlo je do greške, provjerite unos adrese prijave!
+                            </div>
+                        </>
+
+                    );
+                    console.log("kaj si napravil");
+                }
+            })
+            .then(apiResponse => {
+                if (apiResponse) {
+                    setReportContent(
+                        <div>
+                            <h2>Prijava je uspješno prijavljena!</h2>
+                            <p>Id vaše prijave je:</p>
+                            <p>{apiResponse.businessId}</p>
+                            <br></br>
+                            <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
+                        </div>
+                    );
+
+                }
+            });
     };
 
 
     const mergeConfirmDialog = showMergeConfirm && (
         <div className="mergeConfirmDialog">
-            <h3>Već postoji bliska prijava. Detalji prijave:</h3>
-            <p>{`Naslov: ${closestMarkerData.reports[0].title}`}</p>
-            <p>{`Opis: ${closestMarkerData.reports[0].description}`}</p>
-            <p>{`Adresa: ${closestMarkerData.reports[0].address}`}</p>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData.problemId); }}>Spoji s postojećom</button>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(null); }}>Stvori novu</button>
+            <h3>Već postoji bliska prijava. Želite li da se:</h3>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData); }}>spoji s postojećom</button>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(null); }}>Stvor nova</button>
         </div>
     );
 

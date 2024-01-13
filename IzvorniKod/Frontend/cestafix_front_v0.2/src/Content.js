@@ -13,7 +13,21 @@ import { useParams } from 'react-router-dom';
 const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers }) => {
     const businessIdActive = useParams();
     //console.log(businessIdActive);
-
+    function closeReport() {
+        var div = document.getElementById("OverrideDiv");
+        if (div) {
+            console.log("hideam div,");
+            div.style.display = "none";
+            return null;
+        }
+    } function openReport() {
+        var div = document.getElementById("OverrideDiv");
+        if (div) {
+            console.log("otvaram div,");
+            div.style.display = "block";
+            return null;
+        }
+    }
 
 
     function handleMarkerClick(markerData) {
@@ -66,16 +80,29 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                 //Kliknuto je na mapu i postavljene su koordinate 
                 //Iskomentirat cu i objasnik ovo smece kad se oporavim od fixanja ovog buga
                 var div = document.getElementById("selectedMarker");
+                //reportOnMap Div -> Logika za mijenjanje Gumba na Reportu u Tekst  
+                //
                 if (div) {
-                div.innerText = `[${e.latlng.lat}, ${e.latlng.lng}]`;}
+                    if (div.innerText === "flag") {    //ukoliko je doslo 
+                        div.innerText = `[${e.latlng.lat}, ${e.latlng.lng}]`;
+                        var div2 = document.getElementById("reportOnMap");
+                        if (div2) {
+                            div2.innerHTML = '<div>Odabrane Koodinate na mapi!</div>';
+                        }
+                        openReport();
+                    }
+                    div.innerText = `[${e.latlng.lat}, ${e.latlng.lng}]`;
+
+                }
                 var div2 = document.getElementById("reportOnMap");
                 if (div2) {
                     div2.innerHTML = '<div>Odabrane Koodinate na mapi!</div>';
-            }
+                }
                 setShowReportlist(false);
                 if (init) window.history.pushState({}, '', '/');
                 setInit(false);
-            },
+
+            }
         });
 
         return null; // This component does not render anything
@@ -90,23 +117,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         }
     }
 
-    function closeReport(){
-        var div = document.getElementById("OverrideDiv");
-        if (div) {
-          console.log("hideam div,");
-          div.style.display = "none";
-        return null;}
-    }function openReport(){
-        var div = document.getElementById("OverrideDiv");
-        if (div) {
-          console.log("otvaram div,");
-          div.style.display = "block";
-        
-        
-        
-        
-          return null;}
-    }
+
 
     return (
         <div className='main flex-grow w-full'>
@@ -134,11 +145,11 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                 />}
 
             </MapContainer>
-                    
-                {/*Iskomentirat cu i objasnik ovo smece kad se oporavim od fixanja ovog buga NE DIRAJ*/}
-            <div id="OverrideDiv" style={{ display: 'none' }}> 
-                    <div id='selectedMarker' style={{ display: 'none' }}>false</div>
-                <ReportPopupComponent onClose={() => {closeReport();}} pickMarkerLatLon={null} markers={markers} />
+
+            {/*Iskomentirat cu i objasnik ovo smece kad se oporavim od fixanja ovog buga NE DIRAJ*/}
+            <div id="OverrideDiv" style={{ display: 'none' }}>
+                <div id='selectedMarker' style={{ display: 'none' }}>false</div>
+                <ReportPopupComponent onClose={() => { closeReport(); }} pickMarkerLatLon={null} markers={markers} />
             </div>
 
             {selectedMarkerId !== -1 && (showReportList || init) && <ReportListComponent problemID={init || selectedMarkerId} />}

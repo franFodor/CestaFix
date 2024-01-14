@@ -4,7 +4,6 @@ package fer.proinz.prijave.service;
 import fer.proinz.prijave.dto.AuthenticationResponseDto;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
-import fer.proinz.prijave.repository.CityDeptCategoryRepository;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,15 +11,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +23,6 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final CityDeptCategoryRepository cityDeptCategoryRepository;
     private final ProblemRepository problemRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;

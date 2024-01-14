@@ -72,6 +72,21 @@ public class ProblemsIT {
             preparedStatementCategory.setString(2, category.getCategoryName());
             preparedStatementCategory.executeUpdate();
 
+            String sqlCityDept = "INSERT INTO Citydept (city_dept_id, city_dept_name, category_id) " +
+                    "VALUES (?, ?, ?)";
+
+            CityDept cityDept = CityDept.builder()
+                    .cityDeptId(1)
+                    .cityDeptName("dept_1")
+                    .category(category)
+                    .build();
+
+            PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
+            preparedStatementCityDept.setLong(1, cityDept.getCityDeptId());
+            preparedStatementCityDept.setString(2, cityDept.getCityDeptName());
+            preparedStatementCityDept.setInt(3, cityDept.getCategory().getCategoryId());
+            preparedStatementCityDept.executeUpdate();
+
             /*String sqlUser = "INSERT INTO Users (user_id, username, email, password, role) " +
                     "VALUES (?, ?, ?, ?, ?)";*/
 
@@ -91,7 +106,7 @@ public class ProblemsIT {
                     .problemId(15)
                     .longitude(45.1234)
                     .latitude(27.3857)
-                    .status("Oštećeno")
+                    .status("U obradi")
                     .category(category)
                     .build();
 
@@ -116,6 +131,11 @@ public class ProblemsIT {
             PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
             preparedStatementProblem.setInt(1, 15);
             preparedStatementProblem.executeUpdate();
+
+            String sqlCityDept = "DELETE FROM CityDept WHERE city_dept_id = ?";
+            PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
+            preparedStatementCityDept.setInt(1, 1);
+            preparedStatementCityDept.executeUpdate();
 
             String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
@@ -143,13 +163,13 @@ public class ProblemsIT {
     public void createProblemAndExpect200OK() throws Exception {
         Category testCategory = new Category();
         testCategory.setCategoryId(1);
-        testCategory.setCategoryName("cat_1");
+        testCategory.setCategoryName("cat_2");
 
         Problem problem = Problem.builder()
                 .problemId(15)
                 .longitude(45.1234)
                 .latitude(27.3857)
-                .status("Oštećeno")
+                .status("U obradi")
                 .category(testCategory)
                 .build();
 
@@ -164,8 +184,8 @@ public class ProblemsIT {
     @Test
     public void updateProblemAndExpect200OK() throws Exception {
         Category testCategory = new Category();
-        testCategory.setCategoryId(1);
-        testCategory.setCategoryName("cat_1");
+        testCategory.setCategoryId(2);
+        testCategory.setCategoryName("cat_2");
 
         Problem problem = Problem.builder()
                 .problemId(15)

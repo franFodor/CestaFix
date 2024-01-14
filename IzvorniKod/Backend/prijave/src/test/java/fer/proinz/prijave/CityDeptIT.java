@@ -1,7 +1,8 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fer.proinz.prijave.model.CityDepartment;
+import fer.proinz.prijave.model.Category;
+import fer.proinz.prijave.model.CityDept;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.JwtService;
@@ -61,12 +62,26 @@ public class CityDeptIT {
     @BeforeEach
     void setUpCityDept() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlCityDept = "INSERT INTO Citydept (citydept_id, citydept_name) " +
+            String sqlCategory = "INSERT INTO Category (category_id, category_name) " +
                     "VALUES (?, ?)";
 
-            CityDepartment cityDept = CityDepartment.builder()
-                    .citydeptId(1)
-                    .citydeptName("Ured za obnovu javnih povrsina")
+            Category category = Category.builder()
+                    .categoryId(1)
+                    .categoryName("cat_1")
+                    .build();
+
+            PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
+            preparedStatementCategory.setInt(1, category.getCategoryId());
+            preparedStatementCategory.setString(2, category.getCategoryName());
+            preparedStatementCategory.executeUpdate();
+
+            String sqlCityDept = "INSERT INTO Citydept (city_dept_id, city_dept_name, category_id) " +
+                    "VALUES (?, ?, ?)";
+
+            CityDept cityDept = CityDept.builder()
+                    .cityDeptId(1)
+                    .cityDeptName("dept_1")
+                    .category(category)
                     .build();
 
             UserDetails userDetails = User.builder()
@@ -79,8 +94,9 @@ public class CityDeptIT {
             this.jwtToken = jwtService.generateToken(userDetails);
 
             PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
-            preparedStatementCityDept.setLong(1, cityDept.getCitydeptId());
-            preparedStatementCityDept.setString(2, cityDept.getCitydeptName());
+            preparedStatementCityDept.setLong(1, cityDept.getCityDeptId());
+            preparedStatementCityDept.setString(2, cityDept.getCityDeptName());
+            preparedStatementCityDept.setInt(3, cityDept.getCategory().getCategoryId());
             preparedStatementCityDept.executeUpdate();
 
         } catch (Exception e) {
@@ -91,10 +107,15 @@ public class CityDeptIT {
     @AfterEach
     void tearDownCityDept() {
         try (Connection connection = dataSource.getConnection()) {
-            String sqlCityDept = "DELETE FROM Citydept WHERE citydept_id = ?";
+            String sqlCityDept = "DELETE FROM CityDept WHERE city_dept_id = ?";
             PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
             preparedStatementCityDept.setInt(1, 1);
             preparedStatementCityDept.executeUpdate();
+
+            String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
+            PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
+            preparedStatementCategory.setInt(1, 1);
+            preparedStatementCategory.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -114,9 +135,9 @@ public class CityDeptIT {
 
     @Test
     public void createCityDeptAndExpect200OK() throws Exception {
-        CityDepartment cityDept = CityDepartment.builder()
-                .citydeptId(5)
-                .citydeptName("Ured za odrzavanje vodovodnih cijevi")
+        CityDept cityDept = CityDept.builder()
+                .cityDeptId(5)
+                .cityDeptName("Ured za odrzavanje vodovodnih cijevi")
                 .build();
 
         String jsonCityDept = objectMapper.writeValueAsString(cityDept);
@@ -137,21 +158,21 @@ public class CityDeptIT {
 
     @Test
     public void updateCityDeptAndExpect200OK() throws Exception {
-        CityDepartment cityDept = CityDepartment.builder()
-                .citydeptId(18)
-                .citydeptName("Ured za zbrinavanje palih drveca")
+        CityDept cityDept = CityDept.builder()
+                .cityDeptId(18)
+                .cityDeptName("Ured za zbrinavanje palih drveca")
                 .build();
 
         String jsonCityDept = objectMapper.writeValueAsString(cityDept);
 
         String roleFromToken = (String) jwtService.extractRole(jwtToken);
         if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(patch("/advanced/cityDept/" + cityDept.getCitydeptId())
+            mockMvc.perform(patch("/advanced/cityDept/" + cityDept.getCityDeptId())
                             .contentType("application/json")
                             .content(jsonCityDept))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(patch("/advanced/cityDept/" + cityDept.getCitydeptId())
+            mockMvc.perform(patch("/advanced/cityDept/" + cityDept.getCityDeptId())
                             .contentType("application/json")
                             .content(jsonCityDept))
                     .andExpect(status().isForbidden());

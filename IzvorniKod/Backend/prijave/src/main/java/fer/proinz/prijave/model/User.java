@@ -41,8 +41,8 @@ public class User implements UserDetails, Serializable {
     private Role role;
 
     @ManyToOne
-    @JoinColumn(name = "citydept_id")
-    private CityDepartment citydept;
+    @JoinColumn(name = "city_dept_id")
+    private CityDept cityDept;
 
     @JsonIgnore
     @Override

@@ -5,6 +5,7 @@ import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.ProblemService;
 import fer.proinz.prijave.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,15 +61,15 @@ public class ProblemController {
     }
 
 
-    @Operation(summary = "Get a problem by its id")
-    @GetMapping("/advanced/getStaffProblems/{userId}")
-    public ResponseEntity<?> getStaffProblems(@PathVariable("userId") int userId) {
-        Optional<User> userOptional = userService.getUserById(userId);
-        if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Korisnik nije pronaden");
-        }
-        User user = userOptional.get();
-        return ResponseEntity.ok(problemService.getProblemsForUser(user));
+    @Operation(summary = "Get problems for a certain city dept")
+    @GetMapping("/advanced/problem/{cityDeptId}")
+    public ResponseEntity<?> getProblemsForCityDept(
+            @PathVariable("cityDeptId") int cityDeptId,
+            HttpServletRequest httpRequest
+    ) {
+        String authorizationHeader = httpRequest.getHeader("Authorization");
+
+        return ResponseEntity.ok(problemService.getProblemsForCityDept(cityDeptId, httpRequest));
     }
 
 }

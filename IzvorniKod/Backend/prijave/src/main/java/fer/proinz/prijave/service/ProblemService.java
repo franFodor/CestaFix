@@ -1,19 +1,18 @@
 package fer.proinz.prijave.service;
 
-import fer.proinz.prijave.model.CityDeptCategory;
-import fer.proinz.prijave.model.Problem;
-import fer.proinz.prijave.model.Report;
-import fer.proinz.prijave.model.User;
-import fer.proinz.prijave.repository.CityDeptCategoryRepository;
+import fer.proinz.prijave.model.*;
+import fer.proinz.prijave.repository.CityDeptRepository;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +20,13 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
 
-    private final CityDeptCategoryRepository cityDeptCategoryRepository;
-
     private final ReportRepository reportRepository;
+
+    private final CityDeptRepository cityDeptRepository;
+
+    private final JwtService jwtService;
+
+    private final UserService userService;
 
     public List<Problem> getAllProblems() {
         return problemRepository.findAll();
@@ -76,22 +79,39 @@ public class ProblemService {
         return problemRepository.findByCategory_CategoryId(categoryId);
     }
 
-    public List<Problem> getProblemsForUser(User user) {
-        // Fetch CityDeptCategory instances related to the user's CityDepartment
-        List<CityDeptCategory> cityDeptCategories = cityDeptCategoryRepository.findByCityDepartment(user.getCitydept());
+    public List<Problem> getProblemsForCityDept(
+            int cityDeptId,
+            HttpServletRequest httpRequest
+    ) {
+        User user = null;
+        String authorizationHeader = httpRequest.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            Integer userId = jwtService.extractUserId(token);
+            Optional<User> optionalUser = userService.getUserById(userId);
+            if (optionalUser.isPresent()) {
+                user = optionalUser.get();
+            }
+        }
 
-        // Extract Category IDs from CityDeptCategory instances
-        List<Integer> categoryIds = cityDeptCategories.stream()
-                .map(cityDeptCategory -> cityDeptCategory.getCategory().getCategoryId())
-                .collect(Collectors.toList());
+        int userCityDeptId = user.getCityDept().getCityDeptId();
 
-        // Fetch problems for each category ID and flatten the result
-
-        List<Problem> userProblems = categoryIds.stream()
-                .flatMap(categoryId -> problemRepository.findByCategory_CategoryId(categoryId).stream())
-                .distinct()
-                .collect(Collectors.toList());
-
-        return userProblems;
+        Optional<CityDept> optionalCityDept = cityDeptRepository.findById(cityDeptId);
+        if (optionalCityDept.isPresent()) {
+            int categoryId = optionalCityDept.get().getCategory().getCategoryId();
+            List<Problem> result = new ArrayList<>();
+            if (cityDeptId == userCityDeptId) {
+                for (Problem problem : getAllProblems()) {
+                    if (problem.getCategory().getCategoryId() == categoryId) {
+                        result.add(problem);
+                    }
+                }
+            } else {
+                throw new RuntimeException("Trying to access another city department!");
+            }
+            return result;
+        } else {
+            throw new RuntimeException("City Department doesn't exist!");
+        }
     }
 }

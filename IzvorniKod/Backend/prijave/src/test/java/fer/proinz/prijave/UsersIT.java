@@ -1,7 +1,7 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fer.proinz.prijave.model.CityDepartment;
+import fer.proinz.prijave.model.CityDept;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.JwtService;
@@ -93,17 +93,17 @@ public class UsersIT {
             preparedStatementUser.setString(6, String.valueOf(user.getRole()));
             preparedStatementUser.executeUpdate();
 
-            String sqlCityDepartment = "INSERT INTO Citydept (citydept_id, citydept_name) " +
+            String sqlCityDepartment = "INSERT INTO Citydept (city_dept_id, city_dept_name) " +
                     "VALUES (?, ?)";
 
-            CityDepartment cityDepartment = CityDepartment.builder()
-                    .citydeptId(3)
-                    .citydeptName("Ured za obnovu javnih povrsina")
+            CityDept cityDepartment = CityDept.builder()
+                    .cityDeptId(3)
+                    .cityDeptName("Ured za obnovu javnih povrsina")
                     .build();
 
             PreparedStatement preparedStatementCityDepartment = connection.prepareStatement(sqlCityDepartment);
-            preparedStatementCityDepartment.setLong(1, cityDepartment.getCitydeptId());
-            preparedStatementCityDepartment.setString(2, cityDepartment.getCitydeptName());
+            preparedStatementCityDepartment.setLong(1, cityDepartment.getCityDeptId());
+            preparedStatementCityDepartment.setString(2, cityDepartment.getCityDeptName());
             preparedStatementCityDepartment.executeUpdate();
 
         } catch (Exception e) {
@@ -119,7 +119,7 @@ public class UsersIT {
             preparedStatementUser.setInt(1, 4);
             preparedStatementUser.executeUpdate();
 
-            String sqlCityDepartment = "DELETE FROM Citydept WHERE citydept_id = ?";
+            String sqlCityDepartment = "DELETE FROM Citydept WHERE city_dept_id = ?";
             PreparedStatement preparedStatementCityDepartment = connection.prepareStatement(sqlCityDepartment);
             preparedStatementCityDepartment.setInt(1, 3);
             preparedStatementCityDepartment.executeUpdate();
@@ -160,7 +160,7 @@ public class UsersIT {
                 .email("mat.waller@gmail.com")
                 .password(passwordEncoder.encode("qwertz"))
                 .role(Role.USER)
-                .citydept(null)
+                .cityDept(null)
                 .build();
 
         String jsonUser = objectMapper.writeValueAsString(user);
@@ -184,7 +184,7 @@ public class UsersIT {
                 .email("justin.waller@gmail.com")
                 .password(passwordEncoder.encode("cowboy"))
                 .role(Role.USER)
-                .citydept(null)
+                .cityDept(null)
                 .build();
 
         String jsonUser = objectMapper.writeValueAsString(user);

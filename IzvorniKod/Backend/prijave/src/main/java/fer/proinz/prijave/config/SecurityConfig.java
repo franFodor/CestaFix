@@ -45,6 +45,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/advanced/report/{reportId}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/advanced/report/{reportId}").authenticated()
 
+                        .requestMatchers(HttpMethod.PATCH, "/advanced/user/{userId}").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").authenticated()
+
                         .requestMatchers("/advanced/**").hasAnyRole("STAFF", "ADMIN")
 
                         .requestMatchers("/swagger-ui/**").permitAll()

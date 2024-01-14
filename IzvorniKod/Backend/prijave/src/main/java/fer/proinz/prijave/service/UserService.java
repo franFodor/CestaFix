@@ -1,6 +1,7 @@
 package fer.proinz.prijave.service;
 
 
+import fer.proinz.prijave.dto.AuthenticationResponseDto;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.CityDeptCategoryRepository;
 import fer.proinz.prijave.repository.ProblemRepository;
@@ -28,6 +29,7 @@ public class UserService {
     private final CityDeptCategoryRepository cityDeptCategoryRepository;
     private final ProblemRepository problemRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -47,7 +49,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User updateUser(int userId, User updatedUser) {
+    public AuthenticationResponseDto updateUser(int userId, User updatedUser) {
         /*Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             User saved = userRepository.save(updatedUser);
@@ -55,7 +57,7 @@ public class UserService {
         } else {
             throw new NoSuchElementException("No user with this id");
         }*/
-        return userRepository.findById(userId)
+        User user1 = userRepository.findById(userId)
                 .map(user -> {
                     if (updatedUser.getFirstname() != null) {
                         user.setFirstname(updatedUser.getFirstname());
@@ -72,6 +74,10 @@ public class UserService {
                     return userRepository.save(user);
                 })
                 .orElseThrow(RuntimeException::new);
+        var jwtToken = jwtService.generateToken(user1);
+        return AuthenticationResponseDto.builder()
+                .token(jwtToken)
+                .build();
     }
 
     public ResponseEntity<String> deleteUser(int userId, Authentication authentication) {

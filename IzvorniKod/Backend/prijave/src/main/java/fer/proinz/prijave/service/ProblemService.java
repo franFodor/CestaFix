@@ -2,9 +2,11 @@ package fer.proinz.prijave.service;
 
 import fer.proinz.prijave.model.CityDeptCategory;
 import fer.proinz.prijave.model.Problem;
+import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.CityDeptCategoryRepository;
 import fer.proinz.prijave.repository.ProblemRepository;
+import fer.proinz.prijave.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,8 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
 
     private final CityDeptCategoryRepository cityDeptCategoryRepository;
+
+    private final ReportRepository reportRepository;
 
     public List<Problem> getAllProblems() {
         return problemRepository.findAll();
@@ -43,6 +47,14 @@ public class ProblemService {
                         problem.setLatitude(updatedProblem.getLatitude());
                     }
                     if (updatedProblem.getStatus() != null) {
+                        Optional<Problem> problemOptional = problemRepository.findById(problemId);
+                        if (problemOptional.isPresent()) {
+                            Problem problem1 = problemOptional.get();
+                            for (Report report : problem1.getReports()) {
+                                report.setStatus(updatedProblem.getStatus());
+                                reportRepository.save(report);
+                            }
+                        }
                         problem.setStatus(updatedProblem.getStatus());
                     }
                     return problemRepository.save(problem);

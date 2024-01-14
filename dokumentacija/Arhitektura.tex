@@ -176,7 +176,7 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa cityde
 	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Photo} je entitet koji sadrži sve bitne informacije vezane za fotografiju oštećenja.
+\noindent\textbf{Photo} je entitet koji sadrži sve bitne informacije vezane za sliku oštećenja.
 Sastoji se od atributa: photo\_id, photo\_data i report\_id. 
 Povezan je vezom \textit{Many-to-One} s entitetom Reports preko atributa report\_id.
 
@@ -189,7 +189,7 @@ Povezan je vezom \textit{Many-to-One} s entitetom Reports preko atributa report\
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Photo}}                                                              \\ \hline[3pt]
-	\SetCell{LightBlue}photo\_id  	 & INT & jedinstveni identifikator fotografije (photo.photo\_id)         \\ \hline
+	\SetCell{LightBlue}photo\_id  	 & INT & jedinstveni identifikator slike (photo.photo\_id)         \\ \hline
 	\SetCell{LightBlue}photo\_data   & BYTEA & slika oštećenja \\ \hline
 	\SetCell{LightBlue}report\_id    & INT & jedinstveni identifikator prijave (report.report\_id) \\ \hline
 \end{longtblr}

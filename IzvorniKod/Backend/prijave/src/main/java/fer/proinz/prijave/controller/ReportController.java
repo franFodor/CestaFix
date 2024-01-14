@@ -163,8 +163,13 @@ public class ReportController {
 
     @Operation(summary = "See if there is a nearbyReport")
     @PostMapping("/public/nearbyReport")
-    public ResponseEntity<Integer> getNearbyReport(@RequestBody CreateReportRequestDto reportRequest) throws JsonProcessingException {
-        return ResponseEntity.ok(reportService.getNearbyReport(reportRequest));
+    public ResponseEntity<?> getNearbyReport(@RequestBody CreateReportRequestDto reportRequest) throws JsonProcessingException {
+        Integer result = reportService.getNearbyReport(reportRequest);
+        if (result == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No address, photo or coordinates given.");
+        } else {
+            return ResponseEntity.ok(reportService.getNearbyReport(reportRequest));
+        }
     }
 
     @Operation(summary = "Update a report")

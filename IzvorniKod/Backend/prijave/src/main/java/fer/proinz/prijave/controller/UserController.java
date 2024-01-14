@@ -55,7 +55,7 @@ public class UserController {
     @Operation(summary = "Update a user",
             description = "Users can update only personal data about themselves")
     @PatchMapping("/advanced/user/{userId}")
-    public ResponseEntity<User> updateUser(
+    public ResponseEntity<?> updateUser(
             @PathVariable("userId") int userId,
             @RequestBody User updatedUser
         ) {

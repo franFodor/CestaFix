@@ -179,7 +179,7 @@ public class ReportService {
                 return report.getProblem().getProblemId();
             }
         }
-        return null;
+        return -1;
     }
 
     public ResponseEntity<?> updateReport(int reportId, Report updatedReport) {

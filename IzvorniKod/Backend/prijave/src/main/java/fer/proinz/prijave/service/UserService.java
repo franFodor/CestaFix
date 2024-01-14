@@ -2,11 +2,13 @@ package fer.proinz.prijave.service;
 
 
 import fer.proinz.prijave.dto.AuthenticationResponseDto;
+import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.CityDeptCategoryRepository;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -85,8 +87,15 @@ public class UserService {
         User authenticatedUser = (User) authentication.getPrincipal();
 
         if (userOptional.isPresent()) {
-            userRepository.deleteById(userId);
-            return ResponseEntity.ok("User with id " + userId + " is deleted.");
+            if (authenticatedUser.getRole() == Role.STAFF) {
+                userRepository.deleteById(userId);
+                return ResponseEntity.ok("User with id " + userId + " is deleted.");
+            } else if (authenticatedUser.getUserId() == userId) {
+                userRepository.deleteById(userId);
+                return ResponseEntity.ok("User with id " + userId + " is deleted.");
+            } else {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You cannot delete other users.");
+            }
         } else {
             throw new RuntimeException("user with id " + userId + " does not exists!");
         }

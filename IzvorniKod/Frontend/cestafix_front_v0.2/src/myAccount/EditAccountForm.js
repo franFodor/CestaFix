@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import './EditAccountForm.css'
+import { APIUpdateUser } from '../API';
 
 const EditAccountForm = () => {
     // State for user account details
@@ -17,7 +18,6 @@ const EditAccountForm = () => {
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [editing, setEditing] = useState({ firstName: false, lastName: false, email: false });
     
     useEffect(() => {
@@ -53,14 +53,24 @@ const EditAccountForm = () => {
         if (field === 'firstName') setFirstName(value);
         if (field === 'lastName') setLastName(value);
         if (field === 'email') setEmail(value);
-        if (field === 'password') setPassword(value);
     };
 
     // Handle form submit
     const handleSubmit = (e) => {
         e.preventDefault();
         // Here you would typically make an API call to update the user details
-        console.log('Updated Info:', { firstName, lastName, email, password });
+        console.log('Updated Info:', { firstName, lastName, email});
+        
+        let userInfo = Cookies.get('userInfo');
+        if(userInfo)userInfo = JSON.parse(userInfo);
+
+        APIUpdateUser(userInfo.userId,
+                      firstName,
+                      lastName,
+                      email,
+                      userInfo.role,
+                      userInfo.citydept
+        );
         setEditing({ firstName: false, lastName: false, email: false });
     };
 
@@ -101,10 +111,6 @@ const EditAccountForm = () => {
                         <p>
                         <strong>Uloga:</strong>
                             {accountInfo.role}
-                        </p>
-                        <p>
-                            <strong>Promijeni lozinku:</strong>
-                            <input type="password" value={password} onChange={(e) => handleChange(e, 'password')} />
                         </p>
                     </div>
                     <button type="submit">Spremi promjene</button>

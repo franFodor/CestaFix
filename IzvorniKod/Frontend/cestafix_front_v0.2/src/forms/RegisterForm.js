@@ -80,8 +80,6 @@ const RegisterFormComponent = () => {
                     <input type="password" placeholder="Lozinka" name="password" required />
                     <label htmlFor="password-repeat"><b>Ponovi Lozinku</b></label>
                     <input type="password" placeholder="Ponovi lozinku" name="password-repeat" required />
-                    <label htmlFor="remember">Zapamti me</label>
-                    <input type="checkbox" defaultChecked="checked" name="remember" />
                     <button type="submit" className="signupbtn">Registriraj se</button>
                 </form>
             <div className="registerFail"></div>

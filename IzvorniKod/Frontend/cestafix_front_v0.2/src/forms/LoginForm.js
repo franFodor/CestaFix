@@ -48,8 +48,6 @@ const LoginFormComponent = () => {
             <input type="text" name="email" required />
             <label htmlFor="password"><b>Lozinka</b></label>
             <input type="password" name="password" required />
-            <label htmlFor="remember">Zapamti me</label>
-            <input type="checkbox" defaultChecked="checked" name="remember" style={{ marginBottom: '15px' }} />
             <button type="submit" className="login-button">Prijava</button>
         </form>
         <div className="loginFail"></div>

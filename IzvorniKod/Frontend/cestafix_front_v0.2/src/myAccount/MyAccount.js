@@ -20,10 +20,10 @@ const MyAccount = () => {
 
   async function handleDeletion() {
     console.log("You have chosen death-");
-    let holder =await APIDeleteUser(loggedUser.userId);
+    let holder = await APIDeleteUser(loggedUser.userId);
     Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });
-    window.location.href = "/";   
+    window.location.href = "/";
 
 
   }
@@ -35,41 +35,11 @@ const MyAccount = () => {
           <div className="container min-w-full">
             <div className="myAccLeft">
               <img src={userImage} alt="User" />
-              <div className="Details">
-                {loggedUser.firstname + " " + loggedUser.lastname}
-              </div>
-              <button
-                className="confirmButton"
-                style={{ display: "inline-block", width: "fit-content" }}
-                onClick={() => handleClick("a")}
-              >
-                Uredi Profil
-              </button>
-              <button
-                className="confirmButton"
-                style={{ display: "inline-block", width: "fit-content" }}
-                onClick={() => handleClick("b")}
-              >
-                Pregled Mojih Prijava
-              </button>
-              <button
-                className="confirmButton"
-                style={{
-                  display: "inline-block",
-                  width: "fit-content",
-                  background: "red",
-                }}
-                onClick={() => handleClick("c")}
-              >
-                Pobriši Račun!!!
-              </button>
-              <button
-                className="confirmButton"
-                style={{ display: "inline-block", width: "fit-content" }}
-                onClick={() => (window.location.href = "/")}
-              >
-                Povratak
-              </button>
+              <div className="Details">{loggedUser.firstname + " " + loggedUser.lastname}</div>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("a")}>Uredi Profil</button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("b")}>Pregled Mojih Prijava              </button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content", background: "red", }} onClick={() => handleClick("c")}>Pobriši Račun!!!</button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => (window.location.href = "/")}>Povratak</button>
             </div>
 
             <div className="myAccRight">
@@ -99,45 +69,18 @@ const MyAccount = () => {
                 {loggedUser.firstname + " " + loggedUser.lastname}
               </div>
               <div className="Details">{loggedUser.citydept.citydeptName + ""}</div>
-
-              <button
-                className="confirmButton"
-                style={{ display: "inline-block", width: "fit-content" }}
-                onClick={() => handleClick("a")}
-              >
-                Ažuriraj stanje Prijava!
-              </button>
-              <button
-                className="confirmButton"
-                style={{ display: "inline-block", width: "fit-content" }}
-                onClick={() => handleClick("b")}
-              >
-                Spoji prijave!
-              </button>
-              <button
-                className="confirmButton"
-                style={{
-                  display: "inline-block",
-                  width: "fit-content",
-                  background: "red",
-                }}
-                onClick={() => handleClick("c")}
-              >
-                Pobriši Račun!!!
-              </button>
-              <button
-                className="confirmButton"
-                style={{ display: "inline-block", width: "fit-content" }}
-                onClick={() => (window.location.href = "/")}
-              >
-                Povratak
-              </button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("a")}>Uredi Profil</button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("b")}>Ažuriraj stanje Prijava!</button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("c")}>Spoji prijave!</button>
+              <button className="confirmButton" style={{display: "inline-block",width: "fit-content",background: "red",}}onClick={() => handleClick("d")}>Pobriši Račun!!!</button>
+              <button className="confirmButton"style={{ display: "inline-block", width: "fit-content" }}onClick={() => (window.location.href = "/")}>Povratak</button>
             </div>
 
             <div className="myAccRight">
-              {buttonClicked === "a" && <UpdateReportTable />}
-              {buttonClicked === "b" && <MergeReportTable />}
-              {buttonClicked === "c" && (
+              {buttonClicked === "a" && <EditAccountForm />}
+              {buttonClicked === "b" && <UpdateReportTable />}
+              {buttonClicked === "c" && <MergeReportTable />}
+              {buttonClicked === "d" && (
                 <div className="deletionDiv">
                   <p>
                     Jeste li sigurni da želite probrisati račun? Ova radnja ne

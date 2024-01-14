@@ -12,6 +12,26 @@ async function APILogin(email, password) {
             body: JSON.stringify(formData)
         });
 }
+async function APIUpdateUser(userId,
+    firstName,
+    lastName,
+    email,
+    role,
+    citydept) {
+    const formData = {
+        userId: userId,
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+        role: role,
+        citydept: citydept};
+
+    return fetch(`/api/advanced/user/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    });
+}
 
 async function APIDeleteUser(id) {
     return fetch(`/advanced/user/${id}`, {
@@ -191,8 +211,9 @@ async function APIGetStats() {
 }
 export {
     APILogin,
-    APIDeleteUser,
     APIRegister,
+    APIUpdateUser,
+    APIDeleteUser,
     APIGetAllProblems,
     APIGetAllReports,
     APIWhoAmI,

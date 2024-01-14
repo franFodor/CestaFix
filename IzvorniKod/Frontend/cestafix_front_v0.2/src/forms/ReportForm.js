@@ -129,7 +129,9 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             reportData = data;
         }
         let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
-        let token = Cookies.get('sessionToken');
+        let token;
+        if(Cookies.get('sessionToken'))token = Cookies.get('sessionToken');
+        else{token = null;}
         if(reportData){
         APICreateReport(token,
             reportData.title,
@@ -178,8 +180,8 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const mergeConfirmDialog = showMergeConfirm && (
         <div className="mergeConfirmDialog">
             <h3>Već postoji bliska prijava. Želite li da se:</h3>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData,null); }}>spoji s postojećom</button>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(null,null); }}>Stvori novu prijavu</button>
+            <button onClick={() => { setShowMergeConfirm(false);submitReport(closestMarkerData,reportData); }}>spoji s postojećom</button>
+            <button onClick={() => { setShowMergeConfirm(false);submitReport(null,reportData); }}>Stvori novu prijavu</button>
             <button onClick={() => { setShowMergeConfirm(false);onClose();}}>Odustani</button>
         </div>
     );
@@ -188,7 +190,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
     return (
         <PopupComponent onClose={onClose}>
-            {!mergeConfirmDialog && reportContent} {/*mergeConfirmDialog ? reportConent : MergeReportDialog*/}
+            {reportContent} {/*mergeConfirmDialog ? reportConent : MergeReportDialog*/}
             {mergeConfirmDialog}
         </PopupComponent>
     );

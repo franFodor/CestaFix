@@ -51,9 +51,6 @@ const LoginFormComponent = () => {
             <button type="submit" className="login-button">Prijava</button>
         </form>
         <div className="loginFail"></div>
-        <div style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
-        Zaboravljena lozinka?
-        </div>
         </>
     );
     }

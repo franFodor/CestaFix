@@ -50,7 +50,6 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 	\item \textit{CityDept}
 	\item \textit{Category}
 	\item \textit{Problems}
-	\item \textit{CitydeptCategory}
 	\item \textit{Photo}
 \end{packed_item}
 
@@ -59,8 +58,8 @@ Baza podataka ove aplikacija sadrži sljedeće entitete:
 \subsection{Opis tablica}
 
 \noindent \textbf{Users} je entitet koji sadrži sve bitne informacije o korisnicima i njihovim ulogama unutar aplikacije. 
-Sastoji se od atributa: user\_id, firstname, lastname, email, password, role i citydept\_id.
-Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa citydept\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
+Sastoji se od atributa: user\_id, firstname, lastname, email, password, role i city\_dept\_id.
+Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa city\_dept\_id i vezom \textit{One-to-Many} s entitetom Reports preko atributa user\_id.
 
 
 \begin{longtblr}[
@@ -72,13 +71,13 @@ Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa cityde
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Users}}                                               \\ \hline[3pt]
-	\SetCell{LightGreen}user\_id     & INT     & jedinstveni identifikator korisnika      \\ \hline
-	firstname                        & VARCHAR & ime korisnika                            \\ \hline
-	lastname                         & VARCHAR & prezime korisnika                        \\ \hline
-	email                            & VARCHAR & e-mail adresa korisnika                  \\ \hline
-	password                         & VARCHAR & hash lozinke korisnika                   \\ \hline
-	role                             & VARCHAR & uloga korisnika                          \\ \hline
-	\SetCell{LightBlue} citydept\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	\SetCell{LightGreen}user\_id       & INT     & jedinstveni identifikator korisnika      \\ \hline
+	firstname                          & VARCHAR & ime korisnika                            \\ \hline
+	lastname                           & VARCHAR & prezime korisnika                        \\ \hline
+	email                              & VARCHAR & e-mail adresa korisnika                  \\ \hline
+	password                           & VARCHAR & hash lozinke korisnika                   \\ \hline
+	role                               & VARCHAR & uloga korisnika                          \\ \hline
+	\SetCell{LightBlue} city\_dept\_id & INT     & jedinstveni identifikator gradskog ureda (citydept.city\_dept\_id)\\ \hline
 \end{longtblr}
 
 
@@ -90,7 +89,7 @@ Povezan je vezom \textit{Many-to-One} s entitetom Problems preko atributa proble
 	entry=none
 	]{
 	width = \textwidth,
-	colspec={|X[13,l]|X[6, l]|X[20, l]|},
+	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Reports}}                                                                 \\ \hline[3pt]
@@ -107,9 +106,9 @@ Povezan je vezom \textit{Many-to-One} s entitetom Problems preko atributa proble
 	\SetCell{LightBlue} problem\_id & INT        & jedinstveni identifikator oštećenja (problems.problem\_id) \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Citydept} je entitet koji sadrži sve bitne informacije o gradskim uredima.
-Sastoji se od atributa: citydept\_id i citydept\_name. 
-Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa citydept\_id i vezom \textit{One-to-Many} s entitetom CityDeptCategory preko atributa citydept\_id.
+\noindent\textbf{CityDept} je entitet koji sadrži sve bitne informacije o gradskim uredima.
+Sastoji se od atributa: city\_dept\_id, city\_dept\_name i category\_id. 
+Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa city\_dept\_id i vezom \textit{One-to-One} s entitetom Category preko atributa category\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -118,14 +117,15 @@ Povezan je vezom \textit{One-to-Many} s entitetom Users preko atributa citydept\
 	colspec={|X[6,l]|X[6, l]|X[20, l]|},
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Citydept}}                                            \\ \hline[3pt]
-	\SetCell{LightGreen}citydept\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
-	citydept\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
+	\hline \SetCell[c=3]{c}{\textbf{CityDept}}                                            \\ \hline[3pt]
+	\SetCell{LightGreen}city\_dept\_id & INT     & jedinstveni identifikator gradskog ureda \\ \hline
+	city\_dept\_name                   & VARCHAR & naziv gradskog ureda                     \\ \hline
+	\SetCell{LightBlue} category\_id   & INT     & jedinstveni identifikator kategorije oštećenja (category.category\_id)   \\ \hline
 \end{longtblr}
 
 \noindent\textbf{Category} je entitet koji sadrži sve bitne informacije o kategoriji oštećenja. 
 Sastoji se od atributa: category\_id i category\_name. 
-Povezan je vezom \textit{One-to-Many} s entitetom Problems preko atributa category\_id i vezom \textit{One-to-Many} s entitetom CityDeptCategory preko atributa category\_id.
+Povezan je vezom \textit{One-to-Many} s entitetom Problems preko atributa category\_id i vezom \textit{One-to-One} s entitetom CityDept preko atributa category\_id.
 \begin{longtblr}[
 	label=none,
 	entry=none
@@ -159,23 +159,6 @@ Povezan je vezom \textit{One-to-Many} s entitetom Reports preko atributa problem
 \end{longtblr}
 
 
-\noindent\textbf{CitydeptCategory} je entitet koji sadrži sve bitne informacije vezane uz kategoriju oštećenja kojom se bavi određeni gradski ured.
-Sastoji se od atributa: citydept\_id i category\_id. 
-Povezan je vezom \textit{Many-to-One} s entitetom CityDept preko atributa citydept\_id i vezom \textit{Many-to-One} s entitetom Category preko atributa category\_id.
-
-\begin{longtblr}[
-	label=none,
-	entry=none
-	]{
-	width = \textwidth,
-	colspec={|X[6,l]|X[6, l]|X[20, l]|},
-	rowhead = 1,
-	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{CitydeptCategory}}                                                             \\ \hline[3pt]
-	\SetCell{LightBlue}citydept\_id & INT & jedinstveni identifikator gradskog ureda (citydept.citydept\_id)       \\ \hline
-	\SetCell{LightBlue}category\_id & INT & jedinstveni identifikator kategorije oštećenja (category.category\_id) \\ \hline
-\end{longtblr}
-
 \noindent\textbf{Photo} je entitet koji sadrži sve bitne informacije vezane za sliku oštećenja.
 Sastoji se od atributa: photo\_id, photo\_data i report\_id. 
 Povezan je vezom \textit{Many-to-One} s entitetom Reports preko atributa report\_id.
@@ -189,33 +172,16 @@ Povezan je vezom \textit{Many-to-One} s entitetom Reports preko atributa report\
 	rowhead = 1,
 	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 	\hline \SetCell[c=3]{c}{\textbf{Photo}}                                                              \\ \hline[3pt]
-	\SetCell{LightBlue}photo\_id  	 & INT & jedinstveni identifikator slike (photo.photo\_id)         \\ \hline
-	\SetCell{LightBlue}photo\_data   & BYTEA & slika oštećenja \\ \hline
+	\SetCell{LightGreen}photo\_id  	 & INT & jedinstveni identifikator slike (photo.photo\_id)         \\ \hline
+	photo\_data   & BYTEA & slika oštećenja \\ \hline
 	\SetCell{LightBlue}report\_id    & INT & jedinstveni identifikator prijave (report.report\_id) \\ \hline
 \end{longtblr}
 
-\noindent\textbf{Photo} je entitet koji sadrži sve bitne informacije vezane za fotografiju oštećenja.
-Sastoji se od atributa: photo\_id, photo\_data i report\_id. 
-Povezan je vezom \textit{Many-to-One} s entitetom Reports preko atributa report\_id.
-
-\begin{longtblr}[
-	label=none,
-	entry=none
-	]{
-	width = \textwidth,
-	colspec={|X[6,l]|X[6, l]|X[20, l]|},
-	rowhead = 1,
-	} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-	\hline \SetCell[c=3]{c}{\textbf{Photo}}                                                              \\ \hline[3pt]
-	\SetCell{LightBlue}photo\_id  	 & INT & jedinstveni identifikator fotografije (photo.photo\_id)         \\ \hline
-	\SetCell{LightBlue}photo\_data   & BYTEA & slika oštećenja \\ \hline
-	\SetCell{LightBlue}report\_id    & INT & jedinstveni identifikator prijave (report.report\_id) \\ \hline
-\end{longtblr}
 
 \subsection{Dijagram baze podataka}
 
 \begin{figure}[H]
-	\includegraphics[scale=0.50]{slike/ERD-model} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+	\includegraphics[scale=0.75]{slike/ERD-model} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
 	\caption{E-R dijagram baze podataka}
 	\label{fig:ERdijagramBazePodataka}
@@ -235,7 +201,7 @@ upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u 
 logiku interakcije i promjene. Kontroler AuthenticationController omogućuje registraciju i prijavu korisnika. 
 Kontroler ReportController omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje 
 interakcije s objedinjenim problemima oštećenja s istom temom i lokacijom. Kontroler UserController omogućuje 
-interakcije i promjene povezane s registriranim korisnicima. Kontroler CityDepartmentController omogućuje 
+interakcije i promjene povezane s registriranim korisnicima. Kontroler CityDeptController omogućuje 
 interakcije i promjene povezane s gradskim uredima. Kontroler PhotoController omogućuje interakciju i promjene
 vezane za slike oštećenja. Kontroler CategoryController omogućuje interakciju i promjene vezane za 
 kategorije oštećenja.
@@ -273,13 +239,9 @@ korisnika koji je unio nužne podatke u sustav. Razred Report predstavlja prijav
 unio potrebne i opcionalne podatke. Razred Problem predstavlja prijavu problema koja predstavlja jednu ili više
 prijava oštećenja objedinjene u prijavu problema sa zajedničkom temom i lokacijom. Razred Category predstavlja
 kategoriju oštećenja koju korisnik može odabrati za prijavljeno oštećenje, odnosno koju gradski ured može dobiti
-na upravljanje oštećenjima. Razred CityDepartment predstavlja gradski ured koji upravlja jednom ili više 
-kategorija oštećenja koje im je administrator dodijelio. Razred CityDeptCategory predstavlja vezu između
-razreda Category i razreda CityDepartment, odnosno predstavlja zapis kategorija i gradskih ureda u parovima.
-Također, zbog ograničenja tehnologije Spring Boot-a postoji razred CityDeptCategoryId u kojem ručno implementiramo
-metode koje nisu automatski generirane zbog postojanja više od jednog atributa kao primarni ključ. Enumeracija 
-Role predstavlja ulogu koju registrirani korisnik ima. Razred Role predstavlja enumeraciju uloga koje registrirani 
-korisnik može imati. Razred Photo predstavlja fotografiju oštećenja koju je korisnik dodao prilikom prijave oštećenja. 
+na upravljanje oštećenjima. Razred CityDept predstavlja gradski ured koji upravlja jednom kategorijom oštećenja 
+koju im je administrator dodijelio. Enumeracija Role predstavlja ulogu koju registrirani korisnik ima. Razred 
+Photo predstavlja fotografiju oštećenja koju je korisnik dodao prilikom prijave oštećenja. 
 
 \begin{figure}[H]
 	\includegraphics[scale=0.60]{slike/DR-model.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike

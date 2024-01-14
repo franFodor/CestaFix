@@ -1,18 +1,15 @@
 import React, { useState , useEffect} from 'react';
 import './StatisticsComponent.css';
 import PopupComponent from './PopupComponent';
+import { APIGetStats } from './API';
 
 const StatisticsComponent = ({onClose}) => {
     const [stats, setStats] = useState(null);
 
     const fetchStats = async () => {
         try {
-            const response = await fetch('/path/to/your/stats/api'); // Replace with your API endpoint
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const data = await response.json();
-            setStats(data);
+            const response = await APIGetStats();
+            setStats(response);
         } catch (error) {
             console.error('Failed to fetch statistics:', error);
         }
@@ -25,29 +22,20 @@ const StatisticsComponent = ({onClose}) => {
         return () => clearInterval(interval);
     }, []);
 
-    if (!stats) {
-        return <PopupComponent onClose={onClose} children={<div>Učitavanje podataka...</div>}/>
-    }
 
     const popupContent = (
         <div className="stats-container">
-            <div className="title">Road Issue Report Statistics</div>
+            <div className="title">Statistika Dosadašnjih Prijava</div>
+            {console.log(stats)}
             <div className="section">
-                <h3>Status Breakdown</h3>
-                {stats.status.map((item, index) => (
-                    <p key={index}><span className="label">{item.status}:</span> {item.count} reports</p>
-                ))}
-            </div>
-            <div className="section">
-                <h3>Category Breakdown</h3>
-                {stats.category.map((item, index) => (
-                    <p key={index}><span className="label">{item.category}:</span> {item.count} reports</p>
+                <h3>Raščlamba statistike:</h3>
+                {stats && Object.entries(stats).map(([key, value], index) => (
+                    <p key={index}><span className="label">{key}:</span> {value} Prijava</p>
                 ))}
             </div>
         </div>
-    );
-
-    return <PopupComponent onClose={onClose} children={popupContent}/>
+       );
+    return <PopupComponent onClose={onClose} children={stats ? popupContent:<div>Učitavanje podataka...</div>}/>
 };
 
 export default StatisticsComponent;

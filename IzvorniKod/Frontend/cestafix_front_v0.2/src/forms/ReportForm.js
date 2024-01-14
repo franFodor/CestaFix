@@ -48,7 +48,12 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         setReportData(data);
 
         //neispravna implementacija!! let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
-        let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
+        let getFinalMapMarker;
+        if(document.getElementById('selectedMarker')){
+             getFinalMapMarker= JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
+        }
+        else { getFinalMapMarker = null;}
+        
         let checkNearby = await APICheckNearbyReport(data.title,
             data.description,
             data.address,
@@ -59,7 +64,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             getFinalMapMarker ? getFinalMapMarker[1] : null,
             data.categoryId,
             null);
-            console.log("odčekiram>>>",checkNearby);
+        console.log("odčekiram>>>",checkNearby);
 
         //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
         if (checkNearby) {
@@ -166,7 +171,8 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         <div className="mergeConfirmDialog">
             <h3>Već postoji bliska prijava. Želite li da se:</h3>
             <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData); }}>spoji s postojećom</button>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(null); }}>Stvor nova</button>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(null); }}>Stvori novu prijavu</button>
+            <button onClick={() => { setShowMergeConfirm(false);onClose();}}>Odustani</button>
         </div>
     );
 

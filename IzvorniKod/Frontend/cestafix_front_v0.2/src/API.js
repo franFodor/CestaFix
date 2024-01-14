@@ -7,16 +7,16 @@ async function APILogin(email, password) {
 
     return fetch('/api/auth/login',
         {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(formData)
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
         });
 }
 
 async function APIDeleteUser(id) {
     return fetch(`/advanced/user/${id}`, {
         method: 'DELETE',
-        headers: {'Content-Type': 'application/json'}
+        headers: { 'Content-Type': 'application/json' }
     });
 }
 
@@ -31,12 +31,12 @@ async function APIRegister(firstname, lastname, email, password) {
 
     return fetch('/api/auth/register', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
     });
 }
 
-async function APIGetAllProblems(){
+async function APIGetAllProblems() {
     const response = await fetch('/api/public/problem/getAll', {
         method: 'GET',
         headers: {
@@ -52,7 +52,7 @@ async function APIGetAllProblems(){
     return data;
 }
 
-async function APIGetAllReports(problem_id){
+async function APIGetAllReports(problem_id) {
     const response = await fetch('/api/public/problem/' + problem_id, {
         method: 'GET',
         headers: {
@@ -64,19 +64,19 @@ async function APIGetAllReports(problem_id){
     return data.reports;
 }
 
-async function APIGetStaffProblems(token,user_ID){
+async function APIGetStaffProblems(token, user_ID) {
     const response = await fetch('/api/advanced/getStaffProblems/' + user_ID, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + token
+            'Authorization': 'Bearer ' + token
         },
     });
 
     const data = await response.json();
     return data;
 }
-async function APIGetProblemIDFromBusinessId(businessId){
+async function APIGetProblemIDFromBusinessId(businessId) {
     const response = await fetch('/api/public/lookup/' + businessId, {
         method: 'GET',
         headers: {
@@ -89,12 +89,12 @@ async function APIGetProblemIDFromBusinessId(businessId){
     return data;
 }
 
-async function APIWhoAmI(token){
+async function APIWhoAmI(token) {
     const response = await fetch('/api/normal/user/whoAmI', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization' : 'Bearer ' + token
+            'Authorization': 'Bearer ' + token
         },
     });
 
@@ -102,83 +102,103 @@ async function APIWhoAmI(token){
     return data;
 }
 
-async function APICreateReport(token, 
-                               title, 
-                               description, 
-                               address, 
-                               base64Photos,
-                                reportStatus, 
-                                problemStatus, 
-                                latitude, 
-                                longitude, 
-                                categoryId, 
-                                closest_problem_id) {
+async function APICreateReport(token,
+    title,
+    description,
+    address,
+    base64Photos,
+    reportStatus,
+    problemStatus,
+    latitude,
+    longitude,
+    categoryId,
+    closest_problem_id) {
     const formData = {
-        "longitude" : longitude,
-        "latitude" : latitude,
+        "longitude": longitude,
+        "latitude": latitude,
         "title": title,
         "description": description,
         "address": address,
         "base64Photos": base64Photos,
         "reportStatus": reportStatus,
-        "problemStatus" : problemStatus,
-        "categoryId" : categoryId,
-        "mergeProblemId" : closest_problem_id
+        "problemStatus": problemStatus,
+        "categoryId": categoryId,
+        "mergeProblemId": closest_problem_id
     };
     //console.log("Report Data:>>",formData);
 
-    if (token === null){
+    if (token === null) {
         return fetch('/api/public/report', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         });
     } else {
         return fetch('/api/public/report', {
             method: 'POST',
-            headers: {'Content-Type': 'application/json',
-                      'Authorization' : 'Bearer ' + token
-                     },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
             body: JSON.stringify(formData)
         });
     }
 }
-async function APICheckNearbyReport(title, 
-                                    description, 
-                                    address, 
-                                    base64Photos, 
-                                    reportStatus, 
-                                    problemStatus, 
-                                    latitude, 
-                                    longitude, 
-                                    categoryId, 
-                                    closest_problem_id) {
+async function APICheckNearbyReport(title,
+    description,
+    address,
+    base64Photos,
+    reportStatus,
+    problemStatus,
+    latitude,
+    longitude,
+    categoryId,
+    closest_problem_id) {
     const formData = {
-        "longitude" : longitude,
-        "latitude" : latitude,
+        "longitude": longitude,
+        "latitude": latitude,
         "title": title,
         "description": description,
         "address": address,
         "base64Photos": base64Photos,
         "reportStatus": reportStatus,
-        "problemStatus" : problemStatus,
-        "categoryId" : categoryId,
-        "mergeProblemId" : closest_problem_id
+        "problemStatus": problemStatus,
+        "categoryId": categoryId,
+        "mergeProblemId": closest_problem_id
     };
     //console.log("Report Data:>>",formData);
-        return fetch('/api/public/nearbyReport', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(formData)
-        });
+    return fetch('/api/public/nearbyReport', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    });
+}
+
+async function APIGetStats() {
+    const response = await fetch('/api/public/statistics', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error('Network response was not OK');
     }
-export {APILogin, 
-        APIDeleteUser, 
-        APIRegister, 
-        APIGetAllProblems, 
-        APIGetAllReports, 
-        APIWhoAmI, 
-        APICreateReport, 
-        APIGetStaffProblems, 
-        APIGetProblemIDFromBusinessId,
-        APICheckNearbyReport};
+
+    const data = await response.json();
+    return data;
+}
+export {
+    APILogin,
+    APIDeleteUser,
+    APIRegister,
+    APIGetAllProblems,
+    APIGetAllReports,
+    APIWhoAmI,
+    APICreateReport,
+    APIGetStaffProblems,
+    APIGetProblemIDFromBusinessId,
+    APICheckNearbyReport,
+    APIGetStats
+};

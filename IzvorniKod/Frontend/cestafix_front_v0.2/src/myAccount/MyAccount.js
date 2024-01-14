@@ -21,8 +21,6 @@ const MyAccount = () => {
   async function handleDeletion() {
     console.log("You have chosen death-");
     let holder =await APIDeleteUser(loggedUser.userId);
-
-
     Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });
     window.location.href = "/";   
@@ -100,7 +98,7 @@ const MyAccount = () => {
               <div>
                 {loggedUser.firstname + " " + loggedUser.lastname}
               </div>
-              <div className="Details">{loggedUser.citydeptName + ""}</div>
+              <div className="Details">{loggedUser.citydept.citydeptName + ""}</div>
 
               <button
                 className="confirmButton"

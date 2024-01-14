@@ -34,7 +34,7 @@ async function APIUpdateUser(userId,
 }
 
 async function APIDeleteUser(id) {
-    return fetch(`/advanced/user/${id}`, {
+    return fetch(`api/advanced/user/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' }
     });
@@ -187,11 +187,16 @@ async function APICheckNearbyReport(title,
         "mergeProblemId": closest_problem_id
     };
     //console.log("Report Data:>>",formData);
-    return fetch('/api/public/nearbyReport', {
+    const response=await fetch('/api/public/nearbyReport', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
     });
+    console.log(response);
+    const data = await response.json();
+    return data;
+    
+
 }
 
 async function APIGetStats() {

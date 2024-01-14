@@ -53,7 +53,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
              getFinalMapMarker= JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
         }
         else { getFinalMapMarker = null;}
-        
+
         let checkNearby = await APICheckNearbyReport(data.title,
             data.description,
             data.address,
@@ -67,11 +67,11 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         console.log("odčekiram>>>",checkNearby);
 
         //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
-        if (checkNearby) {
+        if (checkNearby > 0) {
             setClosestMarkerData(checkNearby);
             setShowMergeConfirm(true);
         } else {
-            submitReport(null);
+            submitReport(null,data);
         }
     };
 
@@ -122,9 +122,16 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const [reportContent, setReportContent] = useState(baseReport);
 
 
-    const submitReport = (closest_problem_id) => {
+    const submitReport = (closest_problem_id,data) => {
+        
+        let reportData;
+        if (data){
+            reportData = data;
+        }
         let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
-        APICreateReport(reportData.token,
+        let token = Cookies.get('sessionToken');
+        if(reportData){
+        APICreateReport(token,
             reportData.title,
             reportData.description,
             reportData.address,
@@ -164,14 +171,15 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
                 }
             });
+        }
     };
 
 
     const mergeConfirmDialog = showMergeConfirm && (
         <div className="mergeConfirmDialog">
             <h3>Već postoji bliska prijava. Želite li da se:</h3>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData); }}>spoji s postojećom</button>
-            <button onClick={() => { setShowMergeConfirm(false); submitReport(null); }}>Stvori novu prijavu</button>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData,null); }}>spoji s postojećom</button>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(null,null); }}>Stvori novu prijavu</button>
             <button onClick={() => { setShowMergeConfirm(false);onClose();}}>Odustani</button>
         </div>
     );

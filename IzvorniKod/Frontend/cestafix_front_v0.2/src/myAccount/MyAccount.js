@@ -88,7 +88,7 @@ const MyAccount = () => {
                     može biti poništena.
                   </p>
                   <br></br>
-                  <button className="deleteButton" onClick={handleDeletion}>POTVRDI</button>
+                  <button className="deleteButton" id="brisiacc" onClick={handleDeletion}>POTVRDI</button>
                 </div>
               )}
             </div>

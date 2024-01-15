@@ -39,7 +39,7 @@ const MyAccount = () => {
               <div className="Details">{loggedUser.firstname + " " + loggedUser.lastname}</div>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("a")}>Uredi Profil</button>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("b")}>Pregled Mojih Prijava              </button>
-              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content", background: "red", }} onClick={() => handleClick("c")}>Pobriši Račun!!!</button>
+              <button className="confirmButton" id="brisiid" style={{ display: "inline-block", width: "fit-content", background: "red", }} onClick={() => handleClick("c")}>Pobriši Račun!!!</button>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => (window.location.href = "/")}>Povratak</button>
             </div>
 

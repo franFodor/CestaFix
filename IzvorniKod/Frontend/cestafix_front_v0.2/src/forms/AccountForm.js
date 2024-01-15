@@ -23,14 +23,14 @@ const AccountPopupComponent = ({onClose}) => {
     if (formType === formTypeEnum.LOGIN) {
         popupContent = <div className="loginContent">
                            <LoginFormComponent />
-                           <div onClick={handleFormSwitch} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
+                           <div onClick={handleFormSwitch} id="nemaracun" style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
                                Nemaš račun? Registriraj se!
                            </div>
                        </div>
     } else if (formType === formTypeEnum.REGISTER) {
         popupContent = <div className="registerContent">
                            <RegisterFormComponent />
-                           <div onClick={handleFormSwitch} style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
+                           <div onClick={handleFormSwitch} id="imaracunlogin" style={{ textDecoration: 'underline', cursor: 'pointer', color: 'blue' }}>
                                Već imaš račun? Ulogiraj se!
                            </div>
                        </div>

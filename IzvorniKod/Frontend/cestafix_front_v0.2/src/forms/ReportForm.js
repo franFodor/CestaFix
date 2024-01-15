@@ -180,7 +180,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const mergeConfirmDialog = showMergeConfirm && (
         <div className="mergeConfirmDialog">
             <h3>Već postoji bliska prijava. Želite li da se:</h3>
-            <button onClick={() => { setShowMergeConfirm(false);submitReport(closestMarkerData,reportData); }}>spoji s postojećom</button>
+            <button id="spojiid" onClick={() => { setShowMergeConfirm(false);submitReport(closestMarkerData,reportData); }}>spoji s postojećom</button>
             <button onClick={() => { setShowMergeConfirm(false);submitReport(null,reportData); }}>Stvori novu prijavu</button>
             <button onClick={() => { setShowMergeConfirm(false);onClose();}}>Odustani</button>
         </div>

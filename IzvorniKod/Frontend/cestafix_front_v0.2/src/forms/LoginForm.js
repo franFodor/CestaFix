@@ -45,10 +45,10 @@ const LoginFormComponent = () => {
 
         <form className="form" onSubmit={handleLogin}>
             <label htmlFor="email"><b>Email</b></label>
-            <input type="text" name="email" required />
+            <input type="text" name="email" id="username" required />
             <label htmlFor="password"><b>Lozinka</b></label>
-            <input type="password" name="password" required />
-            <button type="submit" className="login-button">Prijava</button>
+            <input type="password" name="password" id="password" required />
+            <button type="submit" className="login-button" id="submit">Prijava</button>
         </form>
         <div className="loginFail"></div>
         </>

@@ -46,7 +46,7 @@ const Header = ({ pickMarkerLatLon, markers }) => {
       <div className="right">
         {(Cookies.get('userInfo')) ? (
           <>
-            <button className="headerBTN1" onClick={handleReportBtn}>Prijavi Štetu!</button>
+            <button className="headerBTN1" id="prijava" onClick={handleReportBtn}>Prijavi Štetu!</button>
             <button className="headerBTN1" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>

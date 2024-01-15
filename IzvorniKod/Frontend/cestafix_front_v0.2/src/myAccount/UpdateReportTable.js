@@ -10,7 +10,7 @@ const UpdateReportTable = () => {
         const loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
         const token = Cookies.get("sessionToken");
         try {
-            const problemsData = await APIGetStaffProblems(token, loggedUser.userId);
+            const problemsData = await APIGetStaffProblems(loggedUser.cityDept.cityDeptId,token);
             setProblems(problemsData);
         } catch (error) {
             console.error('Error fetching problems:', error);

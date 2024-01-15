@@ -33,10 +33,12 @@ async function APIUpdateUser(userId,
     });
 }
 
-async function APIDeleteUser(id) {
+async function APIDeleteUser(id,token) {
     return fetch(`api/advanced/user/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json',
+    
+        'Authorization': 'Bearer ' + token }
     });
 }
 
@@ -84,8 +86,8 @@ async function APIGetAllReports(problem_id) {
     return data.reports;
 }
 
-async function APIGetStaffProblems(token, user_ID) {
-    const response = await fetch('/api/advanced/getStaffProblems/' + user_ID, {
+async function APIGetStaffProblems(citydeptId,token) {
+    const response = await fetch(`/api/advanced/problem/${citydeptId}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -96,7 +98,7 @@ async function APIGetStaffProblems(token, user_ID) {
     const data = await response.json();
     return data;
 }
-async function APIGetProblemIDFromBusinessId(businessId) {
+async function APIGetProblemIDFromBusinessId(businessId,token) {
     const response = await fetch('/api/public/lookup/' + businessId, {
         method: 'GET',
         headers: {

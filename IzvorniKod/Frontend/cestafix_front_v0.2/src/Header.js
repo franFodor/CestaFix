@@ -47,9 +47,9 @@ const Header = ({ pickMarkerLatLon, markers }) => {
         {(Cookies.get('userInfo')) ? (
           <>
             <button className="headerBTN1" id="prijava" onClick={handleReportBtn}>Prijavi Štetu!</button>
-            <button className="headerBTN1" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
+            <button className="headerBTN1" id="statistika" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
             <div className="dropdown reportDropdown">
-              <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
+              <button className="headerBTN1 dropbtn" id="status">Provjeri Status Prijave!</button>
               <div className="dropdown-content">
                 <div>
                   {CheckReportComponent()}
@@ -59,25 +59,25 @@ const Header = ({ pickMarkerLatLon, markers }) => {
 
 
             <div className="dropdown">
-              <button className="headerBTN1 dropbtn" onClick={() => window.location.href = '/myAccount'}>{getUsername()}</button>
+              <button className="headerBTN1 dropbtn" id="account" onClick={() => window.location.href = '/myAccount'}>{getUsername()}</button>
               <div className="dropdown-content">
-                <button className="headerBTNLOGOUT" onClick={() => { window.location.href = '/'; handleLogout(); }}>Logout</button>
+                <button className="headerBTNLOGOUT" id="logout" onClick={() => { window.location.href = '/'; handleLogout(); }}>Logout</button>
               </div>
             </div>
           </>
         ) : (
           <>
             <button className="headerBTN1" id="prijava" onClick={handleReportBtn} href>Prijavi Štetu!</button>
-            <button className="headerBTN1" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
+            <button className="headerBTN1" id="statistika" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
             <div className="dropdown reportDropdown">
-              <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>
+              <button className="headerBTN1 dropbtn" id="status">Provjeri Status Prijave!</button>
               <div className="dropdown-content">
                 <div>
                   {CheckReportComponent()}
                 </div>
               </div>
             </div>
-            <button className="headerBTN1" onClick={handleAccountBtn}>Login/Register</button>
+            <button className="headerBTN1" id="login" onClick={handleAccountBtn}>Login/Register</button>
           </>
         )
         }

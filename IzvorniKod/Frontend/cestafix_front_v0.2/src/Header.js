@@ -67,7 +67,7 @@ const Header = ({ pickMarkerLatLon, markers }) => {
           </>
         ) : (
           <>
-            <button className="headerBTN1" onClick={handleReportBtn} href>Prijavi Štetu!</button>
+            <button className="headerBTN1" id="prijava" onClick={handleReportBtn} href>Prijavi Štetu!</button>
             <button className="headerBTN1" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn">Provjeri Status Prijave!</button>

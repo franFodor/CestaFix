@@ -194,6 +194,9 @@ async function APICheckNearbyReport(title,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
     });
+    if (response.status === 403) {
+        throw new Error('Forbidden');
+    }
     console.log(response);
     const data = await response.json();
     return data;

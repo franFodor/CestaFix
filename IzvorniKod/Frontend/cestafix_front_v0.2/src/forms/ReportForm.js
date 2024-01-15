@@ -54,27 +54,40 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
         else { getFinalMapMarker = null;}
 
-        let checkNearby = await APICheckNearbyReport(data.title,
-            data.description,
-            data.address,
-            data.photo,
-            "U obradi",
-            "U obradi",
-            getFinalMapMarker ? getFinalMapMarker[0] : null,
-            getFinalMapMarker ? getFinalMapMarker[1] : null,
-            data.categoryId,
-            null);
-        console.log("odčekiram>>>",checkNearby);
-
-        //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
-        if (checkNearby > 0) {
-            setClosestMarkerData(checkNearby);
-            setShowMergeConfirm(true);
-        } else {
-            submitReport(null,data);
+        try {
+            let checkNearby = await APICheckNearbyReport(data.title,
+                data.description,
+                data.address,
+                data.photo,
+                "U obradi",
+                "U obradi",
+                getFinalMapMarker ? getFinalMapMarker[0] : null,
+                getFinalMapMarker ? getFinalMapMarker[1] : null,
+                data.categoryId,
+                null);
+            console.log("odčekiram>>>",checkNearby);
+         
+            //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
+            if (checkNearby > 0) {
+                setClosestMarkerData(checkNearby);
+                setShowMergeConfirm(true);
+            } else {
+                submitReport(null,data);
+            }
+         } catch (error) {
+            if (error.message === 'Forbidden') {
+                setReportContent(
+                    <>
+                        {baseReport}
+                        <div style={{ color: 'red' }}>
+                           Došlo je do greške, provjerite unos adrese prijave!
+                        </div>
+                    </>
+                );
+            }
         }
-    };
 
+    }
     const baseReport = (
         <div className="reportContent" >
             <form className="form" onSubmit={handleSubmitReport}>

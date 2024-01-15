@@ -71,15 +71,15 @@ const RegisterFormComponent = () => {
             <h1>Registracija</h1>
                 <form className="form" onSubmit={handleRegister}>
                     <label htmlFor="firstname"><b>Ime</b></label>
-                    <input type="text" placeholder="Ime" name="firstname" required />
+                    <input type="text" placeholder="Ime" name="firstname" id="imeid" required />
                     <label htmlFor="lastname"><b>Prezime</b></label>
-                    <input type="text" placeholder="Prezime" name="lastname" required />
+                    <input type="text" placeholder="Prezime" name="lastname" id="prezimeid" required />
                     <label htmlFor="email"><b>E-mail</b></label>
-                    <input type="text" placeholder="Email" name="email" required />
+                    <input type="text" placeholder="Email" name="email" id="emailid" required />
                     <label htmlFor="password"><b>Lozinka</b></label>
-                    <input type="password" placeholder="Lozinka" name="password" required />
+                    <input type="password" placeholder="Lozinka" name="password" id="passwordid" required />
                     <label htmlFor="password-repeat"><b>Ponovi Lozinku</b></label>
-                    <input type="password" placeholder="Ponovi lozinku" name="password-repeat" required />
+                    <input type="password" placeholder="Ponovi lozinku" name="password-repeat" id="repatpasswordid" required />
                     <button type="submit" className="signupbtn">Registriraj se</button>
                 </form>
             <div className="registerFail"></div>

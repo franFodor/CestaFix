@@ -1,6 +1,6 @@
 const { By, Key, Builder, until } = require("selenium-webdriver");
 
-
+// Test sa neispravnom lozinkom
 async function register() {
 
     let driver = await new Builder().forBrowser("chrome").build();

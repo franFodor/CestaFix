@@ -33,20 +33,6 @@ import java.util.*;
 public class ReportController {
     @Autowired
     private final ReportService reportService;
-    @Autowired
-    private final ProblemService problemService;
-    @Autowired
-    private final CategoryService categoryService;
-    @Autowired
-    private final UserService userService;
-    @Autowired
-    private final JwtService jwtService;
-    @PersistenceContext
-    private final EntityManager entityManager;
-    @Autowired
-    private final PhotoService photoService;
-    @Autowired
-    private final GeoConversionService geoConversionService;
 
     @Operation(summary = "Get all reports")
     @GetMapping( "/public/report/getAll")
@@ -75,90 +61,11 @@ public class ReportController {
     @Operation(summary = "Create a report")
     @PostMapping("/public/report")
     @Transactional
-    public ResponseEntity<?> createReport(@RequestBody CreateReportRequestDto reportRequest, HttpServletRequest httpRequest) throws JsonProcessingException {
-
-        reportRequest = reportService.validateLocation(reportRequest);
-        if (reportRequest == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No address, photo or coordinates given.");
-        }
-
-        Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
-        if (optionalCategory.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
-        }
-        Category category = optionalCategory.get();
-
-        User user = null;
-        String authorizationHeader = httpRequest.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            Integer userId = jwtService.extractUserId(token);
-            Optional<User> optionalUser = userService.getUserById(userId);
-            if (optionalUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token user not found");
-            }
-            user = optionalUser.get();
-        }
-
-        Problem savedProblem = null;
-        if (reportRequest.getMergeProblemId() == null) {
-            Problem problem = Problem.builder()
-                    .longitude(reportRequest.getLongitude())
-                    .latitude(reportRequest.getLatitude())
-                    .status(reportRequest.getProblemStatus())
-                    .category(category)
-                    .build();
-
-            // Save the Problem object
-            savedProblem = problemService.createProblem(problem);
-            if (savedProblem == null) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problem object cannot be initialized");
-            }
-        } else {
-            Optional<Problem> optionalProblem = problemService.getProblemById(reportRequest.getMergeProblemId());
-            if (optionalProblem.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nearby problem couldn't be found");
-            }
-            savedProblem = optionalProblem.get();
-        }
-
-        // Create photos
-        List<Photo> photos = new ArrayList<>();
-        if (reportRequest.getBase64Photos() != null) {
-            for (String base64Photo : reportRequest.getBase64Photos()) {
-                Photo photo = Photo.builder()
-                        .photoData(Base64.decodeBase64(base64Photo))
-                        .report(null)
-                        .build();
-                photoService.createPhoto(photo);
-                photos.add(photo);
-            }
-        }
-
-        // Build a new Report
-        Report report = Report.builder()
-                .user(user)
-                .title(reportRequest.getTitle())
-                .description(reportRequest.getDescription())
-                .address(reportRequest.getAddress())
-                .base64Photos(reportRequest.getBase64Photos())
-                .status(reportRequest.getReportStatus())
-                .latitude(reportRequest.getLatitude())
-                .longitude(reportRequest.getLongitude())
-                .problem(savedProblem)
-                .build();
-
-        Report savedReport = reportService.createReport(report);
-
-        for (Photo photo : photos) {
-            photo.setReport(savedReport);
-            photoService.updatePhoto(photo.getPhotoId(), photo);
-        }
-        entityManager.refresh(savedReport);
-        savedReport.setPhotos(photos);
-        reportService.createReport(savedReport);
-
-        return ResponseEntity.ok(savedReport);
+    public ResponseEntity<?> createReport(
+            @RequestBody CreateReportRequestDto reportRequest,
+            HttpServletRequest httpRequest
+    ) throws JsonProcessingException {
+        return ResponseEntity.ok(reportService.createReport(reportRequest, httpRequest));
     }
 
     @Operation(summary = "See if there is a nearbyReport")

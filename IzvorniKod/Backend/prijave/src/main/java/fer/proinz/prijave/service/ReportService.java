@@ -12,6 +12,8 @@ import fer.proinz.prijave.dto.CreateReportRequestDto;
 import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,16 @@ public class ReportService {
     private final ProblemService problemService;
 
     private final GeoConversionService geoConversionService;
+
+    private final CategoryService categoryService;
+
+    private final JwtService jwtService;
+
+    private final UserService userService;
+
+    private final PhotoService photoService;
+
+    private final EntityManager entityManager;
 
     public List<Report> getAllReports() {
         List<Report> reports = reportRepository.findAll();
@@ -127,6 +139,7 @@ public class ReportService {
                     GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
 
                     if (gpsDir != null) {
+                        // Extract latitude and longitude
                         GeoLocation geoLocation = gpsDir.getGeoLocation();
                         double latitude = geoLocation.getLatitude();
                         double longitude = geoLocation.getLongitude();
@@ -149,10 +162,93 @@ public class ReportService {
         return reportRequest;
     }
 
-    public Report createReport(Report report) {
-        
+    public ResponseEntity<?> createReport(
+            CreateReportRequestDto reportRequest,
+            HttpServletRequest httpRequest
+    ) throws JsonProcessingException {
+        reportRequest = validateLocation(reportRequest);
+        if (reportRequest == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No address, photo or coordinates given.");
+        }
 
-        return reportRepository.save(report);
+        Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
+        if (optionalCategory.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
+        }
+        Category category = optionalCategory.get();
+
+        User user = null;
+        String authorizationHeader = httpRequest.getHeader("Authorization");
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            Integer userId = jwtService.extractUserId(token);
+            Optional<User> optionalUser = userService.getUserById(userId);
+            if (optionalUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token user not found");
+            }
+            user = optionalUser.get();
+        }
+
+        Problem savedProblem = null;
+        if (reportRequest.getMergeProblemId() == null) {
+            Problem problem = Problem.builder()
+                    .longitude(reportRequest.getLongitude())
+                    .latitude(reportRequest.getLatitude())
+                    .status(reportRequest.getProblemStatus())
+                    .category(category)
+                    .build();
+
+            // Save the Problem object
+            savedProblem = problemService.createProblem(problem);
+            if (savedProblem == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Problem object cannot be initialized");
+            }
+        } else {
+            Optional<Problem> optionalProblem = problemService.getProblemById(reportRequest.getMergeProblemId());
+            if (optionalProblem.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nearby problem couldn't be found");
+            }
+            savedProblem = optionalProblem.get();
+        }
+
+        // Create photos
+        List<Photo> photos = new ArrayList<>();
+        if (reportRequest.getBase64Photos() != null) {
+            for (String base64Photo : reportRequest.getBase64Photos()) {
+                Photo photo = Photo.builder()
+                        .photoData(Base64.decodeBase64(base64Photo))
+                        .report(null)
+                        .build();
+                photoService.createPhoto(photo);
+                photos.add(photo);
+            }
+        }
+
+        // Build a new Report
+        Report report = Report.builder()
+                .user(user)
+                .title(reportRequest.getTitle())
+                .description(reportRequest.getDescription())
+                .address(reportRequest.getAddress())
+                .base64Photos(reportRequest.getBase64Photos())
+                .status(reportRequest.getReportStatus())
+                .latitude(reportRequest.getLatitude())
+                .longitude(reportRequest.getLongitude())
+                .problem(savedProblem)
+                .build();
+
+        Report savedReport = reportRepository.save(report);
+
+        for (Photo photo : photos) {
+            photo.setReport(savedReport);
+            photoService.updatePhoto(photo.getPhotoId(), photo);
+        }
+        entityManager.refresh(savedReport);
+        savedReport.setPhotos(photos);
+        reportRepository.save(savedReport);
+
+        return ResponseEntity.ok(savedReport);
+
     }
 
     // function to calculate the distance of nearbyReport

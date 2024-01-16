@@ -69,7 +69,7 @@ const MyAccount = () => {
               <div>
                 {loggedUser.firstname + " " + loggedUser.lastname}
               </div>
-              <div className="Details">{loggedUser.citydept.citydeptName + ""}</div>
+              <div className="Details">{loggedUser.cityDept.cityDeptName + ""}</div>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("a")}>Uredi Profil</button>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("b")}>Ažuriraj stanje Prijava!</button>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("c")}>Spoji prijave!</button>

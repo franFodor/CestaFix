@@ -13,7 +13,7 @@ const MergeReportTable = () => {
       const token = Cookies.get("sessionToken");
       try {
         
-        const problemsData = await APIGetStaffProblems(loggedUser.citydept.citydeptId,token);
+        const problemsData = await APIGetStaffProblems(loggedUser.cityDept.cityDeptId,token);
         setProblems(problemsData);
       } catch (error) {
         console.error('Error fetching problems:', error);

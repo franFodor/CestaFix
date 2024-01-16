@@ -31,7 +31,7 @@
 			 i njegovu biblioteku \textbf{\href{https://react.dev/}{React}} za izradu \textit{frontenda}. React je biblioteka 
 			 u JavaScriptu za izgradnju korisničkih sučelja. Nastala je od strane Facebooka. Glavna karakteristika Reacta je komponentna 
 			 arhitektura, što znači da se korisničko sučelje sastoji od više manjih, ponovno uporabljivih komponenata. Izrada 
-			 složenijih aplikacija u Reactu obično zahtjeva korištenje dodatnih biblioteka za interakciju s API-jem. Radni okvir 
+			 složenijih aplikacija u Reactu obično zahtijeva korištenje dodatnih biblioteka za interakciju s API-jem. Radni okvir 
 			 Spring Boot nudi gotova rješenja i funkcionalnosti koje ubrzavaju razvoj aplikacija. Ima automatsko upravljanje 
 			 konfiguracijom i zavisnostima što olakšava i ubrzava posao programerima. Spring Boot pruža podršku za implementaciju 
 			 sigurnosti u aplikacijama pomoću Spring Security modula. 
@@ -470,6 +470,15 @@
 			
 			 \textit{Potrebno je umetnuti \textbf{specifikacijski} dijagram razmještaja i opisati ga. Moguće je umjesto specifikacijskog dijagrama razmještaja umetnuti dijagram razmještaja instanci, pod uvjetom da taj dijagram bolje opisuje neki važniji dio sustava.}
 		
+			Dijagram razmještaja opisuje topologiju sustava i usredotočen je na odnos sklopovskih i programskih
+			dijelova. Prikazan je na slici 5.1. Na poslužiteljskom računalu se nalazi Render servis, Frontend HTTP poslužitelj, Backend HTTP 
+			poslužitelj te PostgreSQL poslužitelj na kojem je baza podataka. Na Frontend HTTP poslužitelju se nalazi
+			React frontend CestaFix aplikacije. Na Backend HTTP poslužitelju se nalazi ReportApplication.jar, tj. 
+			Java Archive file u kojem se nalazi backend CestaFix aplikacije. Poslužiteljska strana aplikacije
+			ostvarena je pomoću servisa Render. Klijenti koriste web preglednik kako bi pristupili web aplikaciji. 
+			Sustav je baziran na arhitekturi "klijent - poslužitelj", a komunikacija između računala korisnika
+			i poslužitelja odvija se preko HTTP veze.
+
 			\begin{figure}[H]
 				\includegraphics[scale=0.60]{slike/DR.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 				\centering

@@ -68,10 +68,7 @@ const EditAccountForm = () => {
         APIUpdateUser(token,
                       userInfo.userId,
                       firstName,
-                      lastName,
-                      email,
-                      userInfo.role,
-                      userInfo.citydept
+                      lastName
         );
         setEditing({ firstName: false, lastName: false, email: false });
     };
@@ -100,7 +97,7 @@ const EditAccountForm = () => {
                             )}
                             <button type="button" onClick={() => handleEdit('lastName')}>Edit</button>
                         </p>
-                        <p>
+                        {/*<p>
                             <strong>Email:</strong>
                             {editing.email ? (
                                 <input type="email" value={email} onChange={(e) => handleChange(e, 'email')} />
@@ -108,7 +105,7 @@ const EditAccountForm = () => {
                                 email
                             )}
                             <button type="button" onClick={() => handleEdit('email')}>Edit</button>
-                        </p>
+                        </p>*/}
 
                         <p>
                         <strong>Uloga:</strong>

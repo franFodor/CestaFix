@@ -15,17 +15,11 @@ async function APILogin(email, password) {
 async function APIUpdateUser(token,
     userId,
     firstName,
-    lastName,
-    email,
-    role,
-    citydept) {
+    lastName) {
     const formData = {
         userId: userId,
         firstname: firstName,
-        lastname: lastName,
-        email: email,
-        role: role,
-        citydept: citydept
+        lastname: lastName
     };
 
     return fetch(`/api/advanced/user/${userId}`, {

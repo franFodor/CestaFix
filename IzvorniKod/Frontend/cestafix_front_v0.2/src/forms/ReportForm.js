@@ -3,6 +3,7 @@ import PopupComponent from "../PopupComponent.js";
 import "./Forms.css";
 import { APICreateReport, APICheckNearbyReport } from "../API.js";
 import Cookies from 'js-cookie';
+import loadingGif from '../images/loading.gif'
 
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
@@ -55,6 +56,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         else { getFinalMapMarker = null;}
 
         try {
+            setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..."/>)
             let checkNearby = await APICheckNearbyReport(data.title,
                 data.description,
                 data.address,
@@ -65,8 +67,8 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 getFinalMapMarker ? getFinalMapMarker[1] : null,
                 data.categoryId,
                 null);
+            
             console.log("odčekiram>>>",checkNearby);
-         
             //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
             if (checkNearby > 0) {
                 setClosestMarkerData(checkNearby);
@@ -146,6 +148,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         if(Cookies.get('sessionToken'))token = Cookies.get('sessionToken');
         else{token = null;}
         if(reportData){
+        setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..."/>)
         APICreateReport(token,
             reportData.title,
             reportData.description,
@@ -187,6 +190,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
                 }
             });
+            
         }
     };
 
@@ -200,12 +204,9 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         </div>
     );
 
-
-
     return (
         <PopupComponent onClose={onClose}>
-            {reportContent} {/*mergeConfirmDialog ? reportConent : MergeReportDialog*/}
-            {mergeConfirmDialog}
+            {mergeConfirmDialog || reportContent}
         </PopupComponent>
     );
 }

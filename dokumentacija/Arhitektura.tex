@@ -192,11 +192,11 @@ Povezan je vezom \textit{Many-to-One} s entitetom Reports preko atributa report\
 
 \section{Dijagram razreda}
 
-Na slikama 4.3, 4.4 i 4.5 su prikazani razredi koji pripadaju \textit{backend} dijelu
+Na slikama 4.3, 4.4, 4.5 i 4.6 prikazani su razredi koji pripadaju \textit{backend} dijelu
 s arhitekturom podijeljenom na kontrolere, repozitorije i servise te uključuje DTO
 (Data Transfer Object) i modele. \newline
 
-Na slici 4.3 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima
+Na slikama 4.3 i 4.4 prikazani su razredi koji nasljeđuju Controller razred. Metode implementirane u tim razredima
 upravljaju i rukuju DTO-ima koji su dohvaćeni pomoću metoda implementiranih u Model razredima. Omogućuju
 logiku interakcije i promjene. Kontroler AuthenticationController omogućuje registraciju i prijavu korisnika.
 Kontroler ReportController omogućuje interakcije s prijavom oštećenja, dok kontroler ProblemController omogućuje
@@ -204,7 +204,7 @@ interakcije s objedinjenim problemima oštećenja s istom temom i lokacijom. Kon
 interakcije i promjene povezane s registriranim korisnicima. Kontroler CityDeptController omogućuje
 interakcije i promjene povezane s gradskim uredima. Kontroler PhotoController omogućuje interakciju i promjene
 vezane za slike oštećenja. Kontroler CategoryController omogućuje interakciju i promjene vezane za
-kategorije oštećenja.
+kategorije oštećenja. Kontroler ExceptionController omogućuje interakcije vezane za iznimke.
 
 \begin{figure}[H]
 	\includegraphics[scale=1.0]{slike/DR-controller1} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -223,7 +223,7 @@ kategorije oštećenja.
 Na slici 4.4 prikazani su razredi koji pripadaju DTO. Data Transfer Objects (DTO) omogućavaju
 razmjenu podataka između procesa i slojeva. RegisterRequestDto služi za registraciju korisnika.
 LoginRequestDto služi za prijavu korisnika. AuthenticationResponseDto sastoji se od jwt tokena koji se vraća
-kada se korisnik registrira ili ulogira. CreateReportRequestDto služi za kreiranje podataka o prijavi prijave
+kada se korisnik registrira ili ulogira. ReportRequestDto služi za kreiranje podataka o prijavi
 oštećenja i problema.
 
 \begin{figure}[H]
@@ -265,8 +265,6 @@ Photo predstavlja fotografiju oštećenja koju je korisnik dodao prilikom prijav
 \textbf{\textit{dio 2. revizije}}\\
 
 \textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
-
-TRENUTNO PLACEHOLDER
 
 \begin{figure}[H]
 	\includegraphics[scale=0.4]{slike/DS.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike

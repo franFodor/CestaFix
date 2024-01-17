@@ -1,25 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie'; 
-import { APIGetStaffProblems } from '../API.js'; 
+import { APIGetStaffProblems, APIMergeReports } from '../API.js'; 
 import './MergeReportTable.css'
 
 const MergeReportTable = () => {
   const [problems, setProblems] = useState([]);
   const [selectedReports, setSelectedReports] = useState(new Set());
+  const token = Cookies.get("sessionToken");
+
+  async function fetchData() {
+    const loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
+    try {
+      
+      const problemsData = await APIGetStaffProblems(loggedUser.cityDept.cityDeptId,token);
+      setProblems(problemsData);
+    } catch (error) {
+      console.error('Error fetching problems:', error);
+    }
+  }
 
   useEffect(() => {
-    async function fetchData() {
-      const loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
-      const token = Cookies.get("sessionToken");
-      try {
-        
-        const problemsData = await APIGetStaffProblems(loggedUser.cityDept.cityDeptId,token);
-        setProblems(problemsData);
-      } catch (error) {
-        console.error('Error fetching problems:', error);
-      }
-    }
     fetchData();
+    // eslint-disable-next-line
   }, []);
 
   const toggleReportSelection = (reportId) => {
@@ -35,8 +37,12 @@ const MergeReportTable = () => {
   };
 
   const handleMerge = (problemId) => {
-    console.log('MERGANJE PLACEHOLDER', problemId, Array.from(selectedReports));
-    setSelectedReports(new Set());
+    APIMergeReports(token, problemId, Array.from(selectedReports)).then(() => {
+        setSelectedReports(new Set());
+        fetchData();
+      }
+    );
+
   };
 
   return (

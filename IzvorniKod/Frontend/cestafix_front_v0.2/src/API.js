@@ -58,6 +58,16 @@ async function APIRegister(firstname, lastname, email, password) {
     });
 }
 
+async function APIMergeReports(token, problem_id, reportlist) {
+    return fetch('/api/advanced/report/group/' + problem_id, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json',
+                   'Authorization': 'Bearer ' + token},
+        body: JSON.stringify(reportlist)
+    });
+}
+
+
 async function APIGetAllProblems() {
     const response = await fetch('/api/public/problem/getAll', {
         method: 'GET',
@@ -245,5 +255,6 @@ export {
     APIUpdateProblemStatus,
     APIGetProblemIDFromBusinessId,
     APICheckNearbyReport,
-    APIGetStats
+    APIGetStats,
+    APIMergeReports
 };

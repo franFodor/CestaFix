@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -44,11 +45,11 @@ public class Report implements Serializable {
     @JsonIgnore
     @JsonIgnoreProperties("report")
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Fetch(FetchMode.JOIN)
+    @Fetch(FetchMode.SELECT)
     private List<Photo> photos = new ArrayList<>();
 
     @Transient
-    private List<String> base64Photos;
+    private List<String> base64Photos = new ArrayList<>();
 
     @Column(name = "report_time", nullable = false, updatable = false, insertable = false)
     private Timestamp reportTime;
@@ -77,6 +78,15 @@ public class Report implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(reportId);
+    }
+
+    @PostLoad
+    public void getPictures() {
+        List<String> result = new ArrayList<>();
+        for (Photo photo : photos) {
+            result.add(Base64.encodeBase64String(photo.getPhotoData()));
+        }
+        setBase64Photos(result);
     }
 
 }

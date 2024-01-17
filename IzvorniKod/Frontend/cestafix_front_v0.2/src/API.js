@@ -12,7 +12,8 @@ async function APILogin(email, password) {
             body: JSON.stringify(formData)
         });
 }
-async function APIUpdateUser(userId,
+async function APIUpdateUser(token,
+    userId,
     firstName,
     lastName,
     email,
@@ -24,21 +25,26 @@ async function APIUpdateUser(userId,
         lastname: lastName,
         email: email,
         role: role,
-        citydept: citydept};
+        citydept: citydept
+    };
 
     return fetch(`/api/advanced/user/${userId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
         body: JSON.stringify(formData)
     });
 }
 
-async function APIDeleteUser(id,token) {
+async function APIDeleteUser(id, token) {
     return fetch(`api/advanced/user/${id}`, {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json',
-    
-        'Authorization': 'Bearer ' + token }
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        }
     });
 }
 
@@ -86,7 +92,7 @@ async function APIGetAllReports(problem_id) {
     return data.reports;
 }
 
-async function APIGetStaffProblems(citydeptId,token) {
+async function APIGetStaffProblems(citydeptId, token) {
     const response = await fetch(`/api/advanced/problem/${citydeptId}`, {
         method: 'GET',
         headers: {
@@ -98,20 +104,20 @@ async function APIGetStaffProblems(citydeptId,token) {
     const data = await response.json();
     return data;
 }
-async function APIUpdateProblemStatus(token,problemId,newStatus) {
+async function APIUpdateProblemStatus(token, problemId, newStatus) {
     const response = await fetch(`/api/advanced/problem/${problemId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + token
         },
-        body: JSON.stringify({"status": newStatus})
+        body: JSON.stringify({ "status": newStatus })
     });
 
     const data = await response.json();
     return data;
 }
-async function APIGetProblemIDFromBusinessId(businessId,token) {
+async function APIGetProblemIDFromBusinessId(businessId, token) {
     const response = await fetch('/api/public/lookup/' + businessId, {
         method: 'GET',
         headers: {
@@ -202,7 +208,7 @@ async function APICheckNearbyReport(title,
         "mergeProblemId": closest_problem_id
     };
     //console.log("Report Data:>>",formData);
-    const response=await fetch('/api/public/nearbyReport', {
+    const response = await fetch('/api/public/nearbyReport', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -213,7 +219,7 @@ async function APICheckNearbyReport(title,
     console.log(response);
     const data = await response.json();
     return data;
-    
+
 
 }
 

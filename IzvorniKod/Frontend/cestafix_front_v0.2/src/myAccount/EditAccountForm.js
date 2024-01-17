@@ -63,8 +63,10 @@ const EditAccountForm = () => {
         
         let userInfo = Cookies.get('userInfo');
         if(userInfo)userInfo = JSON.parse(userInfo);
+        let token = Cookies.get("sessionToken");
 
-        APIUpdateUser(userInfo.userId,
+        APIUpdateUser(token,
+                      userInfo.userId,
                       firstName,
                       lastName,
                       email,

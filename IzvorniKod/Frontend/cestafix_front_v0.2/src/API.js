@@ -98,6 +98,19 @@ async function APIGetStaffProblems(citydeptId,token) {
     const data = await response.json();
     return data;
 }
+async function APIUpdateProblemStatus(token,problemId,newStatus) {
+    const response = await fetch(`/api/advanced/problem/${problemId}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({"status": newStatus})
+    });
+
+    const data = await response.json();
+    return data;
+}
 async function APIGetProblemIDFromBusinessId(businessId,token) {
     const response = await fetch('/api/public/lookup/' + businessId, {
         method: 'GET',
@@ -229,6 +242,7 @@ export {
     APIWhoAmI,
     APICreateReport,
     APIGetStaffProblems,
+    APIUpdateProblemStatus,
     APIGetProblemIDFromBusinessId,
     APICheckNearbyReport,
     APIGetStats

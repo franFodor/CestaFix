@@ -58,7 +58,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                     <div className='markerPopup'>
                         <p>Problem ID: {marker.problemId}</p>
                         <p>Status: {marker.status}</p>
-                        <p>Kategorija: {(marker.category && marker.category.categoryName) || "Nije Dodijeljena!"}</p>
+                        <p>Kategorija: {marker.category.categoryName || "Nije Dodijeljena!"}</p>
                         <p>Koordinate: {marker.latitude + " " + marker.longitude}</p>
                     </div>,
                 icon: markerIcon,

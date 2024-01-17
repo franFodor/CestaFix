@@ -174,11 +174,12 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             })
             .then(apiResponse => {
                 if (apiResponse) {
+                    console.log(apiResponse);
                     setReportContent(
                         <div>
                             <h2>Prijava je uspješno prijavljena!</h2>
                             <p>Id vaše prijave je:</p>
-                            <p>{apiResponse.businessId}</p>
+                            <p>{apiResponse.body.businessId}</p>
                             <br></br>
                             <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
                         </div>

@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -75,24 +76,8 @@ public class ProblemService {
         }
     }
 
-    public List<Problem> getProblemsByCategoryId(int categoryId) {
-        return problemRepository.findByCategory_CategoryId(categoryId);
-    }
-
-    public List<Problem> getProblemsForCityDept(
-            int cityDeptId,
-            HttpServletRequest httpRequest
-    ) {
-        User user = null;
-        String authorizationHeader = httpRequest.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            Integer userId = jwtService.extractUserId(token);
-            Optional<User> optionalUser = userService.getUserById(userId);
-            if (optionalUser.isPresent()) {
-                user = optionalUser.get();
-            }
-        }
+    public List<Problem> getProblemsForCityDept(int cityDeptId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         int userCityDeptId = user.getCityDept().getCityDeptId();
 

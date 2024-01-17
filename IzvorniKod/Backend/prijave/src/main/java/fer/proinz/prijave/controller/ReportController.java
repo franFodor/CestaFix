@@ -1,29 +1,18 @@
 package fer.proinz.prijave.controller;
 
-import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.lang.GeoLocation;
-import com.drew.metadata.Metadata;
-import com.drew.metadata.exif.GpsDirectory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import fer.proinz.prijave.dto.CreateReportRequestDto;
+import fer.proinz.prijave.dto.ReportRequestDto;
+import fer.proinz.prijave.exception.NonExistingCategoryException;
 import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.service.*;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.apache.tomcat.util.codec.binary.Base64;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -61,16 +50,15 @@ public class ReportController {
     @Operation(summary = "Create a report")
     @PostMapping("/public/report")
     @Transactional
-    public ResponseEntity<?> createReport(
-            @RequestBody CreateReportRequestDto reportRequest,
-            HttpServletRequest httpRequest
-    ) throws JsonProcessingException {
-        return ResponseEntity.ok(reportService.createReport(reportRequest, httpRequest));
+    public ResponseEntity<?> createReport(@RequestBody ReportRequestDto reportRequest)
+            throws IOException, ImageProcessingException, NonExistingCategoryException {
+        return ResponseEntity.ok(reportService.createReport(reportRequest));
     }
 
     @Operation(summary = "See if there is a nearbyReport")
     @PostMapping("/public/nearbyReport")
-    public ResponseEntity<?> getNearbyReport(@RequestBody CreateReportRequestDto reportRequest) throws JsonProcessingException {
+    public ResponseEntity<?> getNearbyReport(@RequestBody ReportRequestDto reportRequest)
+            throws IOException, ImageProcessingException {
         Integer result = reportService.getNearbyReport(reportRequest);
         if (result == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No address, photo or coordinates given.");

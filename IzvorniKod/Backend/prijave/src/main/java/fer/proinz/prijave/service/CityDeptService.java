@@ -1,7 +1,9 @@
 package fer.proinz.prijave.service;
 
 import fer.proinz.prijave.model.CityDept;
+import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.CityDeptRepository;
+import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.Optional;
 public class CityDeptService {
 
     private final CityDeptRepository cityDeptRepository;
+
+    private final UserService userService;
 
     public List<CityDept> getAllCityDepts() {
         return cityDeptRepository.findAll();
@@ -48,8 +52,15 @@ public class CityDeptService {
     }
 
     public ResponseEntity<String> deleteCityDept(int cityDeptId) {
-        Optional<CityDept> cityDepartment = cityDeptRepository.findById(cityDeptId);
-        if (cityDepartment.isPresent()) {
+        Optional<CityDept> optionalCityDept = cityDeptRepository.findById(cityDeptId);
+        if (optionalCityDept.isPresent()) {
+            CityDept cityDept = optionalCityDept.get();
+            List<User> cityDeptUsers = userService.getAllUsers();
+            for (User user : cityDeptUsers) {
+                if (user.getCityDept() == cityDept) {
+                    userService.deleteUser(user.getUserId());
+                }
+            }
             cityDeptRepository.deleteById(cityDeptId);
             return ResponseEntity.ok("City department with id " + cityDeptId + "is deleted.");
         } else {

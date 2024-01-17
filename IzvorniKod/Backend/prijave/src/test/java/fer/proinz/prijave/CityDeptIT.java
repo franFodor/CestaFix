@@ -43,7 +43,9 @@ public class CityDeptIT {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
-    private String jwtToken;
+
+    private String userJwtToken;
+    private String staffJwtToken;
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -62,42 +64,77 @@ public class CityDeptIT {
     @BeforeEach
     void setUpCityDept() {
         try (Connection connection = dataSource.getConnection()) {
+            // Category
             String sqlCategory = "INSERT INTO Category (category_id, category_name) " +
                     "VALUES (?, ?)";
-
             Category category = Category.builder()
-                    .categoryId(1)
-                    .categoryName("cat_1")
+                    .categoryId(20)
+                    .categoryName("cat_20")
                     .build();
-
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
             preparedStatementCategory.setInt(1, category.getCategoryId());
             preparedStatementCategory.setString(2, category.getCategoryName());
             preparedStatementCategory.executeUpdate();
 
+            // City Dept
             String sqlCityDept = "INSERT INTO Citydept (city_dept_id, city_dept_name, category_id) " +
                     "VALUES (?, ?, ?)";
-
             CityDept cityDept = CityDept.builder()
-                    .cityDeptId(1)
-                    .cityDeptName("dept_1")
+                    .cityDeptId(20)
+                    .cityDeptName("dept_20")
                     .category(category)
                     .build();
-
-            UserDetails userDetails = User.builder()
-                    .firstname("John")
-                    .lastname("Doe")
-                    .password(passwordEncoder.encode("qwertz"))
-                    .role(Role.USER)
-                    .build();
-
-            this.jwtToken = jwtService.generateToken(userDetails);
-
             PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
-            preparedStatementCityDept.setLong(1, cityDept.getCityDeptId());
+            preparedStatementCityDept.setInt(1, cityDept.getCityDeptId());
             preparedStatementCityDept.setString(2, cityDept.getCityDeptName());
             preparedStatementCityDept.setInt(3, cityDept.getCategory().getCategoryId());
             preparedStatementCityDept.executeUpdate();
+
+            // USER user
+            String sqlNormalUser = "INSERT INTO Users (user_id, firstname, lastname, email, password, role) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+            User user1 = User.builder()
+                    .userId(20)
+                    .firstname("Obicni")
+                    .lastname("Korisnik")
+                    .email("obicni.korisnik@gmail.com")
+                    .password(passwordEncoder.encode("ObicnaSifra.5"))
+                    .role(Role.USER)
+                    .cityDept(null)
+                    .build();
+            PreparedStatement normalUser = connection.prepareStatement(sqlNormalUser);
+            normalUser.setInt(1, user1.getUserId());
+            normalUser.setString(2, user1.getFirstname());
+            normalUser.setString(3, user1.getLastname());
+            normalUser.setString(4, user1.getEmail());
+            normalUser.setString(5, user1.getPassword());
+            normalUser.setString(6, String.valueOf(user1.getRole()));
+            //normalUser.setInt(7, user1.getCityDept().getCityDeptId());
+            normalUser.executeUpdate();
+            this.userJwtToken = jwtService.generateToken(user1);
+
+            // STAFF user
+            String sqlAdvancedUser = "INSERT INTO Users (user_id, firstname, lastname, email, password, role, city_dept_id)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            User user2 = User.builder()
+                    .userId(21)
+                    .firstname("Gradski")
+                    .lastname("Službenik")
+                    .email("gradski.sluzbenik@gmail.com")
+                    .password(passwordEncoder.encode("LaganaSifra.5"))
+                    .role(Role.STAFF)
+                    .cityDept(cityDept)
+                    .build();
+            PreparedStatement advancedUser = connection.prepareStatement(sqlAdvancedUser);
+            advancedUser.setInt(1, user2.getUserId());
+            advancedUser.setString(2, user2.getFirstname());
+            advancedUser.setString(3, user2.getLastname());
+            advancedUser.setString(4, user2.getEmail());
+            advancedUser.setString(5, user2.getPassword());
+            advancedUser.setString(6, String.valueOf(user2.getRole()));
+            advancedUser.setInt(7, user2.getCityDept().getCityDeptId());
+            advancedUser.executeUpdate();
+            this.staffJwtToken = jwtService.generateToken(user2);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,14 +144,24 @@ public class CityDeptIT {
     @AfterEach
     void tearDownCityDept() {
         try (Connection connection = dataSource.getConnection()) {
+            String sqlNormalUser = "DELETE FROM Users WHERE user_id = ?";
+            PreparedStatement normalUser = connection.prepareStatement(sqlNormalUser);
+            normalUser.setInt(1, 20);
+            normalUser.executeUpdate();
+
+            String sqlAdvancedUser = "DELETE FROM Users WHERE user_id = ?";
+            PreparedStatement advancedUser = connection.prepareStatement(sqlAdvancedUser);
+            advancedUser.setInt(1, 21);
+            advancedUser.executeUpdate();
+
             String sqlCityDept = "DELETE FROM CityDept WHERE city_dept_id = ?";
             PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
-            preparedStatementCityDept.setInt(1, 1);
+            preparedStatementCityDept.setInt(1, 20);
             preparedStatementCityDept.executeUpdate();
 
             String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
-            preparedStatementCategory.setInt(1, 1);
+            preparedStatementCategory.setInt(1, 20);
             preparedStatementCategory.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -129,28 +176,34 @@ public class CityDeptIT {
 
     @Test
     public void getCityDeptByIdAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/public/cityDept/1"))
+        mockMvc.perform(get("/public/cityDept/20"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void createCityDeptAndExpect200OK() throws Exception {
+        Category category = Category.builder()
+                .categoryName("Nova kategorija")
+                .build();
+
         CityDept cityDept = CityDept.builder()
-                .cityDeptId(5)
-                .cityDeptName("Ured za odrzavanje vodovodnih cijevi")
+                .cityDeptName("Novi gradski ured")
+                .category(category)
                 .build();
 
         String jsonCityDept = objectMapper.writeValueAsString(cityDept);
 
-        String roleFromToken = (String) jwtService.extractRole(jwtToken);
-        if (roleFromToken.equals("STAFF")) {
+        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+        if (roleFromToken.equals("ROLE_STAFF")) {
             mockMvc.perform(post("/advanced/cityDept")
                             .contentType("application/json")
+                            .header("Authorization", "Bearer " + staffJwtToken)
                             .content(jsonCityDept))
                     .andExpect(status().isOk());
         } else {
             mockMvc.perform(post("/advanced/cityDept")
                             .contentType("application/json")
+                            .header("Authorization", "Bearer " + userJwtToken)
                             .content(jsonCityDept))
                     .andExpect(status().isForbidden());
         }
@@ -159,21 +212,22 @@ public class CityDeptIT {
     @Test
     public void updateCityDeptAndExpect200OK() throws Exception {
         CityDept cityDept = CityDept.builder()
-                .cityDeptId(18)
-                .cityDeptName("Ured za zbrinavanje palih drveca")
+                .cityDeptName("Ažurirani gradski ured")
                 .build();
 
         String jsonCityDept = objectMapper.writeValueAsString(cityDept);
 
-        String roleFromToken = (String) jwtService.extractRole(jwtToken);
-        if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(patch("/advanced/cityDept/" + cityDept.getCityDeptId())
+        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+        if (roleFromToken.equals("ROLE_STAFF")) {
+            mockMvc.perform(patch("/advanced/cityDept/20")
                             .contentType("application/json")
+                            .header("Authorization", "Bearer " + staffJwtToken)
                             .content(jsonCityDept))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(patch("/advanced/cityDept/" + cityDept.getCityDeptId())
+            mockMvc.perform(patch("/advanced/cityDept/20")
                             .contentType("application/json")
+                            .header("Authorization", "Bearer " + userJwtToken)
                             .content(jsonCityDept))
                     .andExpect(status().isForbidden());
         }
@@ -181,12 +235,14 @@ public class CityDeptIT {
 
      @Test
     public void deleteCityDeptAndExpect200OK() throws Exception {
-         String roleFromToken = (String) jwtService.extractRole(jwtToken);
-         if (roleFromToken.equals("STAFF")) {
-             mockMvc.perform(delete("/advanced/cityDept/1"))
+         String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+         if (roleFromToken.equals("ROLE_STAFF")) {
+             mockMvc.perform(delete("/advanced/cityDept/20")
+                             .header("Authorization", "Bearer " + staffJwtToken))
                      .andExpect(status().isOk());
          } else {
-             mockMvc.perform(delete("/advanced/cityDept/1"))
+             mockMvc.perform(delete("/advanced/cityDept/20")
+                             .header("Authorization", "Bearer " + userJwtToken))
                      .andExpect(status().isForbidden());
          }
      }

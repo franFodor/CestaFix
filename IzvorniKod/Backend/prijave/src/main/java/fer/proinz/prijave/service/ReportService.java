@@ -2,18 +2,15 @@ package fer.proinz.prijave.service;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
-import com.drew.lang.GeoLocation;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.GpsDirectory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fer.proinz.prijave.dto.CreateReportRequestDto;
+import fer.proinz.prijave.dto.ReportRequestDto;
+import fer.proinz.prijave.exception.NonExistingCategoryException;
 import fer.proinz.prijave.model.*;
 import fer.proinz.prijave.repository.ProblemRepository;
 import fer.proinz.prijave.repository.ReportRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.http.HttpStatus;
@@ -21,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -48,6 +44,8 @@ public class ReportService {
     private final PhotoService photoService;
 
     private final EntityManager entityManager;
+
+    private final ObjectMapper objectMapper;
 
     public List<Report> getAllReports() {
         List<Report> reports = reportRepository.findAll();
@@ -101,92 +99,62 @@ public class ReportService {
         return statistics;
     }
 
-    public CreateReportRequestDto validateLocation(@RequestBody CreateReportRequestDto reportRequest) throws JsonProcessingException {
-        if (reportRequest.getAddress() == null &&
-                reportRequest.getLatitude() != null &&
-                reportRequest.getLongitude() != null) {
-            String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(address);
-            address = jsonNode.get("display_name").asText();
-            reportRequest.setAddress(address);
-        } else if (reportRequest.getLatitude() == null &&
-                reportRequest.getLongitude() == null &&
-                reportRequest.getAddress() != null) {
-            String location = geoConversionService.convertAddressToCoordinates(reportRequest.getAddress());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode[] jsonNodes = objectMapper.readValue(location, JsonNode[].class);
-            Double latitude = jsonNodes[0].get("lat").asDouble();
-            Double longitude = jsonNodes[0].get("lon").asDouble();
-            reportRequest.setLatitude(latitude);
-            reportRequest.setLongitude(longitude);
-        } else if (reportRequest.getAddress() == null &&
-                reportRequest.getLatitude() == null &&
-                reportRequest.getLongitude() == null &&
-                reportRequest.getBase64Photos() != null) {
+    public ReportRequestDto validateLocation(ReportRequestDto reportRequest)
+            throws IOException, ImageProcessingException {
+        if (reportRequest.getAddress() != null && reportRequest.hasCoordinates()) {
+            return reportRequest;
+        }else if (reportRequest.needsToConvertCoordinatesToAddress()) {
+
+            //reportRequest = getAddressFromCoordinates(reportRequest);
+            reportRequest = geoConversionService.convertCoordinatesToAddress(reportRequest);
+
+        } else if (reportRequest.needsToConvertAddressToCoordinates()) {
+
+            reportRequest = geoConversionService.convertAddressToCoordinates(reportRequest);
+
+        } else if (reportRequest.needsToGetLocationFromPhoto()) {
+
             if (reportRequest.getBase64Photos().isEmpty()) {
                 return null;
             }
 
             for (String base64Photo : reportRequest.getBase64Photos()) {
-                byte[] decodedBytes = Base64.decodeBase64(base64Photo);
+                // Extract EXIF metadata
+                Metadata metadata = ImageMetadataReader
+                        .readMetadata(new ByteArrayInputStream(Base64.decodeBase64(base64Photo)));
 
-                try {
-                    // Extract EXIF metadata
-                    Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(decodedBytes));
+                // Get the GPS directory from the metadata
+                GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
 
-                    // Get the GPS directory from the metadata
-                    GpsDirectory gpsDir = metadata.getFirstDirectoryOfType(GpsDirectory.class);
-
-                    if (gpsDir != null) {
-                        // Extract latitude and longitude
-                        GeoLocation geoLocation = gpsDir.getGeoLocation();
-                        double latitude = geoLocation.getLatitude();
-                        double longitude = geoLocation.getLongitude();
-                        reportRequest.setLatitude(latitude);
-                        reportRequest.setLongitude(longitude);
-                        String address = geoConversionService.convertCoordinatesToAddress(reportRequest.getLatitude(), reportRequest.getLongitude());
-                        ObjectMapper objectMapper = new ObjectMapper();
-                        JsonNode jsonNode = objectMapper.readTree(address);
-                        address = jsonNode.get("display_name").asText();
-                        reportRequest.setAddress(address);
-                    } else {
-                        return null;
-                        //return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No EXIF data found in the photo.");
-                    }
-                } catch (ImageProcessingException | IOException e) {
-                    e.printStackTrace();
+                if (gpsDir != null) {
+                    // Extract latitude and longitude
+                    reportRequest.setGeo(gpsDir.getGeoLocation());
+                    reportRequest = geoConversionService.convertCoordinatesToAddress(reportRequest);
+                    break;  // Found photo with coordinates
+                } else {
+                    return null;
                 }
             }
         }
         return reportRequest;
     }
 
-    public ResponseEntity<?> createReport(
-            CreateReportRequestDto reportRequest,
-            HttpServletRequest httpRequest
-    ) throws JsonProcessingException {
+    public ResponseEntity<?> createReport(ReportRequestDto reportRequest)
+            throws IOException, ImageProcessingException, NonExistingCategoryException {
         reportRequest = validateLocation(reportRequest);
         if (reportRequest == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No address, photo or coordinates given.");
         }
 
         Optional<Category> optionalCategory = categoryService.getCategoryById(reportRequest.getCategoryId());
-        if (optionalCategory.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category not found");
-        }
-        Category category = optionalCategory.get();
+        Category category = optionalCategory.orElseThrow(NonExistingCategoryException::new);
 
-        User user = null;
-        String authorizationHeader = httpRequest.getHeader("Authorization");
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            Integer userId = jwtService.extractUserId(token);
-            Optional<User> optionalUser = userService.getUserById(userId);
-            if (optionalUser.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Token user not found");
-            }
-            user = optionalUser.get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user;
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            user = (User) authentication.getPrincipal();
+        } else {
+            user = null;
         }
 
         Problem savedProblem = null;
@@ -252,7 +220,7 @@ public class ReportService {
     }
 
     // function to calculate the distance of nearbyReport
-    public double haversineDistance(CreateReportRequestDto reportRequest, Report report) {
+    public double haversineDistance(ReportRequestDto reportRequest, Report report) {
         double dLat = (reportRequest.getLatitude() - report.getLatitude()) * Math.PI / 180;
         double dLon = (reportRequest.getLongitude() - report.getLongitude()) * Math.PI / 180;
         double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -261,8 +229,10 @@ public class ReportService {
         return 6371e3 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
-    public Integer getNearbyReport(CreateReportRequestDto reportRequest) throws JsonProcessingException {
-        reportRequest = validateLocation(reportRequest);
+    public Integer getNearbyReport(ReportRequestDto reportRequest) throws IOException, ImageProcessingException {
+        if (!reportRequest.hasCoordinates()) {
+            reportRequest = validateLocation(reportRequest);
+        }
         if (reportRequest == null) {
             return null;
         }
@@ -351,8 +321,7 @@ public class ReportService {
         if (reportOptional.isPresent()) {
             Report report = reportOptional.get();
             Problem problem = report.getProblem();
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            User user = (User) authentication.getPrincipal();
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if (report.getUser() == null && user.getRole() != Role.STAFF) {
                 return ResponseEntity.badRequest().body("The report trying to be deleted is anonymous");

@@ -40,7 +40,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/public/**").permitAll()
 
-                        .requestMatchers("/normal/**").hasAnyRole("USER", "STAFF", "ADMIN")
+                        .requestMatchers("/normal/**").authenticated()
 
                         .requestMatchers(HttpMethod.PATCH, "/advanced/report/{reportId}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/advanced/report/{reportId}").authenticated()
@@ -48,7 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PATCH, "/advanced/user/{userId}").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/advanced/user/{userId}").authenticated()
 
-                        .requestMatchers("/advanced/**").hasAnyRole("STAFF", "ADMIN")
+                        .requestMatchers("/advanced/**").hasAnyRole("STAFF")
 
                         .requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()

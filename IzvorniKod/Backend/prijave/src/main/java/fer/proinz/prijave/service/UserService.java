@@ -76,8 +76,9 @@ public class UserService {
                 .build();
     }
 
-    public ResponseEntity<String> deleteUser(int userId, Authentication authentication) {
+    public ResponseEntity<String> deleteUser(int userId) {
         Optional<User> userOptional = userRepository.findById(userId);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User authenticatedUser = (User) authentication.getPrincipal();
 
         if (userOptional.isPresent()) {

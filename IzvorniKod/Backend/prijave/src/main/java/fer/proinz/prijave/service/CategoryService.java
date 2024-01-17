@@ -1,6 +1,7 @@
 package fer.proinz.prijave.service;
 
 import fer.proinz.prijave.model.Category;
+import fer.proinz.prijave.model.CityDept;
 import fer.proinz.prijave.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import java.util.Optional;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+
+    private final CityDeptService cityDeptService;
 
     public List<Category> getAllCategories() {
         return categoryRepository.findAll();
@@ -47,8 +50,14 @@ public class CategoryService {
     }
 
     public ResponseEntity<String> deleteCategory(int categoryId) {
-        Optional<Category> categoryOptional = categoryRepository.findById(categoryId);
-        if (categoryOptional.isPresent()) {
+        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            for (CityDept cityDept : cityDeptService.getAllCityDepts()) {
+                if (cityDept.getCategory() == category) {
+                    cityDeptService.deleteCityDept(cityDept.getCityDeptId());
+                }
+            }
             categoryRepository.deleteById(categoryId);
             return ResponseEntity.ok("Category with id " + categoryId + " is deleted.");
         } else {

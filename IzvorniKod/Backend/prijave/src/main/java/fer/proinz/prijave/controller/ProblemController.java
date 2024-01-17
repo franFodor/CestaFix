@@ -63,13 +63,8 @@ public class ProblemController {
 
     @Operation(summary = "Get problems for a certain city dept")
     @GetMapping("/advanced/problem/{cityDeptId}")
-    public ResponseEntity<?> getProblemsForCityDept(
-            @PathVariable("cityDeptId") int cityDeptId,
-            HttpServletRequest httpRequest
-    ) {
-        String authorizationHeader = httpRequest.getHeader("Authorization");
-
-        return ResponseEntity.ok(problemService.getProblemsForCityDept(cityDeptId, httpRequest));
+    public ResponseEntity<?> getProblemsForCityDept(@PathVariable("cityDeptId") int cityDeptId) {
+        return ResponseEntity.ok(problemService.getProblemsForCityDept(cityDeptId));
     }
 
 }

@@ -65,8 +65,8 @@ public class UserController {
     //@PreAuthorize("hasRole('STAFF') or (hasRole('USER') and #userId == principal.id)")
     @Operation(summary = "Delete a user")
     @DeleteMapping("/advanced/user/{userId}")
-    public ResponseEntity<String> deleteUser(@PathVariable("userId") int userId, Authentication authentication) {
-        return userService.deleteUser(userId, authentication);
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") int userId) {
+        return userService.deleteUser(userId);
     }
 
 }

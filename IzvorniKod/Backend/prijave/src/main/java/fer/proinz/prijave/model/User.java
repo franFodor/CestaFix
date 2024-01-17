@@ -34,9 +34,6 @@ public class User implements UserDetails, Serializable {
     //@JsonIgnore
     private String password;
 
-    //@Column(columnDefinition = "varchar default USER")
-    //private String role;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -48,12 +45,6 @@ public class User implements UserDetails, Serializable {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
-    }
-
-    @JsonIgnore
-    @Override
-    public String getPassword() {
-        return password;
     }
 
     @JsonIgnore

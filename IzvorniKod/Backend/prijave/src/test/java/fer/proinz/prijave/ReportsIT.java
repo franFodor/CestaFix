@@ -1,8 +1,7 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import fer.proinz.prijave.dto.CreateReportRequestDto;
+import fer.proinz.prijave.dto.ReportRequestDto;
 import fer.proinz.prijave.model.Category;
 import fer.proinz.prijave.model.Report;
 import fer.proinz.prijave.model.Role;
@@ -164,7 +163,7 @@ public class ReportsIT {
         testUser.setUserId(2);
         testUser.setRole(Role.USER);
 
-        CreateReportRequestDto report = CreateReportRequestDto.builder()
+        ReportRequestDto report = ReportRequestDto.builder()
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")
@@ -188,7 +187,7 @@ public class ReportsIT {
     @Test
     public void createReportAnonymous() throws Exception {
 
-        CreateReportRequestDto report = CreateReportRequestDto.builder()
+        ReportRequestDto report = ReportRequestDto.builder()
                 .title("Pukotina na cesti")
                 .description("kwerwoirwsnfsffowefsg")
                 .address("Ulica grada Vukovara 3")

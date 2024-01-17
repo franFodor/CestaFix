@@ -45,7 +45,7 @@ CREATE TABLE Reports (
     latitude DOUBLE PRECISION NOT NULL,
     longitude DOUBLE PRECISION NOT NULL,
     problem_id INT,
-    FOREIGN KEY (user_id) REFERENCES Users(user_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
     FOREIGN KEY(problem_id) REFERENCES Problems(problem_id)
 );
 
@@ -53,5 +53,5 @@ CREATE TABLE Photos (
     photo_id SERIAL PRIMARY KEY,
     photo_data BYTEA NOT NULL,
     report_id INT,
-    FOREIGN KEY(report_id) REFERENCES Reports(report_id)
+    FOREIGN KEY(report_id) REFERENCES Reports(report_id) ON DELETE CASCADE
 );

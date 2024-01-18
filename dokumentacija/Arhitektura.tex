@@ -266,6 +266,9 @@ Photo predstavlja fotografiju oštećenja koju je korisnik dodao prilikom prijav
 
 \textit{Potrebno je priložiti dijagram stanja i opisati ga. Dovoljan je jedan dijagram stanja koji prikazuje \textbf{značajan dio funkcionalnosti} sustava. Na primjer, stanja korisničkog sučelja i tijek korištenja neke ključne funkcionalnosti jesu značajan dio sustava, a registracija i prijava nisu. }
 
+Dijagram stanja, poznat i kao state machine diagram, je ponašajni UML-dijagram koji se koristi za jasno definiranje mogućih stanja objekta, identifikaciju prijelaza između tih stanja i prikaz ponašanja sustava u različitim situacijama.
+Na slici 4.6 prikazan je dijagram stanja za prijavljenog korisnika. Nakon prijave, korisniku se prikazuje početna stranica s kartografskim prikazom na kojem su crvenim markerima označene već podnesene prijave određenih šteta na javnim površinama.
+Odabirom nekog crvenog markera, korisniku se prikazuju informacije o konkretnoj podnesenoj prijavi. Sličnu funkcionalnost korisnik ostvaruje upisom identifikacijskog broja prijave u zaglavlju čime mu se prikazuju informacije, odnosno status neke od vlastitih podnesenih prijava. Osim pregleda statusa podnesenih šteta, pomoću zaglavlja aplikacije korisnik može pristupiti svom korisničkom računu, pregledati statistiku svih do tog trenutka podnesenih prijava te pristupiti podnošenju nove prijave. Prilikom podnošenja nove prijave, osim unošenja podataka o nastaloj šteti, korisnik može odabrati sliku s vlastitog uređaja i odabrati lokaciju štete na karti. Također, pomoću padajućeg izbornika u zaglavlju, korisnik se može odjaviti iz sustava. S obzirom na to da je zaglavlje zastupljeno na svim stranicama aplikacije, korisnik svim navedenim opcijama vezanim uz zaglavlje može pristupiti neovisno o tome gdje se nalazi unutar aplikacije. Pristupom u vlastiti korisnički račun, omogućen je pregled i uređivanje osobnih podataka, pregled podnesenih prijava korisnika kao i brisanje računa. Ako korisnik prilikom pregleda informacija vlastitih podnesenih prijava, odabere jednu od njih, pristupa informacijama o svim bliskim prijavama odabrane prijave.
 \begin{figure}[H]
 	\includegraphics[scale=0.35]{slike/DS.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
@@ -281,11 +284,11 @@ Photo predstavlja fotografiju oštećenja koju je korisnik dodao prilikom prijav
 
 \textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
 
-UML-dijagrami aktivnosti (activity diagrams) predstavljaju ponašajne dijagrame koji se koriste za modeliranje i grafički prikaz dinamičkog ponašanja sustava. 
-Ovi dijagrami vizualiziraju izvođenje aktivnosti kroz niz akcija koje kontroliraju tokove i objekte, s posebnim naglaskom na slijed i uvjete toka. 
-Dijagrami aktivnosti omogućuju jasno predstavljanje redoslijeda izvođenja aktivnosti, čime olakšavaju razumijevanje dinamike sustava. 
-Na dijagramu aktivnosti sa slike 4.7 prikazan je proces podnošenja nove prijave štete neprijavljenog korisnika. 
-Korisnik se prijavi u sustav, zatim odabirom lokacije na karti ili odabirom "Prijavi Štetu!" na zaglavlju, unosi podatke o nastaloj šteti u prikazanoj formi za prijavu. 
+UML-dijagrami aktivnosti (activity diagrams) predstavljaju ponašajne dijagrame koji se koriste za modeliranje i grafički prikaz dinamičkog ponašanja sustava.
+Ovi dijagrami vizualiziraju izvođenje aktivnosti kroz niz akcija koje kontroliraju tokove i objekte, s posebnim naglaskom na slijed i uvjete toka.
+Dijagrami aktivnosti omogućuju jasno predstavljanje redoslijeda izvođenja aktivnosti, čime olakšavaju razumijevanje dinamike sustava.
+Na dijagramu aktivnosti sa slike 4.7 prikazan je proces podnošenja nove prijave štete neprijavljenog korisnika.
+Korisnik se prijavi u sustav, zatim odabirom lokacije na karti ili odabirom "Prijavi Štetu!" na zaglavlju, unosi podatke o nastaloj šteti u prikazanoj formi za prijavu.
 Ako su podaci neispravno uneseni, korisniku se omogućuje ponovni upis podataka, a ako su podaci ispravni, spremaju se u bazu podataka te se korisniku prikazuje potvrda o uspješno podnesenoj prijavi zajedno s identifikacijskim brojem prijave, kako bi mogao provjeriti status podnesene prijave. Korisnik je pri završetku procesa pozicioniran ponovno na početnu stranicu.
 
 \begin{figure}[H]

@@ -40,6 +40,7 @@
 
 .headerBTN1:hover {
   border-color: green; /* Set the border color to green on hover */
+  background-color: #1b1b1b;
 }
 
 .headerBTNLOGOUT {
@@ -56,6 +57,7 @@
  
  .headerBTNLOGOUT:hover {
   border: 2px solid red; /* Set the border color to red on hover */
+  background-color: #ca000081;
  }
 /* Dropdown Button */
 .dropbtn {
@@ -135,4 +137,5 @@
  
  .headerBTNSUBMIT:hover {
   border: 2px solid #3e8e41; /* Set the border color to red on hover */
+  background-color: rgba(0, 102, 19, 0.417);
  }

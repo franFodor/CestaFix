@@ -1,10 +1,18 @@
-import {APILogin, APIWhoAmI} from '../API.js'
+import { APILogin, APIWhoAmI } from '../API.js'
 import './Forms.css'
 import Cookies from 'js-cookie'
+import { useState } from 'react'
 
 const LoginFormComponent = () => {
+    const [isClicked, setIsClicked] = useState(false);
+    const handleClick = () => {
+        setIsClicked(!isClicked);
+    };
+
+
     const handleLogin = (event) => {
         event.preventDefault();
+
         const formData = new FormData(event.target);
         APILogin(formData.get("email"), formData.get("password"))
             .then(response => {
@@ -12,6 +20,7 @@ const LoginFormComponent = () => {
                     let divElement = document.querySelector('.loginFail');
                     divElement.innerText = 'Prijava nije uspjela.';
                     divElement.style.color = 'red';
+                    handleClick();
                 } else {
                     return response.json();
                 }
@@ -33,11 +42,11 @@ const LoginFormComponent = () => {
                 }
             })
             .catch((error) => {
-            let divElement = document.querySelector('.loginFail');
-            divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
-            divElement.style.color = 'red';
-            console.log("uhvacen>", error);
-        });
+                let divElement = document.querySelector('.loginFail');
+                divElement.innerText = 'Upisani neispravni podatci! Pokušajte ponovo.';
+                divElement.style.color = 'red';
+                console.log("uhvacen>", error);
+            });
     }
 
     return (<>
@@ -48,11 +57,11 @@ const LoginFormComponent = () => {
             <input type="text" name="email" id="username" required />
             <label htmlFor="password"><b>Lozinka</b></label>
             <input type="password" name="password" id="password" required />
-            <button type="submit" className="login-button" id="submit">Prijava</button>
+            <button type="submit" className={`login-button ${isClicked ? 'clicked' : ''}`} id="submit" onClick={handleClick}>Prijava</button>
         </form>
         <div className="loginFail"></div>
-        </>
+    </>
     );
-    }
+}
 
 export default LoginFormComponent;

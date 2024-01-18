@@ -9,7 +9,8 @@ function CheckReportComponent() {
    const id = formData.get('textbox');
 
    // prebaci stranicu na taj ID
-   window.location.href = `/prijava/${id}`
+   if(id !=="")window.location.href = `/prijava/${id}`
+   
  }
 
  return (

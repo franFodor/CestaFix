@@ -3,7 +3,6 @@ import PopupComponent from "../PopupComponent.js";
 import "./Forms.css";
 import { APICreateReport, APICheckNearbyReport } from "../API.js";
 import Cookies from 'js-cookie';
-import loadingGif from '../images/loading.gif'
 
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
@@ -22,10 +21,21 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
     const [reportData, setReportData] = useState(null);
-    const [selectedOption, setSelectedOption] = useState("1");
+    const [isClicked, setIsClicked] = useState(false);
+    const handleClick = () => {
+        console.log("handleam");
+        //force 
+        var submitButton = document.querySelector('button.login-button');
+        submitButton.className = "login-button clicked";
+
+        setIsClicked(!isClicked);
+    };
+
 
     const handleSubmitReport = async (event) => {
+        setIsClicked(true);
         event.preventDefault();
+        handleClick();
         //Parsanje Report Objekta iz Forma
         const formData = new FormData(event.target);
         let photos = [];
@@ -56,7 +66,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         else { getFinalMapMarker = null; }
 
         try {
-            setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..." />)
             let checkNearby = await APICheckNearbyReport(data.title,
                 data.description,
                 data.address,
@@ -78,6 +87,9 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             }
         } catch (error) {
             if (error.message === 'Forbidden') {
+
+                var submitButton = document.querySelector('button.login-button');
+                submitButton.className = "login-button";
                 setReportContent(
                     <>
                         {baseReport}
@@ -90,32 +102,32 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
 
     }
-    function updateRecomendation(n){
-        switch(n){
-            case "1": 
+    function updateRecomendation(n) {
+        switch (n) {
+            case "1":
                 document.getElementById("reccomend").innerText = "Predložen Ured Za Cestovni Promet";
                 break;
-            case "2": 
+            case "2":
                 document.getElementById("reccomend").innerText = "Predložen Ured Za Komunalije i Vodovodnu";
                 break;
-            case "3": 
+            case "3":
                 document.getElementById("reccomend").innerText = "Predložen Gradski Ured za Prostorno Uređenje ";
                 break;
-            case "4": 
+            case "4":
                 document.getElementById("reccomend").innerText = "Predložena Hrvatska Elektroprivreda";
                 break;
-            case "0": 
+            case "0":
                 document.getElementById("reccomend").innerText = "Predloženo Ministarstvo Rada i Mirovinskoga\n Sustava, Obitelji i Socijalne Politike";
                 break;
-            default: 
+            default:
                 document.getElementById("reccomend").innerText = "";
         }
-     }
-     
+    }
+
 
 
     const baseReport = (
-        <div className="reportContent" >
+        <div className="reportContent" key={isClicked}>
             <form className="form" onSubmit={handleSubmitReport}>
                 <div>
                     <b><label htmlFor="name">Naslov</label></b>
@@ -152,12 +164,52 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     </select>
                     <div id='reccomend'>Predložen Ured Za Cestovni Promet</div>
                 </div>
-                <input type="submit" className="confirmButton" value="Submit" />
+                <button id="submitSpecial" type="submit" className={`login-button ${isClicked ? 'clicked' : ''}`}  >Prijavi Štetu!</button>
             </form>
         </div>
     );
 
-    const [reportContent, setReportContent] = useState(baseReport);
+    const [reportContent, setReportContent] = useState(
+        <div className="reportContent" key={isClicked}>
+            <form className="form" onSubmit={handleSubmitReport}>
+                <div>
+                    <b><label htmlFor="name">Naslov</label></b>
+                    <input id="name" type="text" name="name" required />
+                </div>
+                <div>
+                    <b><label htmlFor="description">Kratki Opis</label></b>
+                    <textarea id="description" name="description" required />
+                </div>
+                <div>
+                    <b><label htmlFor="photo">Dodaj Slike</label></b>
+                    <input id="photo" type="file" name="photo" accept="image/*" multiple />
+                </div>
+                <div>
+                    <b><label htmlFor="address">Adresa Prijave:</label></b>
+                    <input
+                        id="address"
+                        type="text"
+                        name="address"
+                    />
+                </div>
+                <div id='reportOnMap'>
+                    <button type="button" className="signupbtn" onClick={() => { document.getElementById("selectedMarker").innerText = "flag"; onClose(); }}>Odaberite lokaciju na karti!</button>
+                </div>
+
+                <div>
+                    <b><label htmlFor="dropdown">Odaberite Kategoriju štete</label></b>
+                    <select id="dropdown" name="dropdown" onChange={e => updateRecomendation(e.target.value)}>
+                        <option value="1">Oštećenje na cesti</option>
+                        <option value="2">Oštećenje na vodovodnoj infrastrukturi</option>
+                        <option value="3">Oštećenje na zelenim površinama</option>
+                        <option value="4">Oštećenje na eletroenergetskoj infrastrukturi</option>
+                        <option value="0">Ostalo</option>
+                    </select>
+                    <div id='reccomend'>Predložen Ured Za Cestovni Promet</div>
+                </div>
+                <button type="submit" id='submit' className={`login-button`} onClick={handleClick}>Prijavi Štetu!</button>
+            </form>
+        </div>);
 
 
     const submitReport = (closest_problem_id, data) => {
@@ -171,7 +223,6 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         if (Cookies.get('sessionToken')) token = Cookies.get('sessionToken');
         else { token = null; }
         if (reportData) {
-            setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..." />)
             APICreateReport(token,
                 reportData.title,
                 reportData.description,
@@ -186,6 +237,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     if (response.status === 200) {
                         return response.json(); // Parse the response body as JSON
                     } else {
+                        handleClick();
                         setReportContent(
                             <>
                                 {baseReport}
@@ -207,7 +259,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                                 <p>Id vaše prijave je:</p>
                                 <p>{apiResponse.businessId}</p>
                                 <br></br>
-                                <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
+                                <button className={`login-button ${isClicked ? 'clicked' : ''}`} onClick={() => window.location.reload()}>Potvrdi</button>
                             </div>
                         );
 

@@ -2,7 +2,9 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.dto.ReportRequestDto;
+import fer.proinz.prijave.exception.NonExistingReportException;
 import fer.proinz.prijave.model.*;
+import fer.proinz.prijave.repository.ReportRepository;
 import fer.proinz.prijave.service.JwtService;
 import org.junit.After;
 import org.junit.jupiter.api.AfterEach;
@@ -49,6 +51,9 @@ public class ReportsIT {
 
     private String userJwtToken;
     private String staffJwtToken;
+
+    @Autowired
+    private ReportRepository reportRepository;
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -210,16 +215,21 @@ public class ReportsIT {
     }
 
     @Test
-    public void createReportAuthenticated() throws Exception {
-        User user = User.builder()
-                .firstname("Novi")
-                .lastname("Korisnik")
-                .email("novi.korisnik@gmail.com")
-                .password(passwordEncoder.encode("PametnaLozinka.5"))
-                .role(Role.USER)
-                .cityDept(null)
-                .build();
+    public void getReportByBusinessIdAndExpect200OK() throws Exception {
+        Report report = reportRepository.findById(20).orElseThrow(NonExistingReportException::new);
 
+        mockMvc.perform(get("/public/lookup/" + report.getBusinessId()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getReportStatisticsAndExpect200OK() throws Exception {
+        mockMvc.perform(get("/public/statistics"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void createReportAuthenticated() throws Exception {
         ReportRequestDto report = ReportRequestDto.builder()
                 .title("Autenticirana prijava")
                 .description("Autenticiran opis")
@@ -243,7 +253,6 @@ public class ReportsIT {
 
     @Test
     public void createReportAnonymous() throws Exception {
-
         ReportRequestDto report = ReportRequestDto.builder()
                 .title("Anonimna prijava")
                 .description("Anoniman opis")
@@ -265,11 +274,33 @@ public class ReportsIT {
     }
 
     @Test
+    public void getNearbyReportAndExpect200OK() throws Exception {
+        ReportRequestDto report = ReportRequestDto.builder()
+                .title("Provjera za blisku prijavu")
+                .description("Opis provjere")
+                .address("Maksimirska cesta 128")
+                .reportStatus("U obradi")
+                .latitude(45.8197)
+                .longitude(16.0178)
+                .problemStatus("U obradi")
+                .categoryId(20)
+                .mergeProblemId(null)
+                .build();
+
+        String jsonReport = objectMapper.writeValueAsString(report);
+
+        mockMvc.perform(post("/public/nearbyReport")
+                        .contentType("application/json")
+                        .content(jsonReport))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void updateReportAndExpect200OK() throws Exception {
         Report report = Report.builder()
                 .title("Ažurirana prijava")
                 .description("Ažuriran opis prijave")
-                .status("Završeno")
+                .status("Obrađeno")
                 .build();
 
         String jsonReport = objectMapper.writeValueAsString(report);
@@ -288,8 +319,6 @@ public class ReportsIT {
                             .content(jsonReport))
                     .andExpect(status().isForbidden());
         }
-
-
     }
 
     @Test
@@ -304,6 +333,6 @@ public class ReportsIT {
                             .header("Authorization", "Bearer " + userJwtToken))
                     .andExpect(status().isForbidden());
         }
-
     }
+
 }

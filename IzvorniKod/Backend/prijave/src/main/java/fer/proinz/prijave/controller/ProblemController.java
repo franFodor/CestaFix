@@ -20,8 +20,6 @@ public class ProblemController {
 
     private final ProblemService problemService;
 
-    private final UserService userService;
-
     @Operation(summary = "Get all problems")
     @GetMapping("/public/problem/getAll")
     public List<Problem> getAllProblems() {
@@ -61,7 +59,7 @@ public class ProblemController {
     }
 
     @Operation(summary = "Staff member groups reports")
-    @PatchMapping("/advanced/report/group/{problemId}")
+    @PatchMapping("/advanced/problem/group/{problemId}")
     public ResponseEntity<Problem> groupReports(
             @PathVariable("problemId") int problemId,
             @RequestBody List<Integer> reportIdList

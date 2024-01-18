@@ -271,7 +271,6 @@ public class ReportService {
         } else {
             problem.getReports().remove(report);
             report.setProblem(null);
-            //problemService.updateProblem(problem.getProblemId(), problem);
             problemRepository.save(problem);
             reportRepository.save(report);
 

@@ -1,13 +1,13 @@
 package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import fer.proinz.prijave.dto.LoginRequestDto;
+import fer.proinz.prijave.dto.RegisterRequestDto;
 import fer.proinz.prijave.model.Category;
 import fer.proinz.prijave.model.CityDept;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.JwtService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -30,13 +29,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @Testcontainers
 @AutoConfigureMockMvc
-public class UsersIT {
+public class AuthenticationIT {
 
     @Autowired
     private DataSource dataSource;
@@ -68,7 +67,7 @@ public class UsersIT {
     }
 
     @BeforeEach
-    void setUpUser() {
+    void setUpAuthentication() {
         try (Connection connection = dataSource.getConnection()) {
             // Category
             String sqlCategory = "INSERT INTO Category (category_id, category_name) " +
@@ -115,7 +114,6 @@ public class UsersIT {
             normalUser.setString(4, user1.getEmail());
             normalUser.setString(5, user1.getPassword());
             normalUser.setString(6, String.valueOf(user1.getRole()));
-            //normalUser.setInt(7, user1.getCityDept().getCityDeptId());
             normalUser.executeUpdate();
             this.userJwtToken = jwtService.generateToken(user1);
 
@@ -148,102 +146,42 @@ public class UsersIT {
     }
 
     @AfterEach
-    void tearDownUser() {
+    void tearDownAuthentication() {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "Users");
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "Citydept");
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "Category");
     }
 
     @Test
-    public void getAllUsersAndExpect200OK() throws Exception {
-        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
-        if (roleFromToken.equals("ROLE_STAFF")) {
-            mockMvc.perform(get("/advanced/user/getAll")
-                            .header("Authorization", "Bearer " + staffJwtToken))
-                    .andExpect(status().isOk());
-        } else {
-            mockMvc.perform(get("/advanced/user/getAll")
-                            .header("Authorization", "Bearer " + userJwtToken))
-                    .andExpect(status().isForbidden());
-        }
-    }
-
-    @Test
-    public void getUserByIdAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/normal/user/20")
-                        .header("Authorization", "Bearer " + userJwtToken))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void getPersonalDataAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/normal/user/whoAmI")
-                        .header("Authorization", "Bearer " + userJwtToken))
-                .andExpect(status().isOk());
-    }
-
-    @Test
-    public void createUserAndExpect200OK() throws Exception {
-        User user = User.builder()
+    public void registerAndExpect200OK() throws Exception {
+        RegisterRequestDto requestDto = RegisterRequestDto.builder()
                 .firstname("Novi")
                 .lastname("Korisnik")
                 .email("novi.korisnik@gmail.com")
-                .password(passwordEncoder.encode("PametnaLozinka.5"))
-                .role(Role.USER)
-                .cityDept(null)
+                .password("PametnaLozinka.5")
                 .build();
 
-        String jsonUser = objectMapper.writeValueAsString(user);
+        String jsonRequestDto = objectMapper.writeValueAsString(requestDto);
 
-        mockMvc.perform(post("/normal/user")
+        mockMvc.perform(post("/auth/register")
                         .contentType("application/json")
-                        .header("Authorization", "Bearer " + userJwtToken)
-                        .content(jsonUser))
+                        .content(jsonRequestDto))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void updateUserAndExpect200OK() throws Exception {
-        User user = User.builder()
-                .firstname("Ažurirani")
-                .lastname("Korisnik")
-                .email("azurirani.korisnik@gmail.com")
-                .password(passwordEncoder.encode("PametnaLozinka.5"))
-                .role(Role.USER)
-                .cityDept(null)
+    public void loginAndExpect200OK() throws Exception {
+        LoginRequestDto requestDto = LoginRequestDto.builder()
+                .email("obicni.korisnik@gmail.com")
+                .password("ObicnaSifra.5")
                 .build();
 
-        String jsonUser = objectMapper.writeValueAsString(user);
+        String jsonRequestDto = objectMapper.writeValueAsString(requestDto);
 
-        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
-        if (roleFromToken.equals("ROLE_STAFF")) {
-            mockMvc.perform(patch("/advanced/user/20")
-                            .contentType("application/json")
-                            .header("Authorization", "Bearer " + staffJwtToken)
-                            .content(jsonUser))
-                    .andExpect(status().isOk());
-        } else {
-            mockMvc.perform(patch("/advanced/user/20")
-                            .contentType("application/json")
-                            .header("Authorization", "Bearer " + userJwtToken)
-                            .content(jsonUser))
-                    .andExpect(status().isForbidden());
-        }
-    }
-
-    @Test
-    public void deleteUserAndExpect200OK() throws Exception {
-        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
-        if (roleFromToken.equals("ROLE_STAFF")) {
-            mockMvc.perform(delete("/advanced/user/20")
-                            .header("Authorization", "Bearer " + staffJwtToken))
-                    .andExpect(status().isOk());
-        } else {
-            mockMvc.perform(delete("/advanced/user/20")
-                            .header("Authorization", "Bearer " + userJwtToken))
-                    .andExpect(status().isForbidden());
-        }
-
+        mockMvc.perform(post("/auth/login")
+                        .contentType("application/json")
+                        .content(jsonRequestDto))
+                .andExpect(status().isOk());
     }
 
 }

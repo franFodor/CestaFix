@@ -25,6 +25,8 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -141,50 +143,95 @@ public class ProblemsIT {
             advancedUser.executeUpdate();
             this.staffJwtToken = jwtService.generateToken(user2);
 
-            // Problem
-            String sqlProblem = "INSERT INTO Problems (problem_id, latitude, longitude, status, category_id) " +
+            // Problem1
+            String sqlProblem1 = "INSERT INTO Problems (problem_id, latitude, longitude, status, category_id) " +
                     "VALUES (?, ?, ?, ?, ?)";
-            Problem problem = Problem.builder()
+            Problem problem1 = Problem.builder()
                     .problemId(20)
                     .latitude(45.8006)
                     .longitude(15.9713)
                     .status("U obradi")
                     .category(category)
                     .build();
-            PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setInt(1, problem.getProblemId());
-            preparedStatementProblem.setDouble(2, problem.getLatitude());
-            preparedStatementProblem.setDouble(3, problem.getLongitude());
-            preparedStatementProblem.setString(4, problem.getStatus());
-            preparedStatementProblem.setInt(5, problem.getCategory().getCategoryId());
-            preparedStatementProblem.executeUpdate();
+            PreparedStatement preparedStatementProblem1 = connection.prepareStatement(sqlProblem1);
+            preparedStatementProblem1.setInt(1, problem1.getProblemId());
+            preparedStatementProblem1.setDouble(2, problem1.getLatitude());
+            preparedStatementProblem1.setDouble(3, problem1.getLongitude());
+            preparedStatementProblem1.setString(4, problem1.getStatus());
+            preparedStatementProblem1.setInt(5, problem1.getCategory().getCategoryId());
+            preparedStatementProblem1.executeUpdate();
 
-            // Report
-            String sqlReport = "INSERT INTO Reports " +
+            // Problem2
+            String sqlProblem2 = "INSERT INTO Problems (problem_id, latitude, longitude, status, category_id) " +
+                    "VALUES (?, ?, ?, ?, ?)";
+            Problem problem2 = Problem.builder()
+                    .problemId(21)
+                    .latitude(45.8009)
+                    .longitude(15.9717)
+                    .status("U obradi")
+                    .category(category)
+                    .build();
+            PreparedStatement preparedStatementProblem2 = connection.prepareStatement(sqlProblem2);
+            preparedStatementProblem2.setInt(1, problem2.getProblemId());
+            preparedStatementProblem2.setDouble(2, problem2.getLatitude());
+            preparedStatementProblem2.setDouble(3, problem2.getLongitude());
+            preparedStatementProblem2.setString(4, problem2.getStatus());
+            preparedStatementProblem2.setInt(5, problem2.getCategory().getCategoryId());
+            preparedStatementProblem2.executeUpdate();
+
+            // Report1
+            String sqlReport1 = "INSERT INTO Reports " +
                     "(report_id, user_id, title, description, address, status, latitude, longitude, problem_id) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            Report report = Report.builder()
+            Report report1 = Report.builder()
                     .reportId(20)
                     .user(user1)
                     .title("Prva prijava")
-                    .description("Opis prijave")
+                    .description("Opis prve prijave")
                     .address("Unska ulica 3")
                     .status("U obradi")
                     .latitude(45.8006)
                     .longitude(15.9713)
-                    .problem(problem)
+                    .problem(problem1)
                     .build();
-            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
-            preparedStatementReport.setInt(1, report.getReportId());
-            preparedStatementReport.setInt(2, report.getUser().getUserId());
-            preparedStatementReport.setString(3, report.getTitle());
-            preparedStatementReport.setString(4, report.getDescription());
-            preparedStatementReport.setString(5, report.getAddress());
-            preparedStatementReport.setString(6, report.getStatus());
-            preparedStatementReport.setDouble(7, report.getLatitude());
-            preparedStatementReport.setDouble(8, report.getLongitude());
-            preparedStatementReport.setInt(9, report.getProblem().getProblemId());
-            preparedStatementReport.executeUpdate();
+            PreparedStatement preparedStatementReport1 = connection.prepareStatement(sqlReport1);
+            preparedStatementReport1.setInt(1, report1.getReportId());
+            preparedStatementReport1.setInt(2, report1.getUser().getUserId());
+            preparedStatementReport1.setString(3, report1.getTitle());
+            preparedStatementReport1.setString(4, report1.getDescription());
+            preparedStatementReport1.setString(5, report1.getAddress());
+            preparedStatementReport1.setString(6, report1.getStatus());
+            preparedStatementReport1.setDouble(7, report1.getLatitude());
+            preparedStatementReport1.setDouble(8, report1.getLongitude());
+            preparedStatementReport1.setInt(9, report1.getProblem().getProblemId());
+            preparedStatementReport1.executeUpdate();
+
+            // Report2
+            String sqlReport2 = "INSERT INTO Reports " +
+                    "(report_id, user_id, title, description, address, status, latitude, longitude, problem_id) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            Report report2 = Report.builder()
+                    .reportId(21)
+                    .user(user1)
+                    .title("Druga prijava")
+                    .description("Opis druge prijave")
+                    .address("Unska ulica 3")
+                    .status("U obradi")
+                    .latitude(45.8009)
+                    .longitude(15.9717)
+                    .problem(problem2)
+                    .build();
+            PreparedStatement preparedStatementReport2 = connection.prepareStatement(sqlReport2);
+            preparedStatementReport2.setInt(1, report2.getReportId());
+            preparedStatementReport2.setInt(2, report2.getUser().getUserId());
+            preparedStatementReport2.setString(3, report2.getTitle());
+            preparedStatementReport2.setString(4, report2.getDescription());
+            preparedStatementReport2.setString(5, report2.getAddress());
+            preparedStatementReport2.setString(6, report2.getStatus());
+            preparedStatementReport2.setDouble(7, report2.getLatitude());
+            preparedStatementReport2.setDouble(8, report2.getLongitude());
+            preparedStatementReport2.setInt(9, report2.getProblem().getProblemId());
+            preparedStatementReport2.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,6 +256,20 @@ public class ProblemsIT {
     public void getProblemByIdAndExpect200OK() throws Exception {
         mockMvc.perform(get("/public/problem/20"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getProblemsForCityDeptAndExpect200OK() throws Exception {
+        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+        if (roleFromToken.equals("ROLE_STAFF")) {
+            mockMvc.perform(delete("/advanced/problem/20")
+                            .header("Authorization", "Bearer " + staffJwtToken))
+                    .andExpect(status().isOk());
+        } else {
+            mockMvc.perform(delete("/advanced/problem/20")
+                            .header("Authorization", "Bearer " + userJwtToken))
+                    .andExpect(status().isForbidden());
+        }
     }
 
     @Test
@@ -255,7 +316,29 @@ public class ProblemsIT {
                             .content(jsonProblem))
                     .andExpect(status().isForbidden());
         }
+    }
 
+    @Test
+    public void groupReportsAndExpect200OK() throws Exception {
+        List<Integer> reportIdList = new ArrayList<>();
+        reportIdList.add(21);
+
+        String jsonReportIdList = objectMapper.writeValueAsString(reportIdList);
+
+        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+        if (roleFromToken.equals("ROLE_STAFF")) {
+            mockMvc.perform(patch("/advanced/problem/group/20")
+                            .contentType("application/json")
+                            .header("Authorization", "Bearer " + staffJwtToken)
+                            .content(jsonReportIdList))
+                    .andExpect(status().isOk());
+        } else {
+            mockMvc.perform(patch("/advanced/problem/group/20")
+                            .contentType("application/json")
+                            .header("Authorization", "Bearer " + userJwtToken)
+                            .content(jsonReportIdList))
+                    .andExpect(status().isForbidden());
+        }
     }
 
     @Test
@@ -270,6 +353,5 @@ public class ProblemsIT {
                             .header("Authorization", "Bearer " + userJwtToken))
                     .andExpect(status().isForbidden());
         }
-
     }
 }

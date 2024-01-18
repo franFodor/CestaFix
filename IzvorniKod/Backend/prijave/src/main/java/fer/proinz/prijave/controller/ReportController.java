@@ -28,7 +28,7 @@ public class ReportController {
 
     @Operation(summary = "Get all reports")
     @GetMapping( "/public/report/getAll")
-    public List<Report> getAllReports() throws NonExistingReportException {
+    public List<Report> getAllReports() {
         return reportService.getAllReports();
     }
 
@@ -51,7 +51,7 @@ public class ReportController {
 
     @Operation(summary = "Get statistics")
     @GetMapping("/public/statistics")
-    public Map<String, Integer> reportStatistics() {
+    public Map<String, Integer> getReportStatistics() {
         return reportService.getReportsStatistics();
     }
 

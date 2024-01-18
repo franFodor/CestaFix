@@ -70,7 +70,7 @@ async function APIRegister(firstname, lastname, email, password) {
 }
 
 async function APIMergeReports(token, problem_id, reportlist) {
-    return fetch('/api/advanced/report/group/' + problem_id, {
+    return fetch('/api/advanced/problem/group/' + problem_id, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json',
                    'Authorization': 'Bearer ' + token},

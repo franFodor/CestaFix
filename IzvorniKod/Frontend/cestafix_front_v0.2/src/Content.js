@@ -11,6 +11,20 @@ import { useParams } from 'react-router-dom';
 
 
 const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers }) => {
+    
+    const [optionalCoordinates, setOptionalCoordinates] = useState();
+    function getProblemCoordinates(businessId, dbMarkers) {
+        for (let problem of dbMarkers) {
+            for (let report of problem.reports) {
+                if (report.businessId === businessId) {
+
+                    console.log("Koordinate problema su>", { latitude: problem.latitude, longitude: problem.longitude });
+                    return [problem.latitude,problem.longitude];
+                }
+            }
+        }
+        return null; // Return null if no matching business ID was found
+    }
     const businessIdActive = useParams();
     //console.log(businessIdActive);
     function closeReport() {
@@ -54,7 +68,6 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
             setMarkers(dbMarkers.map((marker) => ({
                 position: [marker.latitude, marker.longitude],
                 popup:
-
                     <div className='markerPopup'>
                         <p>Problem ID: {marker.problemId}</p>
                         <p>Status: {marker.status}</p>
@@ -65,11 +78,15 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                 problemId: marker.problemId,
                 markerJSON: marker
             })));
+            if (businessIdActive) {
+                console.log("HGAHAHAHAH",businessIdActive.id);
+            setOptionalCoordinates(getProblemCoordinates(businessIdActive.id, dbMarkers));
+            }
         };
-
         fetchAndPopulateMarkers();
         loadSelectedReport();
-    }, []);
+    }, []); // Add optionalCoordinates to the dependency array
+
 
 
     const ClickEventComponent = ({ setPickMarkerLatLon }) => {
@@ -114,6 +131,7 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
             setSelectedMarkerId(apiResponse.problem.problemId);
             console.log("Inicilajiziran....", selectedMarkerId);
             setInit(apiResponse.problem.problemId);
+
         }
     }
 
@@ -121,7 +139,9 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
 
     return (
         <div className='main flex-grow w-full'>
-            <MapContainer center={[45.812915, 15.975522]} zoom={13} className='w-full h-full'>
+            {console.log("JA VIDIM",optionalCoordinates)}
+            <MapContainer key={optionalCoordinates}  center={optionalCoordinates ? [parseFloat(optionalCoordinates[0]), parseFloat(optionalCoordinates[1])] : [45.812915, 15.975522]} zoom={optionalCoordinates ? 20: 13} className='w-full h-full'>
+
                 <ClickEventComponent setPickMarkerLatLon={setPickMarkerLatLon} />
 
                 <TileLayer

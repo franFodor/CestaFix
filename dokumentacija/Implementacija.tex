@@ -57,10 +57,60 @@
 			 \textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
 	
 			
-			\subsection{Ispitivanje komponenti}
+			\subsection{Integracijsko testiranje}
 			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
 			
-			
+			Na backendu integracijsko testiranje se sastoji od pozivanja API-a i očekivanja određenog odgovora za taj API.
+            Na taj način se testira stvarni proces i procedura koja se odvija kada korisnik pozove taj API.
+            Postoji sveukupno 7 integracijskih testova - po jedan za svaki model koji postoji te jos jedan za registraciju i prijavu korisnika.
+            Integracijski testovi funkcioniraju na način da se prvo u dockeru podigne baza podataka, što se može vidjeti na slici \ref{fig:IT_docker}.
+            Nakon toga izvršava se funkcija koja je anotirana sa @BeforeEach anotacijom, što znači da će se ta funkcija izvršiti prije svakog testa.
+            Također, postoji i funkcija koja je anotirana sa @AfterEach anotacijom, što znači da će se ta funkcija izvršiti poslije svakog testa.
+            Sami testovi su anotirani sa anotacijom @Test.
+			Ovo su sve anotacije iz org.junit biblioteke.
+            \begin{figure}[H]
+                \includegraphics[scale=0.60]{slike/IT_containerized_docker.png}
+                \centering
+                \caption{Dizanje baze u integracijskom testu}
+                \label{fig:IT_docker}
+            \end{figure}
+
+            Nakon što se baza digne, a prije pokretanja testova, izvršava se funkcija s anotacijom @BeforeEach koja u bazu umeće podatke potrebne za testiranje.
+            Na primjer, ako se testira metoda za brisanje prijave, u bazu će se prije tog testa umetnuti jedna prijava.
+			Ova funkcija se izvršava prije svakog testa.
+            Umetanje u bazu funkcionira tako da se napravi String varijabla koja je jednaka SQL naredbi.
+			Potom se izgradi objekt koji se želi umetnuti u bazu i u SQL naredbu se upisuju atributi tog objekta.
+			Na kraju se SQL naredba izvršava i podatak se upisuje u bazu (Slika \ref{fig:beforeEach}).
+            \begin{figure}[H]
+                \includegraphics[scale=0.60]{slike/IT_beforeEach.png}
+                \centering
+                \caption{Umetanje podataka u bazu}
+                \label{fig:beforeEach}
+            \end{figure}
+
+            Testovi su funkcije s anotacijom @Test.
+			Za testiranje se koristi mockMvc.perform() funkcija koja simulira HTTP zahtjev, definira HTTP metodu za poziv API-a,
+            predaje JSON ako treba, definira kakav contentType treba predati, je li potreban jwt za pristup API-ju i
+			koji HTTP status se očekuje kao odgovor tog zahtjeva (slika \ref{fig:test}).
+            \begin{figure}[H]
+                \includegraphics[scale=0.60]{slike/IT_test.png}
+                \centering
+                \caption{Integracijski test}
+                \label{fig:test}
+            \end{figure}
+
+            Po završetku svakog testa izvršava se funkcija s anotacijom @AfterEach.
+			Ona koristi JdbcTestUtils.deleteFromTables() funkciju kako bi izbrisala sve podatke iz određene tablice u bazi.
+			Na ovakav način se osigurava da ako se nešto umetne u bazu prilikom testa,
+			poslije završetka testa će se i izbrisati (slika \ref{fig:afterEach}).
+            \begin{figure}[H]
+                \includegraphics[scale=0.60]{slike/IT_afterEach.png}
+                \centering
+                \caption{Brisanje podataka iz baze nakon testa}
+                \label{fig:afterEach}
+            \end{figure}
+
+            \eject
 			
 			\subsection{Ispitivanje sustava}
 

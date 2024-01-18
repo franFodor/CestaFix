@@ -22,7 +22,7 @@ async function APIUpdateUser(token,
         lastname: lastName
     };
 
-    return fetch(`/api/advanced/user/${userId}`, {
+    const response =await fetch(`/api/advanced/user/${userId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
@@ -30,7 +30,18 @@ async function APIUpdateUser(token,
         },
         body: JSON.stringify(formData)
     });
+    
+    if (!response.ok) {
+        throw new Error('Network response was not OK');
+    }
+
+    const data = await response.json();
+    return data;
 }
+
+
+
+
 
 async function APIDeleteUser(id, token) {
     return fetch(`api/advanced/user/${id}`, {

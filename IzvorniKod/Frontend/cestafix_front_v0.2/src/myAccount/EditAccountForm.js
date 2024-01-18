@@ -56,7 +56,7 @@ const EditAccountForm = () => {
     };
 
     // Handle form submit
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Here you would typically make an API call to update the user details
         console.log('Updated Info:', { firstName, lastName, email});
@@ -65,11 +65,13 @@ const EditAccountForm = () => {
         if(userInfo)userInfo = JSON.parse(userInfo);
         let token = Cookies.get("sessionToken");
 
-        APIUpdateUser(token,
+        let response =await APIUpdateUser(token,
                       userInfo.userId,
                       firstName,
                       lastName
         );
+        Cookies.set("userInfo", JSON.stringify(response));
+        window.location.href = '/myAccount';
         setEditing({ firstName: false, lastName: false, email: false });
     };
 

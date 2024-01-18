@@ -117,7 +117,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 document.getElementById("reccomend").innerText = "Predložena Hrvatska Elektroprivreda";
                 break;
             case "0":
-                document.getElementById("reccomend").innerText = "Predloženo Ministarstvo Rada i Mirovinskoga\n Sustava, Obitelji i Socijalne Politike";
+                document.getElementById("reccomend").innerText = "Predloženo Ministarstvo Rada i\n Mirovinskog Sustava,\n Obitelji i Socijalne Politike";
                 break;
             default:
                 document.getElementById("reccomend").innerText = "";
@@ -162,7 +162,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                         <option value="4">Oštećenje na eletroenergetskoj infrastrukturi</option>
                         <option value="0">Ostalo</option>
                     </select>
-                    <div id='reccomend'>Predložen Ured Za Cestovni Promet</div>
+                    <div id='reccomend' className='recommendation'>Predložen Ured Za Cestovni Promet</div>
                 </div>
                 <button id="submitSpecial" type="submit" className={`login-button ${isClicked ? 'clicked' : ''}`}  >Prijavi Štetu!</button>
             </form>

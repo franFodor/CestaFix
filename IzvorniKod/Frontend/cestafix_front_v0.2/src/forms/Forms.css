@@ -103,7 +103,13 @@
   cursor: pointer;
   width: 100%;
  }
- 
+ #reccomend { 
+   background-color:rgba(172, 172, 172, 0.367);/* Background color when text is selected */
+   color: black; /* Text color when text is selected */
+   width: 90%;
+   align-self:center;
+   font-weight: bolder;
+}
  /* -------------MERGE CONFIRM DIALOG---------------- */
  
  .mergeConfirmDialog {

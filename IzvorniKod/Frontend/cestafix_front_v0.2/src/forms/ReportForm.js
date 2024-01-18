@@ -22,7 +22,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
     const [reportData, setReportData] = useState(null);
-
+    const [selectedOption, setSelectedOption] = useState("1");
 
     const handleSubmitReport = async (event) => {
         event.preventDefault();
@@ -50,13 +50,13 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
 
         //neispravna implementacija!! let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
         let getFinalMapMarker;
-        if(document.getElementById('selectedMarker')){
-             getFinalMapMarker= JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
+        if (document.getElementById('selectedMarker')) {
+            getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
         }
-        else { getFinalMapMarker = null;}
+        else { getFinalMapMarker = null; }
 
         try {
-            setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..."/>)
+            setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..." />)
             let checkNearby = await APICheckNearbyReport(data.title,
                 data.description,
                 data.address,
@@ -67,22 +67,22 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 getFinalMapMarker ? getFinalMapMarker[1] : null,
                 data.categoryId,
                 null);
-            
-            console.log("odčekiram>>>",checkNearby);
+
+            console.log("odčekiram>>>", checkNearby);
             //ukoliko postoji bliski marker, pitaj korisnika jel oce mergat inace samo prijavi bez mergea
             if (checkNearby > 0) {
                 setClosestMarkerData(checkNearby);
                 setShowMergeConfirm(true);
             } else {
-                submitReport(null,data);
+                submitReport(null, data);
             }
-         } catch (error) {
+        } catch (error) {
             if (error.message === 'Forbidden') {
                 setReportContent(
                     <>
                         {baseReport}
                         <div style={{ color: 'red' }}>
-                           Došlo je do greške, provjerite unos adrese prijave!
+                            Došlo je do greške, provjerite unos adrese prijave!
                         </div>
                     </>
                 );
@@ -90,6 +90,30 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
 
     }
+    function updateRecomendation(n){
+        switch(n){
+            case "1": 
+                document.getElementById("reccomend").innerText = "Predložen Ured Za Cestovni Promet";
+                break;
+            case "2": 
+                document.getElementById("reccomend").innerText = "Predložen Ured Za Komunalije i Vodovodnu";
+                break;
+            case "3": 
+                document.getElementById("reccomend").innerText = "Predložen Gradski Ured za Prostorno Uređenje ";
+                break;
+            case "4": 
+                document.getElementById("reccomend").innerText = "Predložena Hrvatska Elektroprivreda";
+                break;
+            case "0": 
+                document.getElementById("reccomend").innerText = "Predloženo Ministarstvo Rada i Mirovinskoga\n Sustava, Obitelji i Socijalne Politike";
+                break;
+            default: 
+                document.getElementById("reccomend").innerText = "";
+        }
+     }
+     
+
+
     const baseReport = (
         <div className="reportContent" >
             <form className="form" onSubmit={handleSubmitReport}>
@@ -114,20 +138,19 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                     />
                 </div>
                 <div id='reportOnMap'>
-                    <button className="signupbtn" onClick={() => {document.getElementById("selectedMarker").innerText = "flag";onClose(); }}>Odaberite lokaciju na karti!</button>
+                    <button className="signupbtn" onClick={() => { document.getElementById("selectedMarker").innerText = "flag"; onClose(); }}>Odaberite lokaciju na karti!</button>
                 </div>
-
 
                 <div>
                     <b><label htmlFor="dropdown">Odaberite Kategoriju štete</label></b>
-                    <select id="dropdown" name="dropdown">
+                    <select id="dropdown" name="dropdown" onChange={e => updateRecomendation(e.target.value)}>
                         <option value="1">Oštećenje na cesti</option>
                         <option value="2">Oštećenje na vodovodnoj infrastrukturi</option>
                         <option value="3">Oštećenje na zelenim površinama</option>
                         <option value="4">Oštećenje na eletroenergetskoj infrastrukturi</option>
                         <option value="0">Ostalo</option>
-
                     </select>
+                    <div id='reccomend'>Predložen Ured Za Cestovni Promet</div>
                 </div>
                 <input type="submit" className="confirmButton" value="Submit" />
             </form>
@@ -137,60 +160,60 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const [reportContent, setReportContent] = useState(baseReport);
 
 
-    const submitReport = (closest_problem_id,data) => {
-        
+    const submitReport = (closest_problem_id, data) => {
+
         let reportData;
-        if (data){
+        if (data) {
             reportData = data;
         }
         let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
         let token;
-        if(Cookies.get('sessionToken'))token = Cookies.get('sessionToken');
-        else{token = null;}
-        if(reportData){
-        setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..."/>)
-        APICreateReport(token,
-            reportData.title,
-            reportData.description,
-            reportData.address,
-            reportData.photo,
-            "U obradi",
-            "U obradi",
-            getFinalMapMarker ? getFinalMapMarker[0] : null,
-            getFinalMapMarker ? getFinalMapMarker[1] : null,
-            reportData.categoryId,
-            closest_problem_id).then(response => {
-                if (response.status === 200) {
-                    return response.json(); // Parse the response body as JSON
-                } else {
-                    setReportContent(
-                        <>
-                            {baseReport}
-                            <div style={{ color: 'red' }}>
-                                Došlo je do greške, provjerite unos adrese prijave!
+        if (Cookies.get('sessionToken')) token = Cookies.get('sessionToken');
+        else { token = null; }
+        if (reportData) {
+            setReportContent(<img src={loadingGif} width="85" alt="Učitavanje..." />)
+            APICreateReport(token,
+                reportData.title,
+                reportData.description,
+                reportData.address,
+                reportData.photo,
+                "U obradi",
+                "U obradi",
+                getFinalMapMarker ? getFinalMapMarker[0] : null,
+                getFinalMapMarker ? getFinalMapMarker[1] : null,
+                reportData.categoryId,
+                closest_problem_id).then(response => {
+                    if (response.status === 200) {
+                        return response.json(); // Parse the response body as JSON
+                    } else {
+                        setReportContent(
+                            <>
+                                {baseReport}
+                                <div style={{ color: 'red' }}>
+                                    Došlo je do greške, provjerite unos adrese prijave!
+                                </div>
+                            </>
+
+                        );
+                        console.log("kaj si napravil");
+                    }
+                })
+                .then(apiResponse => {
+                    if (apiResponse) {
+                        console.log(apiResponse);
+                        setReportContent(
+                            <div>
+                                <h2>Prijava je uspješno prijavljena!</h2>
+                                <p>Id vaše prijave je:</p>
+                                <p>{apiResponse.businessId}</p>
+                                <br></br>
+                                <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
                             </div>
-                        </>
+                        );
 
-                    );
-                    console.log("kaj si napravil");
-                }
-            })
-            .then(apiResponse => {
-                if (apiResponse) {
-                    console.log(apiResponse);
-                    setReportContent(
-                        <div>
-                            <h2>Prijava je uspješno prijavljena!</h2>
-                            <p>Id vaše prijave je:</p>
-                            <p>{apiResponse.businessId}</p>
-                            <br></br>
-                            <button className='loginbtn' onClick={() => window.location.reload()}>Potvrdi</button>
-                        </div>
-                    );
+                    }
+                });
 
-                }
-            });
-            
         }
     };
 
@@ -198,9 +221,9 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const mergeConfirmDialog = showMergeConfirm && (
         <div className="mergeConfirmDialog">
             <h3>Već postoji bliska prijava. Želite li da se:</h3>
-            <button id="spojiid" onClick={() => { setShowMergeConfirm(false);submitReport(closestMarkerData,reportData); }}>spoji s postojećom</button>
-            <button onClick={() => { setShowMergeConfirm(false);submitReport(null,reportData); }}>Stvori novu prijavu</button>
-            <button onClick={() => { setShowMergeConfirm(false);onClose();}}>Odustani</button>
+            <button id="spojiid" onClick={() => { setShowMergeConfirm(false); submitReport(closestMarkerData, reportData); }}>spoji s postojećom</button>
+            <button onClick={() => { setShowMergeConfirm(false); submitReport(null, reportData); }}>Stvori novu prijavu</button>
+            <button onClick={() => { setShowMergeConfirm(false); onClose(); }}>Odustani</button>
         </div>
     );
 

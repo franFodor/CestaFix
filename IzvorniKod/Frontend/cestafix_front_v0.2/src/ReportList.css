@@ -4,7 +4,7 @@
     padding: 10px;
     box-sizing: border-box;
     overflow-y: auto; /* Enables vertical scrolling */
-    max-height: 100vh; /* Limits the height to the viewport */
+    max-height: 85vh; /* Limits the height to the viewport */
 }
 
 .report-element {

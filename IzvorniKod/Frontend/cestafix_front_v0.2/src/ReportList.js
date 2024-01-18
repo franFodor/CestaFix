@@ -39,7 +39,7 @@ function ReportListComponent({ problemID }) {
                             <div className="content">
                                 <h3 className="title">{report.title}</h3>
                                 <p className="time-date">{report.time} {datetime}</p>
-                                <p>{report.description}</p>
+                                <p><b>Opis prijave: </b>{report.description}</p>
                                 <p><b>Autor:</b> {author} </p>
                                 <p><b>Adresa:</b> {report.address}</p>
 

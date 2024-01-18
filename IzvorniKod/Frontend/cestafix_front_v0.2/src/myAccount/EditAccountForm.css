@@ -62,7 +62,7 @@
 }
 
 /* Button hover effect */
-.account-details:hover,
+
 .account-container form button[type="submit"]:hover {
   background-color: #037f58;
 }

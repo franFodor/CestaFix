@@ -20,22 +20,18 @@ const UserReportTable = () => {
 
   return (
     <div className="updateTable">
-      <div className="naslovni">
-        <h2>Naziv Prijave</h2>
-        <p>Opis Prijave</p>
-        <p>Adresa</p>
-        <p>Status</p>
-      </div>
       {reports.map((report) => (
         <div className="Report">
-          <div
-            onClick={() =>
-              (window.location.href = `/prijava/${report.businessId}`)
-            }
-          >
+          <div>
             <h2>{report.title}</h2>
-            <p>{report.desc}</p>
+            <p>{report.description}</p>
+            
+            <br></br>
             <p>{report.address}</p>
+            <button className= "px-4 py-2 mb-4 bg-green-500 text-white rounded"onClick={() =>
+              (window.location.href = `/prijava/${report.businessId}`)
+            }>Prikaži na Karti</button>
+            
             <p>{report.status}</p>
           </div>
         </div>

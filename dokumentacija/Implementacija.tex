@@ -61,15 +61,18 @@
 			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
 			
 			Na backendu integracijsko testiranje se sastoji od pozivanja API-a i očekivanja određenog odgovora za taj API.
-            Na taj način se testira stvarni proces i procedura koja se odvija kada korisnik pozove taj API.
-            Postoji sveukupno 7 integracijskih testova - po jedan za svaki model koji postoji te jos jedan za registraciju i prijavu korisnika.
+            Na taj način se testira stvarna procedura koja se odvija kada korisnik pozove taj API.
+			Prolazi se kroz sve slojeve backenda - od kontrolera do baze.
+			Postoji sveukupno 6 integracijskih testova - 5 njih za modele koji reprezentiraju entitete u bazi te jos jedan za registraciju i prijavu korisnika.
             Integracijski testovi funkcioniraju na način da se prvo u dockeru podigne baza podataka, što se može vidjeti na slici \ref{fig:IT_docker}.
-            Nakon toga izvršava se funkcija koja je anotirana sa @BeforeEach anotacijom, što znači da će se ta funkcija izvršiti prije svakog testa.
-            Također, postoji i funkcija koja je anotirana sa @AfterEach anotacijom, što znači da će se ta funkcija izvršiti poslije svakog testa.
+            Nakon toga izvršava se funkcija koja je anotirana sa @BeforeEach anotacijom. 
+			Funkcija koja ima anotaciju @BeforeEach će se izvršiti prije svakog testa.
+            Također, postoji i funkcija koja je anotirana sa @AfterEach anotacijom. 
+			Ona će se izvršiti poslije svakog testa.
             Sami testovi su anotirani sa anotacijom @Test.
-			Ovo su sve anotacije iz org.junit biblioteke.
+			Sve navedene anotacije pripadaju org.junit biblioteci.
             \begin{figure}[H]
-                \includegraphics[scale=0.60]{slike/IT_containerized_docker.png}
+                \includegraphics[scale=0.50]{slike/IT_containerized_docker.png}
                 \centering
                 \caption{Dizanje baze u integracijskom testu}
                 \label{fig:IT_docker}
@@ -90,7 +93,7 @@
 
             Testovi su funkcije s anotacijom @Test.
 			Za testiranje se koristi mockMvc.perform() funkcija koja simulira HTTP zahtjev, definira HTTP metodu za poziv API-a,
-            predaje JSON ako treba, definira kakav contentType treba predati, je li potreban jwt za pristup API-ju i
+            predaje JSON ako treba, definira kakav contentType treba predati, je li potreban JWT za pristup API-ju i
 			koji HTTP status se očekuje kao odgovor tog zahtjeva (slika \ref{fig:test}).
             \begin{figure}[H]
                 \includegraphics[scale=0.60]{slike/IT_test.png}

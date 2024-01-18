@@ -43,9 +43,10 @@ function ReportListComponent({ problemID }) {
                                 <p><b>Autor:</b> {author} </p>
                                 <p><b>Adresa:</b> {report.address}</p>
 
-                            </div>
-                            <div className="image-container">
-                                <img src={report.imageUrl} alt={report.title} />
+                            </div><div className="image-container">
+                                {report.base64Photos.map((photo, index) => (
+                                    <img key={index} src={`data:image/png;base64,${photo}`} alt={`Photo ${index + 1}`} />
+                                ))}
                             </div>
                         </li>
                     )

@@ -58,7 +58,7 @@ const UpdateReportTable = () => {
         ))}
         <select className="mt-2" style={{zIndex: 1}} value={selectedStatuses[problem.problemId] || problem.status} onChange={e => handleStatusChange(problem.problemId, e.target.value)}>
          <option value="Čeka Obradu">Čeka Obradu</option>
-         <option value="U obradi">U obradi</option>
+         <option value="U Obradi">U obradi</option>
          <option value="Obrađeno">Obrađeno</option>
         </select>
         </div>

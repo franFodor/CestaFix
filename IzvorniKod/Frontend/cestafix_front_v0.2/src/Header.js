@@ -47,7 +47,7 @@ const Header = ({ pickMarkerLatLon, markers }) => {
         {(Cookies.get('userInfo')) ? (
           <>
             <button className="headerBTN1" id="prijava" onClick={handleReportBtn}>Prijavi Štetu!</button>
-            <button className="headerBTN1" id="statistika" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
+            <button className="headerBTN1" id="statistika" onClick={handleStatBtn}>Statistika Dosadašnjih prijava</button>
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn" id="status">Provjeri Status Prijave!</button>
               <div className="dropdown-content">
@@ -68,7 +68,7 @@ const Header = ({ pickMarkerLatLon, markers }) => {
         ) : (
           <>
             <button className="headerBTN1" id="prijava" onClick={handleReportBtn} >Prijavi Štetu!</button>
-            <button className="headerBTN1" id="statistika" onClick={handleStatBtn}>Statistika Dosadasnjih prijava</button>
+            <button className="headerBTN1" id="statistika" onClick={handleStatBtn}>Statistika Dosadašnjih prijava</button>
             <div className="dropdown reportDropdown">
               <button className="headerBTN1 dropbtn" id="status">Provjeri Status Prijave!</button>
               <div className="dropdown-content">

@@ -60,7 +60,7 @@ public class ReportService {
     public Map<String, Integer> getReportsStatistics() {
         Map<String, Integer> statistics = new HashMap<>();
 
-        statistics.put("Broj prijava koje cekaju obradu", reportRepository.countByStatus("Čeka Obradu"));
+        statistics.put("Broj prijava koje čekaju obradu", reportRepository.countByStatus("Čeka Obradu"));
         statistics.put("Broj prijava koje su u obradi", reportRepository.countByStatus("U obradi"));
         statistics.put("Broj prijava koje su obrađene", reportRepository.countByStatus("Obrađeno"));
 

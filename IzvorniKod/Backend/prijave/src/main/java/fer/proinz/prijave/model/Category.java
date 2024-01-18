@@ -12,7 +12,6 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "Category")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "categoryId")
 public class Category {
 
     @Id

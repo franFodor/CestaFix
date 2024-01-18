@@ -489,13 +489,51 @@
 			\eject 
 		
 		\section{Upute za puštanje u pogon}
-		
-			\textbf{\textit{dio 2. revizije}}\\
-		
-			 \textit{U ovom poglavlju potrebno je dati upute za puštanje u pogon (engl. deployment) ostvarene aplikacije. Na primjer, za web aplikacije, opisati postupak kojim se od izvornog kôda dolazi do potpuno postavljene baze podataka i poslužitelja koji odgovara na upite korisnika. Za mobilnu aplikaciju, postupak kojim se aplikacija izgradi, te postavi na neku od trgovina. Za stolnu (engl. desktop) aplikaciju, postupak kojim se aplikacija instalira na računalo. Ukoliko mobilne i stolne aplikacije komuniciraju s poslužiteljem i/ili bazom podataka, opisati i postupak njihovog postavljanja. Pri izradi uputa preporučuje se \textbf{naglasiti korake instalacije uporabom natuknica} te koristiti što je više moguće \textbf{slike ekrana} (engl. screenshots) kako bi upute bile jasne i jednostavne za slijediti.}
-			
-			
-			 \textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
-			
-			
+
+			Za pogon naše aplikacije korištena je platforma Render koja pruža besplatno puštanje aplikacije u pogon sa, naravno, ograničenim mogućnostima.   
+
+			\subsection{Puštanje baze podataka u pogon} 
+			Prvo je potrebno upogoniti bazu podataka. Nakon prijavljivanja u platformu, potrebno je odabrati opciju New \texttt{->} PostgreSQL slika \ref{fig:Kreiranjenovogservisa}. 
+			Zatim je na ekranu prikazan unos podataka za bazu podataka, za što smo mi ostavili sve prazno (automatski se generira) osim imena servisa, te je za regiju potrebno postaviti \texttt{Frankfurt(EU Central)} slika \ref{fig:Unos podataka za bazu}.
+			Nedostatak besplatne verzije Rendera je to što je moguća samo jedna baza podataka koja je ograničena na trajanje od 3 mjeseca, no to je dovoljno za naše potrebe.
+			\begin{figure}[H]
+				\includegraphics[scale=0.60]{slike/render1.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Kreiranje novog servisa}
+				\label{fig:Kreiranjenovogservisa}
+			\end{figure}
+
+			\begin{figure}[H]
+				\includegraphics[scale=0.40]{slike/render2.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Unos podataka za bazu}
+				\label{fig:Unos podataka za bazu}
+			\end{figure}
+
+			\subsection{Puštanje backenda u pogon} 
+			Isto tako je potrebno podesiti backend. Prvo je potrebno odabrati opciju \texttt{Web Service} u \ref{fig:Kreiranjenovogservisa}.
+			Nakon toga imamo opciju odabrati deploy preko github repozitorija, što omogućava automatsko redeployanje svaki put kada se napravi novi commit.
+			Nakon odabira našeg repozitorija, opet imamo ekran za unos podataka \ref{fig:UnosPodatakaZaBack}
+			\begin{figure}[H]
+				\includegraphics[scale=0.40]{slike/render3.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Unos podataka za backend}
+				\label{fig:UnosPodatakaZaBack}
+			\end{figure}
+			Za ime upisati željeno ime servisa, za regiju staviti Frankfurt, odabrati granu i pozicionirati se u backend direktorij. Za runtime staviti Docker.
+			Nakon toga je potrebno upisat podatke za varijable okoline koje nam omogućavaju povezivanje na prethodno deployanu bazu \ref{fig:EnvVarijable}
+			\begin{figure}[H]
+				\includegraphics[scale=0.40]{slike/render4.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Unos varijabli okoline za backend}
+				\label{fig:EnvVarijable}
+			\end{figure}
+
+			Nakon toga je potrebno klikom na gumb Advanced pod opcijom Health Check Path upisati \texttt{api/actuator/health}, te pod Dockerfile Path odabrati Dockerfile iz repozitorija, konkretno \texttt{./prijave/Dockerfile}.
+			Time bi backend trebao biti deployan.
+
+			\subsection{Puštanje frontenda u pogon} 
+			Frontend se pušta u pogon na sličan način. Potrebno je odabarti Web Service opciju \ref{fig:Kreiranjenovogservisa}, odabrati git repozitorij, upisati ime, odabrati Frankfurt, odabrati git granu i napisati putanju do frontend koda. Za runtime odabrati Node, za Build Command staviti yarn build, te za Start Command yarn start-prod.
+			Time bi frontend trebao biti pušten u pogon.
+
 			\eject 

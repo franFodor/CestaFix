@@ -281,10 +281,17 @@ Photo predstavlja fotografiju oštećenja koju je korisnik dodao prilikom prijav
 
 \textit{Potrebno je priložiti dijagram aktivnosti s pripadajućim opisom. Dijagram aktivnosti treba prikazivati značajan dio sustava.}
 
+UML-dijagrami aktivnosti (activity diagrams) predstavljaju ponašajne dijagrame koji se koriste za modeliranje i grafički prikaz dinamičkog ponašanja sustava. 
+Ovi dijagrami vizualiziraju izvođenje aktivnosti kroz niz akcija koje kontroliraju tokove i objekte, s posebnim naglaskom na slijed i uvjete toka. 
+Dijagrami aktivnosti omogućuju jasno predstavljanje redoslijeda izvođenja aktivnosti, čime olakšavaju razumijevanje dinamike sustava. 
+Na dijagramu aktivnosti sa slike 4.7 prikazan je proces podnošenja nove prijave štete neprijavljenog korisnika. 
+Korisnik se prijavi u sustav, zatim odabirom lokacije na karti ili odabirom "Prijavi Štetu!" na zaglavlju, unosi podatke o nastaloj šteti u prikazanoj formi za prijavu. 
+Ako su podaci neispravno uneseni, korisniku se omogućuje ponovni upis podataka, a ako su podaci ispravni, spremaju se u bazu podataka te se korisniku prikazuje potvrda o uspješno podnesenoj prijavi zajedno s identifikacijskim brojem prijave, kako bi mogao provjeriti status podnesene prijave. Korisnik je pri završetku procesa pozicioniran ponovno na početnu stranicu.
+
 \begin{figure}[H]
 	\includegraphics[scale=0.5]{slike/DA.jpg} %veličina slike u odnosu na originalnu datoteku i pozicija slike
 	\centering
-	\caption{Dijagram aktivnosti v1}
+	\caption{Dijagram aktivnosti}
 	\label{fig:DijagramAktivnosti}
 \end{figure}
 

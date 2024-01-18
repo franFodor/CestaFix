@@ -1,44 +1,60 @@
 .report-list {
     width: 35%;
-    background-color: white;
-    padding: 10px;
+    background-color: #f9fafc; /* Light gray background */
+    padding: 20px; /* More padding for better spacing */
     box-sizing: border-box;
     overflow-y: auto; /* Enables vertical scrolling */
     max-height: 85vh; /* Limits the height to the viewport */
-}
-
-.report-element {
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+ }
+ 
+ .report-element {
     display: flex;
     justify-content: space-between;
-    background-color: lightgray;
-    margin-bottom: 10px;
-    padding: 10px;
+    background-color: #fff; /* White background */
+    margin-bottom: 20px; /* More space between reports */
+    padding: 20px; /* More padding for better spacing */
     list-style-type: none;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.report-element .content {
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+ }
+ .report-element:first-child {
+    margin-top: 10px; /* Adjust as needed */
+  }
+ 
+ .report-element .content {
     flex-grow: 1;
     word-wrap: break-word; /* Ensures text wraps */
-}
-
-.report-element .title {
+ }
+ 
+ .report-element .title {
     font-weight: bold;
     margin-top: 0;
     word-break: break-all; /* Ensures long words don't overflow */
-}
-
-.report-element .image-container img {
-    max-width: 100px; /* Adjust image size as needed */
+    color: black; /* Blue title */
+ }
+ 
+ .report-element .time-date {
+    font-size: 0.8em;
+    color: #6b7280; /* Gray date and time */
+ }
+ 
+ .report-element .image-container img {
+    max-width: 450px; /* Adjust image size as needed */
     height: auto;
     display: block;
-}
-
-.report-element .time-date {
-    font-size: 0.8em;
-}
-
-ul {
+    border-radius: 5px; /* Rounded corners */
+ }
+ .image-container {
+    
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Optional: Adds space between images */
+  }
+ ul {
     padding: 0;
     margin: 0;
-}
+ }
+ 

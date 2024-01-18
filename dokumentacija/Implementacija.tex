@@ -3,10 +3,6 @@
 		
 		\section{Korištene tehnologije i alati}
 		
-			\textbf{\textit{dio 2. revizije}}
-			
-			 \textit{Detaljno navesti sve tehnologije i alate koji su primijenjeni pri izradi dokumentacije i aplikacije. Ukratko ih opisati, te navesti njihovo značenje i mjesto primjene. Za svaki navedeni alat i tehnologiju je potrebno \textbf{navesti internet poveznicu} gdje se mogu preuzeti ili više saznati o njima}.
-			 
 			 Komunikacija u timu realizirana je korištenjem aplikacije \textbf{\href{https://discord.com/}{Discord}}. 
 			 Discord je društvena platforma na kojoj korisnici imaju mogućnost komuniciranja tekstualnim porukama, glasovnim
 			 pozivima, videopozivima, medijima i datotekama u privatnim porukama ili kao dio zajednice koju nazivaju server. 
@@ -22,9 +18,9 @@
 			 Kao razvojno okruženje korišteni su \textbf{\href{https://code.visualstudio.com/}{Visual Studio Code}} 
 			 i \textbf{\href{https://www.jetbrains.com/idea//}{Intellij IDEA}}. Visual Studio Code je uređivač teksta
 			 razvijen u tvrtki Microsoft. Prvenstveno se koristi za razvoj računalnih sustava na operacijskom sustavu Windows. 
-			 Korišten je za razvoj programske podrške na frontendu i razvoj dokumentacije. Intellij IDEA je integrirano razvojno 
+			 Korišten je za razvoj programske podrške na \textit{frontendu} i razvoj dokumentacije. Intellij IDEA je integrirano razvojno 
 			 okruženje (IDE) razvijeno u tvrtki JetBrains. Usmjereno je na razvoj Java aplikacija, no podržava niz drugih jezika i 
-			 tehnologija. Korišten je za razvoj programske podrške na backendu.
+			 tehnologija. Korišten je za razvoj programske podrške na \textit{backendu}.
 
 			 Aplikacija je napisana koristeći radni okvir \textbf{\href{https://spring.io/projects/spring-boot}{Spring Boot}} i jezik 
 			 \textbf{\href{https://www.java.com/en/}{Java}} za izradu \textit{backenda} te jezik \textbf{\href{https://www.javascript.com/}{JavaScript}} 
@@ -47,20 +43,24 @@
 			 sučeljem poput Microsoft Worda, dokumenti u LaTeX-u pisani su kao obični tekst s dodanom semantičkom strukturom. Time 
 			 postiže usredotočenost na sadržaj, ujednačenost izgleda te brži i stabilniji rad.
 
+			 Ispitivanje sustava napravljeno je koristeći \textbf{\href{https://www.selenium.dev/documentation/webdriver/}{Selenium WebDriver}}.
+			 Selenium WebDriver je web radni okvir koji nam omogućuje izvođenje testova u različitim preglednicima.
+			 Koristi se za automatizaciju testiranja web aplikacija kako bi se provjerilo da li se ponašaju očekivano. Koristili smo
+			 ga za pisanje JavaScript testova uz preglednik \textbf{\href{https://www.google.com/chrome/}{Google Chrome}}.
+
+			 \textbf{\href{https://www.docker.com/}{Docker}} je platforma koja pomaže programerima da grade, dijele i pokreću aplikacije
+			 u kontejnerima. Kontejneri su izolirane jedinice koje sadrže sve što je potrebno za pokretanje aplikacije. Omogućuje brže
+			 i sigurniji razvoj aplikacija koje se mogu pokretati na bilo kojem okruženju. Koristili smo ga za lokalno pokretanje
+			 \textit{backenda} aplikacije i baze podataka tijekom izrade projekta. 
+
 			\eject 
 		
 	
 		\section{Ispitivanje programskog rješenja}
 			
-			\textbf{\textit{dio 2. revizije}}\\
-			
-			 \textit{U ovom poglavlju je potrebno opisati provedbu ispitivanja implementiranih funkcionalnosti na razini komponenti i na razini cijelog sustava s prikazom odabranih ispitnih slučajeva. Studenti trebaju ispitati temeljnu funkcionalnost i rubne uvjete.}
-	
-			
 			\subsection{Integracijsko testiranje}
-			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
-			
-			Na backendu integracijsko testiranje se sastoji od pozivanja API-a i očekivanja određenog odgovora za taj API.
+
+			Na \textit{backendu} integracijsko testiranje se sastoji od pozivanja API-a i očekivanja određenog odgovora za taj API.
             Na taj način se testira stvarni proces i procedura koja se odvija kada korisnik pozove taj API.
             Postoji sveukupno 7 integracijskih testova - po jedan za svaki model koji postoji te jos jedan za registraciju i prijavu korisnika.
             Integracijski testovi funkcioniraju na način da se prvo u dockeru podigne baza podataka, što se može vidjeti na slici \ref{fig:IT_docker}.
@@ -112,19 +112,21 @@
 
             \eject
 			
+			
+			
 			\subsection{Ispitivanje sustava}
 
-			Ispitiavanje funkcionalnosti sustava je provedeno pomoću Selenium tekstova
+			Ispitivanje funkcionalnosti sustava je provedeno pomoću Selenium testova
 			pisanih i jeziku JavaScript uz preglednik Google Chrome. Ukupno je napisano
-			8 testova od kojih 3 provjerava kako se sustav nosi sa pogrešnim unosima.
+			8 testova od kojih 3 provjerava kako se sustav nosi s pogrešnim unosima.
 			 \\
 			\textbf{1. Ispitni slučaj: Prijava korisnika}
 			 \begin{itemize}
 				\item \textbf{Ulaz:} Email adresa i lozinka korisnika 
-				\item \textbf{Očekivani izlaz:} Nakon prijave nalazit ćemo se na početnoj stranici sa korisničkim imenom prikazanim u gornjem desnom kutu.
+				\item \textbf{Očekivani izlaz:} Nakon prijave nalazit ćemo se na početnoj stranici s korisničkim imenom prikazanim u gornjem desnom kutu.
 				\item \textbf{Koraci:} 
 				\\ 1. Klik na gumb Login/Register
-				\\ 2. Unos korisničnih podataka, točnije emaila i lozinke
+				\\ 2. Unos korisničkih podataka, točnije emaila i lozinke
 				\\ 3. Klik na gumb Prijava
 			\end{itemize}
 
@@ -159,11 +161,11 @@
 			\textbf{2. Ispitni slučaj: Registracija korisnika}
 			 \begin{itemize}
 				\item \textbf{Ulaz:} Ime, prezime, email i lozinka korisnika
-				\item \textbf{Očekivani izlaz:} Nakon uspješne registracije nalazit ćemo se na početnoj stranici sa korisničkim imenom prikazanim u gornjem desnom kutu.
+				\item \textbf{Očekivani izlaz:} Nakon uspješne registracije nalazit ćemo se na početnoj stranici s korisničkim imenom prikazanim u gornjem desnom kutu.
 				\item \textbf{Koraci:} 
 				\\ 1. Klik na gumb Login/Register
 				\\ 2. Klik na link "Nemaš račun? Registriraj se!"
-				\\ 3. Unos korisničnih podataka
+				\\ 3. Unos korisničkih podataka
 				\\ 4. Klik na gumb Registriraj se
 			\end{itemize}
 
@@ -246,7 +248,7 @@
 			\textbf{4. Ispitni slučaj: Registracija korisnika i brisanje računa}
 			 \begin{itemize}
 				\item \textbf{Ulaz:} Ime, prezime, email i lozinka korisnika
-				\item \textbf{Očekivani izlaz:} Nakon registriranja i brisanja računa, ako se pokušamo logirati sa istim podatcima dobit ćemo neuspjelu prijavu.
+				\item \textbf{Očekivani izlaz:} Nakon registriranja i brisanja računa, ako se pokušamo logirati s istim podatcima dobit ćemo neuspjelu prijavu.
 				\item \textbf{Koraci:} 
 				\\ 1. Klik na gumb Login/Register
 				\\ 2. Klik na link "Nemaš račun? Registriraj se!"
@@ -414,13 +416,13 @@
 			
 			\textbf{7. Ispitni slučaj: Neuspjela registracija korisnika}
 			 \begin{itemize}
-				\item \textbf{Ulaz:} Ime, prezime, email i \text{neispravna lozinka} (ne zadovoljava uvijet da mora biti dugačka 8 znakova, imati jedno veliko, jedno malo slovo, jedan broj i jedan specijalan znak) korisnika
-				\item \textbf{Očekivani izlaz:} Nakon neuspješne registracije korisniku će se ispitati kako lozinka ne zadovoljava sigurnosni uvijet.
+				\item \textbf{Ulaz:} Ime, prezime, email i \text{neispravna lozinka} (ne zadovoljava uvjet da mora biti dugačka 8 znakova, imati jedno veliko, jedno malo slovo, jedan broj i jedan specijalan znak) korisnika
+				\item \textbf{Očekivani izlaz:} Nakon neuspješne registracije korisniku će se ispitati kako lozinka ne zadovoljava sigurnosni uvjet.
 				\item \textbf{Koraci:} 
 				\\ 1. Klik na gumb Login/Register
 				\\ 2. Klik na link "Nemaš račun? Registriraj se!"
-				\\ 2. Unos korisničnih podataka
-				\\ 3. Klik na gumb Registriraj se
+				\\ 3. Unos korisničnih podataka
+				\\ 4. Klik na gumb Registriraj se
 			\end{itemize}
 
 			\begin{verbatim}
@@ -515,12 +517,12 @@
 			\eject 
 		
 		\section{Dijagram razmještaja}
-			
+
 			Dijagram razmještaja opisuje topologiju sustava i usredotočen je na odnos sklopovskih i programskih
 			dijelova. Prikazan je na slici 5.1. Na poslužiteljskom računalu se nalazi Render servis, Frontend HTTP poslužitelj, Backend HTTP 
 			poslužitelj te PostgreSQL poslužitelj na kojem je baza podataka. Na Frontend HTTP poslužitelju se nalazi
 			React frontend CestaFix aplikacije. Na Backend HTTP poslužitelju se nalazi ReportApplication.jar, tj. 
-			Java Archive file u kojem se nalazi backend CestaFix aplikacije. Poslužiteljska strana aplikacije
+			Java Archive file u kojem se nalazi \textit{backend} CestaFix aplikacije. Poslužiteljska strana aplikacije
 			ostvarena je pomoću servisa Render. Klijenti koriste web preglednik kako bi pristupili web aplikaciji. 
 			Sustav je baziran na arhitekturi "klijent - poslužitelj", a komunikacija između računala korisnika
 			i poslužitelja odvija se preko HTTP veze.
@@ -534,13 +536,13 @@
 
 			\eject 
 		
-		\section{Upute za puštanje u pogon}
+			\section{Upute za puštanje u pogon}
 
 			Za pogon naše aplikacije korištena je platforma Render koja pruža besplatno puštanje aplikacije u pogon sa, naravno, ograničenim mogućnostima.   
 
 			\subsection{Puštanje baze podataka u pogon} 
-			Prvo je potrebno upogoniti bazu podataka. Nakon prijavljivanja u platformu, potrebno je odabrati opciju New \texttt{->} PostgreSQL slika \ref{fig:Kreiranjenovogservisa}. 
-			Zatim je na ekranu prikazan unos podataka za bazu podataka, za što smo mi ostavili sve prazno (automatski se generira) osim imena servisa, te je za regiju potrebno postaviti \texttt{Frankfurt(EU Central)} slika \ref{fig:Unos podataka za bazu}.
+			Prvo je potrebno upogoniti bazu podataka. Nakon prijavljivanja u platformu, potrebno je odabrati opciju New \texttt{->} PostgreSQL  (Slika \ref{fig:Kreiranjenovogservisa}). 
+			Zatim je na ekranu prikazan unos podataka za bazu podataka, za što smo mi ostavili sve prazno (automatski se generira) osim imena servisa, te je za regiju potrebno postaviti \texttt{Frankfurt(EU Central)} (Slika \ref{fig:Unos podataka za bazu}).
 			Nedostatak besplatne verzije Rendera je to što je moguća samo jedna baza podataka koja je ograničena na trajanje od 3 mjeseca, no to je dovoljno za naše potrebe.
 			\begin{figure}[H]
 				\includegraphics[scale=0.60]{slike/render1.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -557,7 +559,7 @@
 			\end{figure}
 
 			\subsection{Puštanje backenda u pogon} 
-			Isto tako je potrebno podesiti backend. Prvo je potrebno odabrati opciju \texttt{Web Service} u \ref{fig:Kreiranjenovogservisa}.
+			Isto tako je potrebno podesiti \textit{backend}. Prvo je potrebno odabrati opciju \texttt{Web Service} u \ref{fig:Kreiranjenovogservisa}.
 			Nakon toga imamo opciju odabrati deploy preko github repozitorija, što omogućava automatsko redeployanje svaki put kada se napravi novi commit.
 			Nakon odabira našeg repozitorija, opet imamo ekran za unos podataka \ref{fig:UnosPodatakaZaBack}
 			\begin{figure}[H]
@@ -566,7 +568,7 @@
 				\caption{Unos podataka za backend}
 				\label{fig:UnosPodatakaZaBack}
 			\end{figure}
-			Za ime upisati željeno ime servisa, za regiju staviti Frankfurt, odabrati granu i pozicionirati se u backend direktorij. Za runtime staviti Docker.
+			Za ime upisati željeno ime servisa, za regiju staviti Frankfurt, odabrati granu i pozicionirati se u \textit{backend} direktorij. Za runtime staviti Docker.
 			Nakon toga je potrebno upisat podatke za varijable okoline koje nam omogućavaju povezivanje na prethodno deployanu bazu \ref{fig:EnvVarijable}
 			\begin{figure}[H]
 				\includegraphics[scale=0.40]{slike/render4.png} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -575,11 +577,6 @@
 				\label{fig:EnvVarijable}
 			\end{figure}
 
-			Nakon toga je potrebno klikom na gumb Advanced pod opcijom Health Check Path upisati \texttt{api/actuator/health}, te pod Dockerfile Path odabrati Dockerfile iz repozitorija, konkretno \texttt{./prijave/Dockerfile}.
-			Time bi backend trebao biti deployan.
-
-			\subsection{Puštanje frontenda u pogon} 
-			Frontend se pušta u pogon na sličan način. Potrebno je odabarti Web Service opciju \ref{fig:Kreiranjenovogservisa}, odabrati git repozitorij, upisati ime, odabrati Frankfurt, odabrati git granu i napisati putanju do frontend koda. Za runtime odabrati Node, za Build Command staviti yarn build, te za Start Command yarn start-prod.
-			Time bi frontend trebao biti pušten u pogon.
+			
 
 			\eject 

@@ -27,11 +27,11 @@ public class User implements UserDetails, Serializable {
     private int userId;
 
     private String firstname;
+
     private String lastname;
 
     private String email;
 
-    //@JsonIgnore
     private String password;
 
     @Enumerated(EnumType.STRING)

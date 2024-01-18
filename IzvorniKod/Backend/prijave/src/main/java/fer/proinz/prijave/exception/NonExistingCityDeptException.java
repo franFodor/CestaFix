@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class NonExistingCategoryException extends Exception {
+public class NonExistingCityDeptException extends Exception {
 
-    public NonExistingCategoryException() {
-        super("Category not found.");
+    public NonExistingCityDeptException() {
+        super("City Department not found.");
     }
 
 }

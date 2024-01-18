@@ -1,17 +1,15 @@
 package fer.proinz.prijave.service;
 
 
-import fer.proinz.prijave.dto.AuthenticationResponseDto;
+import fer.proinz.prijave.exception.NonExistingUserException;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
-import fer.proinz.prijave.repository.ProblemRepository;
+import fer.proinz.prijave.repository.ReportRepository;
 import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,9 +21,7 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final ProblemRepository problemRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
+    private final ReportRepository reportRepository;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -36,24 +32,15 @@ public class UserService {
     }
 
     public User getPersonalData() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        return user;
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public AuthenticationResponseDto updateUser(int userId, User updatedUser) {
-        /*Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            User saved = userRepository.save(updatedUser);
-            return  saved;
-        } else {
-            throw new NoSuchElementException("No user with this id");
-        }*/
-        User user1 = userRepository.findById(userId)
+    public User updateUser(int userId, User updatedUser) throws NonExistingUserException {
+        return userRepository.findById(userId)
                 .map(user -> {
                     if (updatedUser.getFirstname() != null) {
                         user.setFirstname(updatedUser.getFirstname());
@@ -61,38 +48,26 @@ public class UserService {
                     if (updatedUser.getLastname() != null) {
                         user.setLastname(updatedUser.getLastname());
                     }
-                    if (updatedUser.getEmail() != null) {
-                        user.setEmail(updatedUser.getEmail());
-                    }
-                    if (updatedUser.getPassword() != null) {
-                        user.setPassword(updatedUser.getPassword());
-                    }
                     return userRepository.save(user);
                 })
-                .orElseThrow(RuntimeException::new);
-        var jwtToken = jwtService.generateToken(user1);
-        return AuthenticationResponseDto.builder()
-                .token(jwtToken)
-                .build();
+                .orElseThrow(NonExistingUserException::new);
     }
 
-    public ResponseEntity<String> deleteUser(int userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User authenticatedUser = (User) authentication.getPrincipal();
+    public ResponseEntity<String> deleteUser(int userId) throws NonExistingUserException {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NonExistingUserException::new);
+        User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (userOptional.isPresent()) {
-            if (authenticatedUser.getRole() == Role.STAFF) {
-                userRepository.deleteById(userId);
-                return ResponseEntity.ok("User with id " + userId + " is deleted.");
-            } else if (authenticatedUser.getUserId() == userId) {
-                userRepository.deleteById(userId);
-                return ResponseEntity.ok("User with id " + userId + " is deleted.");
-            } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You cannot delete other users.");
-            }
+        if (authenticatedUser.getRole() == Role.STAFF || authenticatedUser.getUserId() == userId) {
+            // Find all of user's reports and set the user attribute in them to null (anonymous)
+            reportRepository.findByUser(user)
+                    .forEach(report -> report.setUser(null));
+
+            userRepository.deleteById(userId);
+            return ResponseEntity.ok("User with id " + userId + " is deleted.");
         } else {
-            throw new RuntimeException("user with id " + userId + " does not exists!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You cannot delete other users.");
         }
     }
 

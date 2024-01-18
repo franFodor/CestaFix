@@ -4,10 +4,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class NonExistingCategoryException extends Exception {
+public class NonExistingProblemException extends Exception {
 
-    public NonExistingCategoryException() {
-        super("Category not found.");
+    public NonExistingProblemException() {
+        super("Problem not found.");
     }
 
 }

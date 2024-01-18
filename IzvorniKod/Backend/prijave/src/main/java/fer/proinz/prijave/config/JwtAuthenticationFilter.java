@@ -1,7 +1,6 @@
 package fer.proinz.prijave.config;
 
 import fer.proinz.prijave.service.JwtService;
-import fer.proinz.prijave.service.UserDetail;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

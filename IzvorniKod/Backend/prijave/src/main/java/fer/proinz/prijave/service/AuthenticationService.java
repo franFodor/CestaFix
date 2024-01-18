@@ -6,7 +6,6 @@ import fer.proinz.prijave.dto.RegisterRequestDto;
 import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.UserRepository;
-import fer.proinz.prijave.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,8 +18,11 @@ import org.springframework.stereotype.Service;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+
     private final PasswordEncoder passwordEncoder;
+
     private final JwtService jwtService;
+
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponseDto register(RegisterRequestDto request) {
@@ -30,6 +32,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .cityDept(null)
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

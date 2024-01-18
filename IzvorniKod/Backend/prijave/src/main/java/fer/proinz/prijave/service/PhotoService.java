@@ -1,5 +1,6 @@
 package fer.proinz.prijave.service;
 
+import fer.proinz.prijave.exception.NonExistingPhotoException;
 import fer.proinz.prijave.model.Photo;
 import fer.proinz.prijave.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,14 +41,12 @@ public class PhotoService {
                 .orElseThrow(RuntimeException::new);
     }
 
-    public ResponseEntity<String> deletePhoto(int photoId) {
-        Optional<Photo> photoOptional = photoRepository.findById(photoId);
-        if (photoOptional.isPresent()) {
-            photoRepository.deleteById(photoId);
-            return ResponseEntity.ok("Photo with id " + photoId + " is deleted.");
-        } else {
-            throw new RuntimeException("Photo with id " + photoId + " doesn't exists!");
-        }
+    public ResponseEntity<String> deletePhoto(int photoId) throws NonExistingPhotoException {
+        photoRepository.findById(photoId)
+                .orElseThrow(NonExistingPhotoException::new);
+
+        photoRepository.deleteById(photoId);
+        return ResponseEntity.ok("Photo with id " + photoId + " is deleted.");
     }
 
 }

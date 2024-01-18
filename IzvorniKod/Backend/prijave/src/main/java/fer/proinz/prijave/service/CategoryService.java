@@ -1,5 +1,8 @@
 package fer.proinz.prijave.service;
 
+import fer.proinz.prijave.exception.NonExistingCategoryException;
+import fer.proinz.prijave.exception.NonExistingCityDeptException;
+import fer.proinz.prijave.exception.NonExistingUserException;
 import fer.proinz.prijave.model.Category;
 import fer.proinz.prijave.model.CityDept;
 import fer.proinz.prijave.repository.CategoryRepository;
@@ -8,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -31,14 +33,8 @@ public class CategoryService {
         return categoryRepository.save(category);
     }
 
-    public Category updateCategory(int categoryId, Category updatedCategory) {
-        /*Optional<Category> category = categoryRepository.findById(categoryId);
-        if (category.isPresent()) {
-            Category saved = categoryRepository.save(updatedCategory);
-            return saved;
-        } else {
-            throw new NoSuchElementException("No category with this id");
-        }*/
+    public Category updateCategory(int categoryId, Category updatedCategory)
+            throws NonExistingCategoryException {
         return categoryRepository.findById(categoryId)
                 .map(category -> {
                     if (updatedCategory.getCategoryName() != null) {
@@ -46,22 +42,24 @@ public class CategoryService {
                     }
                     return categoryRepository.save(category);
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NonExistingCategoryException::new);
     }
 
-    public ResponseEntity<String> deleteCategory(int categoryId) {
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryId);
-        if (optionalCategory.isPresent()) {
-            Category category = optionalCategory.get();
-            for (CityDept cityDept : cityDeptService.getAllCityDepts()) {
-                if (cityDept.getCategory() == category) {
-                    cityDeptService.deleteCityDept(cityDept.getCityDeptId());
-                }
+    public ResponseEntity<String> deleteCategory(int categoryId)
+            throws NonExistingUserException, NonExistingCityDeptException, NonExistingCategoryException {
+
+        Category category = categoryRepository
+                .findById(categoryId)
+                .orElseThrow(NonExistingCategoryException::new);
+
+        for (CityDept cityDept : cityDeptService.getAllCityDepts()) {
+            if (cityDept.getCategory() == category) {
+                // First delete all cityDepts that have the category you want to delete
+                cityDeptService.deleteCityDept(cityDept.getCityDeptId());
             }
-            categoryRepository.deleteById(categoryId);
-            return ResponseEntity.ok("Category with id " + categoryId + " is deleted.");
-        } else {
-            throw new RuntimeException("Category with id " + " does not exist!");
         }
+
+        categoryRepository.deleteById(categoryId);
+        return ResponseEntity.ok("Category with id " + categoryId + " is deleted.");
     }
 }

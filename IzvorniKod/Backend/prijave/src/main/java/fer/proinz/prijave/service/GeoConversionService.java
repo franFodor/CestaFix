@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 import org.springframework.retry.annotation.Retryable;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -27,8 +26,15 @@ public class GeoConversionService {
                         "&api_key=659fe6b1cbeef330011151kjl43d55e";
 
         JsonNode jsonNode = objectMapper.readTree(restTemplate.getForObject(apiUrl, String.class));
-        String address = jsonNode.get("display_name").asText();
-        reportRequest.setAddress(address);
+        if (jsonNode.get("address").get("house_number") != null && jsonNode.get("address").get("road") != null) {
+            String house_number = jsonNode.get("address").get("house_number").asText();
+            String road = jsonNode.get("address").get("road").asText();
+            String address = road + " " + house_number;
+            reportRequest.setAddress(address);
+        } else {
+            String address = jsonNode.get("display_name").asText();
+            reportRequest.setAddress(address);
+        }
 
         return reportRequest;
     }

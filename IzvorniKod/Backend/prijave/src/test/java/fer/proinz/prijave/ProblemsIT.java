@@ -2,6 +2,7 @@ package fer.proinz.prijave;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import fer.proinz.prijave.model.*;
+import fer.proinz.prijave.repository.CategoryRepository;
 import fer.proinz.prijave.service.JwtService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,10 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -35,12 +38,20 @@ public class ProblemsIT {
     private DataSource dataSource;
     @Autowired
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private ObjectMapper objectMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
-    private String jwtToken;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private String userJwtToken;
+    private String staffJwtToken;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Container
     public static PostgreSQLContainer<?> postgreSQLContainer  = new PostgreSQLContainer<>("postgres:latest")
@@ -59,66 +70,121 @@ public class ProblemsIT {
     @BeforeEach
     void setUpProblem() {
         try (Connection connection = dataSource.getConnection()) {
+            // Category
             String sqlCategory = "INSERT INTO Category (category_id, category_name) " +
                     "VALUES (?, ?)";
-
             Category category = Category.builder()
-                    .categoryId(1)
-                    .categoryName("cat_1")
+                    .categoryId(20)
+                    .categoryName("cat_20")
                     .build();
-
             PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
             preparedStatementCategory.setInt(1, category.getCategoryId());
             preparedStatementCategory.setString(2, category.getCategoryName());
             preparedStatementCategory.executeUpdate();
 
+            // City Dept
             String sqlCityDept = "INSERT INTO Citydept (city_dept_id, city_dept_name, category_id) " +
                     "VALUES (?, ?, ?)";
-
             CityDept cityDept = CityDept.builder()
-                    .cityDeptId(1)
-                    .cityDeptName("dept_1")
+                    .cityDeptId(20)
+                    .cityDeptName("dept_20")
                     .category(category)
                     .build();
-
             PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
-            preparedStatementCityDept.setLong(1, cityDept.getCityDeptId());
+            preparedStatementCityDept.setInt(1, cityDept.getCityDeptId());
             preparedStatementCityDept.setString(2, cityDept.getCityDeptName());
             preparedStatementCityDept.setInt(3, cityDept.getCategory().getCategoryId());
             preparedStatementCityDept.executeUpdate();
 
-            /*String sqlUser = "INSERT INTO Users (user_id, username, email, password, role) " +
-                    "VALUES (?, ?, ?, ?, ?)";*/
-
-            UserDetails userDetails = User.builder()
-                    .firstname("John")
-                    .lastname("Doe")
-                    .password(passwordEncoder.encode("qwertz"))
+            // USER user
+            String sqlNormalUser = "INSERT INTO Users (user_id, firstname, lastname, email, password, role) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+            User user1 = User.builder()
+                    .userId(20)
+                    .firstname("Obicni")
+                    .lastname("Korisnik")
+                    .email("obicni.korisnik@gmail.com")
+                    .password(passwordEncoder.encode("ObicnaSifra.5"))
                     .role(Role.USER)
+                    .cityDept(null)
                     .build();
+            PreparedStatement normalUser = connection.prepareStatement(sqlNormalUser);
+            normalUser.setInt(1, user1.getUserId());
+            normalUser.setString(2, user1.getFirstname());
+            normalUser.setString(3, user1.getLastname());
+            normalUser.setString(4, user1.getEmail());
+            normalUser.setString(5, user1.getPassword());
+            normalUser.setString(6, String.valueOf(user1.getRole()));
+            normalUser.executeUpdate();
+            this.userJwtToken = jwtService.generateToken(user1);
 
-            this.jwtToken = jwtService.generateToken(userDetails);
+            // STAFF user
+            String sqlAdvancedUser = "INSERT INTO Users (user_id, firstname, lastname, email, password, role, city_dept_id)" +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+            User user2 = User.builder()
+                    .userId(21)
+                    .firstname("Gradski")
+                    .lastname("Službenik")
+                    .email("gradski.sluzbenik@gmail.com")
+                    .password(passwordEncoder.encode("LaganaSifra.5"))
+                    .role(Role.STAFF)
+                    .cityDept(cityDept)
+                    .build();
+            PreparedStatement advancedUser = connection.prepareStatement(sqlAdvancedUser);
+            advancedUser.setInt(1, user2.getUserId());
+            advancedUser.setString(2, user2.getFirstname());
+            advancedUser.setString(3, user2.getLastname());
+            advancedUser.setString(4, user2.getEmail());
+            advancedUser.setString(5, user2.getPassword());
+            advancedUser.setString(6, String.valueOf(user2.getRole()));
+            advancedUser.setInt(7, user2.getCityDept().getCityDeptId());
+            advancedUser.executeUpdate();
+            this.staffJwtToken = jwtService.generateToken(user2);
 
-            String sqlProblem = "INSERT INTO Problems (problem_id, longitude, latitude, status, category_id) " +
+            // Problem
+            String sqlProblem = "INSERT INTO Problems (problem_id, latitude, longitude, status, category_id) " +
                     "VALUES (?, ?, ?, ?, ?)";
-
             Problem problem = Problem.builder()
-                    .problemId(15)
-                    .longitude(45.1234)
-                    .latitude(27.3857)
+                    .problemId(20)
+                    .latitude(45.8006)
+                    .longitude(15.9713)
                     .status("U obradi")
                     .category(category)
                     .build();
-
-
             PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
             preparedStatementProblem.setInt(1, problem.getProblemId());
-            preparedStatementProblem.setDouble(2, problem.getLongitude());
-            preparedStatementProblem.setDouble(3, problem.getLatitude());
+            preparedStatementProblem.setDouble(2, problem.getLatitude());
+            preparedStatementProblem.setDouble(3, problem.getLongitude());
             preparedStatementProblem.setString(4, problem.getStatus());
             preparedStatementProblem.setInt(5, problem.getCategory().getCategoryId());
             preparedStatementProblem.executeUpdate();
 
+            // Report
+            String sqlReport = "INSERT INTO Reports " +
+                    "(report_id, user_id, title, description, address, status, latitude, longitude, problem_id) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            Report report = Report.builder()
+                    .reportId(20)
+                    .user(user1)
+                    .title("Prva prijava")
+                    .description("Opis prijave")
+                    .address("Unska ulica 3")
+                    .status("U obradi")
+                    .latitude(45.8006)
+                    .longitude(15.9713)
+                    .problem(problem)
+                    .build();
+            PreparedStatement preparedStatementReport = connection.prepareStatement(sqlReport);
+            preparedStatementReport.setInt(1, report.getReportId());
+            preparedStatementReport.setInt(2, report.getUser().getUserId());
+            preparedStatementReport.setString(3, report.getTitle());
+            preparedStatementReport.setString(4, report.getDescription());
+            preparedStatementReport.setString(5, report.getAddress());
+            preparedStatementReport.setString(6, report.getStatus());
+            preparedStatementReport.setDouble(7, report.getLatitude());
+            preparedStatementReport.setDouble(8, report.getLongitude());
+            preparedStatementReport.setInt(9, report.getProblem().getProblemId());
+            preparedStatementReport.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -126,25 +192,11 @@ public class ProblemsIT {
 
     @AfterEach
     void tearDownProblem() {
-        try (Connection connection = dataSource.getConnection()) {
-            String sqlProblem = "DELETE FROM Problems WHERE problem_id = ?";
-            PreparedStatement preparedStatementProblem = connection.prepareStatement(sqlProblem);
-            preparedStatementProblem.setInt(1, 15);
-            preparedStatementProblem.executeUpdate();
-
-            String sqlCityDept = "DELETE FROM CityDept WHERE city_dept_id = ?";
-            PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
-            preparedStatementCityDept.setInt(1, 1);
-            preparedStatementCityDept.executeUpdate();
-
-            String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
-            PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
-            preparedStatementCategory.setInt(1, 1);
-            preparedStatementCategory.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Reports");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Problems");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Users");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Citydept");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Category");
     }
 
     @Test
@@ -155,22 +207,22 @@ public class ProblemsIT {
 
     @Test
     public void getProblemByIdAndExpect200OK() throws Exception {
-        mockMvc.perform(get("/public/problem/15"))
+        mockMvc.perform(get("/public/problem/20"))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void createProblemAndExpect200OK() throws Exception {
-        Category testCategory = new Category();
-        testCategory.setCategoryId(1);
-        testCategory.setCategoryName("cat_2");
+        Category category = Category.builder()
+                .categoryName("cat_create")
+                .build();
+        categoryRepository.save(category);
 
         Problem problem = Problem.builder()
-                .problemId(15)
-                .longitude(45.1234)
-                .latitude(27.3857)
+                .latitude(45.8197)
+                .longitude(16.0178)
                 .status("U obradi")
-                .category(testCategory)
+                .category(category)
                 .build();
 
         String jsonProblem = objectMapper.writeValueAsString(problem);
@@ -183,29 +235,23 @@ public class ProblemsIT {
 
     @Test
     public void updateProblemAndExpect200OK() throws Exception {
-        Category testCategory = new Category();
-        testCategory.setCategoryId(2);
-        testCategory.setCategoryName("cat_2");
-
         Problem problem = Problem.builder()
-                .problemId(15)
-                .longitude(45.1234)
-                .latitude(27.3857)
-                .status("Popravljeno")
-                .category(testCategory)
+                .status("Obrađeno")
                 .build();
 
         String jsonProblem = objectMapper.writeValueAsString(problem);
 
-        String roleFromToken = (String) jwtService.extractRole(jwtToken);
-        if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(patch("/advanced/user/" + problem.getProblemId())
+        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+        if (roleFromToken.equals("ROLE_STAFF")) {
+            mockMvc.perform(patch("/advanced/problem/20")
                             .contentType("application/json")
+                            .header("Authorization", "Bearer " + staffJwtToken)
                             .content(jsonProblem))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(patch("/advanced/user/" + problem.getProblemId())
+            mockMvc.perform(patch("/advanced/problem/20")
                             .contentType("application/json")
+                            .header("Authorization", "Bearer " + userJwtToken)
                             .content(jsonProblem))
                     .andExpect(status().isForbidden());
         }
@@ -214,12 +260,14 @@ public class ProblemsIT {
 
     @Test
     public void deleteProblemAndExpect200OK() throws Exception {
-        String roleFromToken = (String) jwtService.extractRole(jwtToken);
-        if (roleFromToken.equals("STAFF")) {
-            mockMvc.perform(delete("/advanced/problem/15"))
+        String roleFromToken = (String) jwtService.extractRole(staffJwtToken);
+        if (roleFromToken.equals("ROLE_STAFF")) {
+            mockMvc.perform(delete("/advanced/problem/20")
+                            .header("Authorization", "Bearer " + staffJwtToken))
                     .andExpect(status().isOk());
         } else {
-            mockMvc.perform(delete("/advanced/problem/15"))
+            mockMvc.perform(delete("/advanced/problem/20")
+                            .header("Authorization", "Bearer " + userJwtToken))
                     .andExpect(status().isForbidden());
         }
 

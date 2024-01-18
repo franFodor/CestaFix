@@ -1,5 +1,6 @@
 package fer.proinz.prijave.controller;
 
+import fer.proinz.prijave.exception.NonExistingPhotoException;
 import fer.proinz.prijave.model.Photo;
 import fer.proinz.prijave.service.PhotoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,17 +25,18 @@ public class PhotoController {
 
     @Operation(summary = "Get a photo by its id")
     @GetMapping("/advanced/photo/{photoId}")
-    public ResponseEntity<Photo> getPhotoById(@PathVariable("photoId") int photoId) {
-        Optional<Photo> photoOptional = photoService.getPhotoById(photoId);
-        return photoOptional.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Photo> getPhotoById(@PathVariable("photoId") int photoId)
+            throws NonExistingPhotoException {
+        return ResponseEntity.ok(photoService
+                .getPhotoById(photoId)
+                .orElseThrow(NonExistingPhotoException::new)
+        );
     }
 
     @Operation(summary = "Create a photo")
     @PostMapping("/advanced/photo")
     public ResponseEntity<Photo> createPhoto(@RequestBody Photo photo) {
-        Photo savedPhoto = photoService.createPhoto(photo);
-        return ResponseEntity.ok(savedPhoto);
+        return ResponseEntity.ok(photoService.createPhoto(photo));
     }
 
     @Operation(summary = "Change the photo")
@@ -48,7 +50,8 @@ public class PhotoController {
 
     @Operation(summary = "Delete a photo")
     @DeleteMapping("/advanced/photo/{photoId}")
-    public ResponseEntity<String> deletePhoto(@PathVariable("photoId") int photoId) {
+    public ResponseEntity<String> deletePhoto(@PathVariable("photoId") int photoId)
+            throws NonExistingPhotoException {
         return photoService.deletePhoto(photoId);
     }
 

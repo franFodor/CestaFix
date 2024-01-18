@@ -1,11 +1,7 @@
 package fer.proinz.prijave.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
 
 @Data
 @Builder

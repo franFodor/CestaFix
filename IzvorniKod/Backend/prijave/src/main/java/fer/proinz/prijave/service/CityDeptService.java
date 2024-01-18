@@ -1,9 +1,10 @@
 package fer.proinz.prijave.service;
 
+import fer.proinz.prijave.exception.NonExistingCityDeptException;
+import fer.proinz.prijave.exception.NonExistingUserException;
 import fer.proinz.prijave.model.CityDept;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.repository.CityDeptRepository;
-import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,13 +35,7 @@ public class CityDeptService {
     public CityDept updateCityDept(
             int cityDeptId,
             CityDept updatedCityDept
-    ) {
-        /*Optional<CityDepartment> cityDepartment = cityDepartmentRepository.findById(cityDepartmentId);
-        if (cityDepartment.isPresent()) {
-            return cityDepartmentRepository.save(updatedCityDepartment);
-        } else {
-            throw new NoSuchElementException("No city department with this id");
-        }*/
+    ) throws NonExistingCityDeptException {
         return cityDeptRepository.findById(cityDeptId)
                 .map(cityDept -> {
                     if (updatedCityDept.getCityDeptName() != null) {
@@ -48,23 +43,24 @@ public class CityDeptService {
                     }
                     return cityDeptRepository.save(cityDept);
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NonExistingCityDeptException::new);
     }
 
-    public ResponseEntity<String> deleteCityDept(int cityDeptId) {
-        Optional<CityDept> optionalCityDept = cityDeptRepository.findById(cityDeptId);
-        if (optionalCityDept.isPresent()) {
-            CityDept cityDept = optionalCityDept.get();
-            List<User> cityDeptUsers = userService.getAllUsers();
-            for (User user : cityDeptUsers) {
-                if (user.getCityDept() == cityDept) {
-                    userService.deleteUser(user.getUserId());
-                }
+    public ResponseEntity<String> deleteCityDept(int cityDeptId)
+            throws NonExistingUserException, NonExistingCityDeptException {
+
+        CityDept cityDept = cityDeptRepository
+                .findById(cityDeptId)
+                .orElseThrow(NonExistingCityDeptException::new);
+
+        for (User user : userService.getAllUsers()) {
+            if (user.getCityDept() == cityDept) {
+                // First delete all staff users that belong to cityDept you want to delete
+                userService.deleteUser(user.getUserId());
             }
-            cityDeptRepository.deleteById(cityDeptId);
-            return ResponseEntity.ok("City department with id " + cityDeptId + "is deleted.");
-        } else {
-            throw new RuntimeException("City department with id " + cityDeptId + " does not exist!");
         }
+
+        cityDeptRepository.deleteById(cityDeptId);
+        return ResponseEntity.ok("City department with id " + cityDeptId + "is deleted.");
     }
 }

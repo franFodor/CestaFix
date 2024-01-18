@@ -12,10 +12,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.jdbc.JdbcTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
@@ -43,6 +45,8 @@ public class CityDeptIT {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private String userJwtToken;
     private String staffJwtToken;
@@ -143,29 +147,9 @@ public class CityDeptIT {
 
     @AfterEach
     void tearDownCityDept() {
-        try (Connection connection = dataSource.getConnection()) {
-            String sqlNormalUser = "DELETE FROM Users WHERE user_id = ?";
-            PreparedStatement normalUser = connection.prepareStatement(sqlNormalUser);
-            normalUser.setInt(1, 20);
-            normalUser.executeUpdate();
-
-            String sqlAdvancedUser = "DELETE FROM Users WHERE user_id = ?";
-            PreparedStatement advancedUser = connection.prepareStatement(sqlAdvancedUser);
-            advancedUser.setInt(1, 21);
-            advancedUser.executeUpdate();
-
-            String sqlCityDept = "DELETE FROM CityDept WHERE city_dept_id = ?";
-            PreparedStatement preparedStatementCityDept = connection.prepareStatement(sqlCityDept);
-            preparedStatementCityDept.setInt(1, 20);
-            preparedStatementCityDept.executeUpdate();
-
-            String sqlCategory = "DELETE FROM Category WHERE category_id = ?";
-            PreparedStatement preparedStatementCategory = connection.prepareStatement(sqlCategory);
-            preparedStatementCategory.setInt(1, 20);
-            preparedStatementCategory.executeUpdate();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Users");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Citydept");
+        JdbcTestUtils.deleteFromTables(jdbcTemplate, "Category");
     }
 
     @Test

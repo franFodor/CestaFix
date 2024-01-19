@@ -3,14 +3,20 @@ import Cookies from 'js-cookie';
 import './Header.css';
 import AccountPopupComponent from './forms/AccountForm.js'
 import CheckReportComponent from './forms/CheckReportForm.js'
-import { useNavigate } from 'react-router-dom';
 import StatisticsComponent from './StatisticsComponent.js';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Header = ({ pickMarkerLatLon, markers }) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
   const [isStatPopupShown, setIsStatPopupShown] = useState(false);
 
+  const navigate = useNavigate();
+  const location = useLocation();
   const handleReportBtn = () => {
+
+    if (location.pathname === '/myAccount') {
+      navigate('/');
+    }
     var div = document.getElementById("OverrideDiv");
     if (div) {
       console.log("showam div,");
@@ -23,7 +29,6 @@ const Header = ({ pickMarkerLatLon, markers }) => {
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
   const handleStatBtn = () => { setIsStatPopupShown(!isStatPopupShown); };
 
-  const navigate = useNavigate();
   const handleLogout = () => {
     navigate("/");
 

@@ -27,6 +27,11 @@ const UserReportTable = () => {
           <div>
             <h2>{report.title}</h2>
             <p>{report.description}</p>
+            <div className="image-container">
+                                {report.base64Photos.map((photo, index) => (
+                                    <img key={index} src={`data:image/png;base64,${photo}`} alt={`Photo ${index + 1}`} />
+                                ))}
+                            </div>
             
             <br></br>
             <p>{report.address}</p>

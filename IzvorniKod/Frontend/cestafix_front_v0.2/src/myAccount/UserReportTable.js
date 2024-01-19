@@ -2,9 +2,10 @@ import { APIGetAllProblems } from "../API";
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import './UserReportTable.css'
+import loadingGif from "../images/loading.gif"
 
 const UserReportTable = () => {
-  const [reports, setReports] = useState([]);
+  const [reports, setReports] = useState();
   async function getReports() {
     let loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
     const dbMarkers = await APIGetAllProblems();
@@ -18,7 +19,8 @@ const UserReportTable = () => {
     getReports();
   }, []);
 
-  return (
+  return (<>
+    {reports && (
     <div className="updateTable">
       {reports.map((report) => (
         <div className="Report">
@@ -36,7 +38,8 @@ const UserReportTable = () => {
           </div>
         </div>
       ))}
-    </div>
+    </div>)}
+    {!reports && (<img src={loadingGif} alt="Loading..." style={{ width: '5%', height: 'auto' }} />)}</>
   );
 };
 

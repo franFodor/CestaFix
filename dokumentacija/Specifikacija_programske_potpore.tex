@@ -451,8 +451,8 @@
 	\item[] \begin{packed_enum}
 
 		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
-		\item Korisnik odabire opciju za ažuriranje stanja prijava
-		\item Korisnik odabire opciju za promjenu statusa prijave i potvrđuje promjenu
+		\item Korisnik odabire opciju za ažuriranje statusa prijava oštećenja
+		\item Korisnik odabire opciju za promjenu statusa prijave oštećenja i potvrđuje promjenu
 		\item Status prijave oštećenja se ažurira u bazi podataka i korisnik dobiva potvrdu uspješne promjene
 	\end{packed_enum}
 \end{packed_item}
@@ -489,7 +489,7 @@
 		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
 		\item Korisnik odabire opciju za objedinjavanje prijava oštećenja
 		\item Korisnik odabire dvije ili više prijava oštećenja i potvrđuje odabir
-		\item Prijave oštećenja se objedinjuju u bazi podataka i korisnik se učitava novo stanje problema
+		\item Prijave oštećenja se objedinjuju u bazi podataka i korisnik se učitava novo statusa problema
 	\end{packed_enum}
 
 	\item  \textbf{Opis mogućih odstupanja:}
@@ -747,7 +747,7 @@ poruku o neuspješnom unosu jedinstvenog broja prijave.
 Službenik gradskog ureda šalje zahtjev za prikaz popisa prijavljenih oštećenja. Poslužitelj dohvaća popis prijavljenih oštećenja iz baze 
 podataka te ih prikazuje službeniku. Službenik odabire prijavu oštećenja te time šalje zahtjev za prikaz podataka o toj prijavi oštećenja. 
 Poslužitelj dohvaća podatke o prijavi oštećenja te ih prikazuje službeniku. Službenik šalje zahtjev za prikaz opcije za promjenu statusa prijave
-oštećenja. Poslužitelj prikazuje opciju za promjenu statusa prijave oštećenja s navedenim mogućim opcijama stanja prijave oštećenja. Službenik
+oštećenja. Poslužitelj prikazuje opciju za promjenu statusa prijave oštećenja s navedenim mogućim opcijama statusa prijave oštećenja. Službenik
 odabire novi status prijave oštećenja te šalje zahtjev za promjenu statusa poslužitelju. Poslužitelj ažurira status prijave oštećenja u bazi
 podataka. Poslužitelj prikazuje službeniku potvrdu o uspješnosti promjena statusa prijave oštećenja.
 

@@ -57,9 +57,8 @@
 		
 	
 		\section{Ispitivanje programskog rješenja}
-			
+
 			\subsection{Integracijsko testiranje}
-			\textit{Potrebno je provesti ispitivanje jedinica (engl. unit testing) nad razredima koji implementiraju temeljne funkcionalnosti. Razraditi \textbf{minimalno 6 ispitnih slučajeva} u kojima će se ispitati redovni slučajevi, rubni uvjeti te izazivanje pogreške (engl. exception throwing). Poželjno je stvoriti i ispitni slučaj koji koristi funkcionalnosti koje nisu implementirane. Potrebno je priložiti izvorni kôd svih ispitnih slučajeva te prikaz rezultata izvođenja ispita u razvojnom okruženju (prolaz/pad ispita). }
 			
 			Na backendu integracijsko testiranje se sastoji od pozivanja API-a i očekivanja određenog odgovora za taj API.
             Na taj način se testira stvarna procedura koja se odvija kada korisnik pozove taj API.
@@ -73,9 +72,9 @@
             Sami testovi su anotirani sa anotacijom @Test.
 			Sve navedene anotacije pripadaju org.junit biblioteci.
             \begin{figure}[H]
-                \includegraphics[scale=0.50]{slike/IT_containerized_docker.png}
+                \includegraphics[scale=0.60]{slike/IT_containerized_docker.png}
                 \centering
-                \caption{Dizanje baze u integracijskom testu}
+                \caption{Primjer dizanja baze u integracijskom testu}
                 \label{fig:IT_docker}
             \end{figure}
 
@@ -88,7 +87,7 @@
             \begin{figure}[H]
                 \includegraphics[scale=0.60]{slike/IT_beforeEach.png}
                 \centering
-                \caption{Umetanje podataka u bazu}
+                \caption{Primjer umetanja podataka u bazu}
                 \label{fig:beforeEach}
             \end{figure}
 
@@ -96,21 +95,24 @@
 			Za testiranje se koristi mockMvc.perform() funkcija koja simulira HTTP zahtjev, definira HTTP metodu za poziv API-a,
             predaje JSON ako treba, definira kakav contentType treba predati, je li potreban JWT za pristup API-ju i
 			koji HTTP status se očekuje kao odgovor tog zahtjeva (slika \ref{fig:test}).
-            \begin{figure}[H]
-                \includegraphics[scale=0.60]{slike/IT_test.png}
+			\begin{figure}[H]
+                \includegraphics[scale=1.00]{slike/IT_test.png}
                 \centering
-                \caption{Integracijski test}
+                \caption{Primjer integracijskog testa}
                 \label{fig:test}
             \end{figure}
+
+			\vspace{100pt}
 
             Po završetku svakog testa izvršava se funkcija s anotacijom @AfterEach.
 			Ona koristi JdbcTestUtils.deleteFromTables() funkciju kako bi izbrisala sve podatke iz određene tablice u bazi.
 			Na ovakav način se osigurava da ako se nešto umetne u bazu prilikom testa,
 			poslije završetka testa će se i izbrisati (slika \ref{fig:afterEach}).
-            \begin{figure}[H]
-                \includegraphics[scale=0.60]{slike/IT_afterEach.png}
+            \vspace{10pt}
+			\begin{figure}[H]
+                \includegraphics[scale=0.80]{slike/IT_afterEach.png}
                 \centering
-                \caption{Brisanje podataka iz baze nakon testa}
+                \caption{Primjer brisanja podataka iz baze nakon testa}
                 \label{fig:afterEach}
             \end{figure}
 

@@ -1,6 +1,5 @@
-
+//komponenta za lookup reporta uz pomoć businessId-a
 function CheckReportComponent() {
-
  const handleSubmit = async event => {
    event.preventDefault();
 
@@ -12,7 +11,7 @@ function CheckReportComponent() {
    if(id !=="")window.location.href = `/prijava/${id}`
    
  }
-
+//returna Dropdown meni ispod header gumba
  return (
    <form onSubmit={handleSubmit}>
      <label className="reportText">

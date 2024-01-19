@@ -3,10 +3,12 @@ import './API.js'
 import React, { useState, useEffect } from 'react';
 import { APIGetAllReports } from './API.js';
 
+//Lista reportova za odabran problem na karti
 function ReportListComponent({ problemID }) {
     let [reports, setReports] = useState([]);
     let [isLoaded, setIsLoaded] = useState(false);
 
+    //svaki put kad se odabrani problemId promijeni prikazi sve reportove za taj problem
     useEffect(() => {
         const receiveReports = async () => {
             const newReports = await APIGetAllReports(problemID);
@@ -18,6 +20,7 @@ function ReportListComponent({ problemID }) {
 
     }, [problemID]);
 
+    //vrati listu reportova i detalje o reportovima u njoj
     return (
         <div className="report-list">
             <ul>

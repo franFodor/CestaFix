@@ -4,11 +4,14 @@ import { APIGetStaffProblems, APIMergeReports } from '../API.js';
 import './MergeReportTable.css'
 import loadingGif from "../images/loading.gif"
 
+
+//komponenta koja prikazuje tablicu za mergeanje reportova u probleme
 const MergeReportTable = () => {
   const [problems, setProblems] = useState();
   const [selectedReports, setSelectedReports] = useState(new Set());
   const token = Cookies.get("sessionToken");
 
+  //povlaci probleme i reportove bitne samo ovom staff korisniku
   async function fetchData() {
     const loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
     try {
@@ -20,10 +23,13 @@ const MergeReportTable = () => {
     }
   }
 
+
+//na renderu fetchaj podatke
   useEffect(() => {
     fetchData();
   }, []);
 
+  //je li taj report odabran ili nije?
   const toggleReportSelection = (reportId) => {
     setSelectedReports(prevSelected => {
       const newSelected = new Set(prevSelected);
@@ -36,6 +42,8 @@ const MergeReportTable = () => {
     });
   };
 
+
+  //zove se pri predaji forme, te nakon predaje updatea podatke
   const handleMerge = (problemId) => {
     APIMergeReports(token, problemId, Array.from(selectedReports)).then(() => {
       setSelectedReports(new Set());
@@ -44,7 +52,7 @@ const MergeReportTable = () => {
     );
 
   };
-
+//vraca tablicu
   return (<>
     {problems && (
       <div className="problems-container">

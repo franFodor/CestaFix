@@ -8,16 +8,20 @@ import MergeReportTable from "./MergeReportTable";
 import UserReportTable from "./UserReportTable";
 import { APIDeleteUser } from "../API";
 
+//prikaz aktivnosti i renderanje aktivnosti ovisno o ulogi ulogiranog korisnika
 const MyAccount = () => {
+  //prvo dohvati korisnika
   let loggedUser;
   if (Cookies.get("userInfo"))
     loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
   const [buttonClicked, setButtonClicked] = useState("a");
 
+  //koji je gumb kliknut?
   const handleClick = (buttonLabel) => {
     setButtonClicked(buttonLabel);
   };
 
+  //Briše i izlogirava korisnika pri pritisku
   async function handleDeletion() {
     console.log("You have chosen death-");
     let token = Cookies.get("sessionToken");
@@ -28,7 +32,7 @@ const MyAccount = () => {
 
 
   }
-
+//prikazuje razlicite opcije ovisno o ulozi ulogiranog korisnika
   const loggedRoleAccountContent = () => {
     switch (loggedUser ? loggedUser.role : null) {
       case "USER":
@@ -101,7 +105,7 @@ const MyAccount = () => {
         );
     }
   };
-
+//vraca listu opcija ovisno o rolu korisnika
   return <>{loggedRoleAccountContent()}</>;
 };
 

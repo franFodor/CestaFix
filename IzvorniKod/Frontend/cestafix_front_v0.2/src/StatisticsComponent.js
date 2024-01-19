@@ -3,9 +3,12 @@ import './StatisticsComponent.css';
 import PopupComponent from './PopupComponent';
 import { APIGetStats } from './API';
 
+
+//popup koji prikazuje statistiku dobivenu API pozivom
 const StatisticsComponent = ({onClose}) => {
     const [stats, setStats] = useState(null);
 
+    //zove API
     const fetchStats = async () => {
         try {
             const response = await APIGetStats();
@@ -14,7 +17,7 @@ const StatisticsComponent = ({onClose}) => {
             console.error('Failed to fetch statistics:', error);
         }
     };
-
+//zove funkciju za dobijanje podataka svakih 5 sekundi kako bi se dobili što sviježiji podatci
     useEffect(() => {
         fetchStats(); // Fetch stats initially
         const interval = setInterval(fetchStats, 5000);
@@ -22,7 +25,7 @@ const StatisticsComponent = ({onClose}) => {
         return () => clearInterval(interval);
     }, []);
 
-
+//vraca popup i prikazuje podatke
     const popupContent = (
         <div className="stats-container">
             <div className="title">Statistika Dosadašnjih Prijava</div>

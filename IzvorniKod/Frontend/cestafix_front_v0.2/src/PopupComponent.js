@@ -1,5 +1,7 @@
 import './PopupComponent.css'
 
+
+//Komponenta za popup
 function PopupComponent({onClose, children}) {
     return (<div className="popup">
                 <div className="popup-plate">

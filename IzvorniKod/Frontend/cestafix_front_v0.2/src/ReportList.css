@@ -1,4 +1,4 @@
-.updateTable {
+.report-list {
    width: 35%;
    background-color: #f9fafc; /* Light gray background */
    padding: 20px; /* More padding for better spacing */
@@ -9,14 +9,7 @@
    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
 }
 
-.naslovni {
-   background-color: #f5f5f5; /* Light gray */
-   padding: 20px;
-   border-radius: 5px;
-   margin-bottom: 20px;
-}
-
-.Report {
+.report-element {
    display: flex;
    justify-content: space-between;
    background-color: #fff; /* White background */
@@ -26,21 +19,41 @@
    border-radius: 5px; /* Rounded corners */
    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
 }
+.report-element:first-child {
+   margin-top: 10px; /* Adjust as needed */
+ }
 
-.Report > div {
-   margin-bottom: 10px;
+.report-element .content {
+   flex-grow: 1;
+   word-wrap: break-word; /* Ensures text wraps */
 }
 
-.Report > div > h2 {
-   margin-top: 0;
+.report-element .title {
    font-weight: bold;
+   margin-top: 0;
+   word-break: break-all; /* Ensures long words don't overflow */
    color: black; /* Blue title */
 }
 
-.Report > div > p:last-child {
-   font-weight: bold; /* Make the text bold */
-   color: #ff0000; /* Change the text color to red */
-   background-color: #ffff00; /* Change the background color to yellow */
-   padding: 5px; /* Add some padding */
-   border-radius: 5px; /* Round the corners */
+.report-element .time-date {
+   font-size: 0.8em;
+   color: #6b7280; /* Gray date and time */
+}
+
+.report-element .image-container img {
+   max-width: 450px; /* Adjust image size as needed */
+   height: auto;
+   display: block;
+   border-radius: 5px; /* Rounded corners */
+}
+.image-container {
+   
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   gap: 10px; /* Optional: Adds space between images */
+ }
+ul {
+   padding: 0;
+   margin: 0;
 }

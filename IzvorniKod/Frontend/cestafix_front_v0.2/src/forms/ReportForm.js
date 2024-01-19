@@ -3,7 +3,7 @@ import PopupComponent from "../PopupComponent.js";
 import "./Forms.css";
 import { APICreateReport, APICheckNearbyReport } from "../API.js";
 import Cookies from 'js-cookie';
-
+//Konvertira sliku u Base64 kako bi se slala u jednom JSON objektu bez vise api callova
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -16,22 +16,24 @@ function fileToBase64(file) {
         reader.readAsDataURL(file);
     });
 }
-
+//Vraca Report Form i implementira potrebno ponasanje pri predaji
 const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     const [showMergeConfirm, setShowMergeConfirm] = useState(false);
     const [closestMarkerData, setClosestMarkerData] = useState(null);
     const [reportData, setReportData] = useState(null);
+
+    //loading Button
     const [isClicked, setIsClicked] = useState(false);
+    //Postavi da se gumb loada pri kliku
     const handleClick = () => {
         console.log("handleam");
-        //force 
+        //Force ga postavi da se loada, reaktovsko rjesenje ne radi zbog form persistence patcha koji sprijecava rerenderanje forme
         var submitButton = document.querySelector('button.login-button');
         submitButton.className = "login-button clicked";
-
         setIsClicked(!isClicked);
     };
 
-
+    //zove se pri predaji forme
     const handleSubmitReport = async (event) => {
         setIsClicked(true);
         event.preventDefault();
@@ -58,13 +60,15 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         //Postavi Parsani objekt u Hook
         setReportData(data);
 
-        //neispravna implementacija!! let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
+        //NEISPRAVNO>>>>let closestMarker = getNearbyMarker(pickMarkerLatLon, data.categoryId);
+
+        //zbog ne-renderanja forme, komunikacija izmedu mape i forme se ostvaruje preko skrivenog diva <selectedMarker> ciji innerText sadrzi informacije o lokaciji  
         let getFinalMapMarker;
         if (document.getElementById('selectedMarker')) {
             getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
         }
-        else { getFinalMapMarker = null; }
-
+        else { getFinalMapMarker = null; } //inace nije odabran
+        //Provjeri postoji li vremensko-prostorno blizak report
         try {
             let checkNearby = await APICheckNearbyReport(data.title,
                 data.description,
@@ -86,7 +90,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 submitReport(null, data);
             }
         } catch (error) {
-            if (error.message === 'Forbidden') {
+            if (error.message === 'Forbidden') { //nemoguce odrediti adresu iz trenutne prijave, sad se moze rerenderati forma
 
                 var submitButton = document.querySelector('button.login-button');
                 submitButton.className = "login-button";
@@ -102,6 +106,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
 
     }
+    //Funkcija koja nasilno mijenja Div za prijedlog ureda ovisno o kategoriji; nije reaktovski zbog nererenderanja forma
     function updateRecomendation(n) {
         switch (n) {
             case "1":
@@ -125,7 +130,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
     }
 
 
-
+    //HTML reporta u varijabli kako se nebi povlacio kroz kod
     const baseReport = (
         <div className="reportContent" key={isClicked}>
             <form className="form" onSubmit={handleSubmitReport}>
@@ -169,6 +174,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         </div>
     );
 
+    //malo kontradiktorno, ali Initial reportContent je baseReport
     const [reportContent, setReportContent] = useState(
         <div className="reportContent" key={isClicked}>
             <form className="form" onSubmit={handleSubmitReport}>
@@ -211,7 +217,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
             </form>
         </div>);
 
-
+    //Funkcija za Stvaranje reporta u bazi
     const submitReport = (closest_problem_id, data) => {
 
         let reportData;
@@ -220,9 +226,9 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
         let getFinalMapMarker = JSON.parse(document.getElementById('selectedMarker').innerText); //Fetchaj info odabranog markera sa mape
         let token;
-        if (Cookies.get('sessionToken')) token = Cookies.get('sessionToken');
+        if (Cookies.get('sessionToken')) token = Cookies.get('sessionToken'); //fetchaj sessionToken ako postoji inace null
         else { token = null; }
-        if (reportData) {
+        if (reportData) {//zovi API za stvaranje reporta sa potrebnim parametrima
             APICreateReport(token,
                 reportData.title,
                 reportData.description,
@@ -235,8 +241,8 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                 reportData.categoryId,
                 closest_problem_id).then(response => {
                     if (response.status === 200) {
-                        return response.json(); // Parse the response body as JSON
-                    } else {
+                        return response.json(); 
+                    } else {//ako nije uspio API call, znaci da nije pronadena adresa 
                         handleClick();
                         setReportContent(
                             <>
@@ -247,12 +253,10 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
                             </>
 
                         );
-                        console.log("kaj si napravil");
                     }
                 })
-                .then(apiResponse => {
+                .then(apiResponse => {//ako je, prikazi BusinessID i refreshaj stranicu pri confirmationu kako bi se prikazao report na karti
                     if (apiResponse) {
-                        console.log(apiResponse);
                         setReportContent(
                             <div>
                                 <h2>Prijava je uspješno prijavljena!</h2>
@@ -269,7 +273,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         }
     };
 
-
+    //element koji se prikazuje kad postoji bliski report i pita korisnika da li da radi novi ili da mergea u postojeci problem
     const mergeConfirmDialog = showMergeConfirm && (
         <div className="mergeConfirmDialog">
             <h3>Već postoji bliska prijava. Želite li da se:</h3>
@@ -279,6 +283,7 @@ const ReportPopupComponent = ({ onClose, pickMarkerLatLon, markers }) => {
         </div>
     );
 
+    //vrati popup sa reportContentom ili Mergeom
     return (
         <PopupComponent onClose={onClose}>
             {mergeConfirmDialog || reportContent}

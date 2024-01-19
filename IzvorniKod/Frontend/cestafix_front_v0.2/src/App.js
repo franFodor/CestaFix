@@ -5,7 +5,7 @@ import Footer from './Footer';
 import MyAccount from './myAccount/MyAccount';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
-
+//Glavni parent React aplikacije sa routerom
 function App() {
   const [pickMarkerLatLon, setPickMarkerLatLon] = useState(null);
   const [markers, setMarkers] = useState([]);

@@ -1,4 +1,6 @@
+//{radi}-{vraca}
 
+//logira korisnika - sesionToken
 async function APILogin(email, password) {
     const formData = {
         email: email,
@@ -12,6 +14,8 @@ async function APILogin(email, password) {
             body: JSON.stringify(formData)
         });
 }
+
+//azurira korisnika - novi user
 async function APIUpdateUser(token,
     userId,
     firstName,
@@ -42,7 +46,7 @@ async function APIUpdateUser(token,
 
 
 
-
+//brise korisnika
 async function APIDeleteUser(id, token) {
     return fetch(`api/advanced/user/${id}`, {
         method: 'DELETE',
@@ -53,7 +57,7 @@ async function APIDeleteUser(id, token) {
     });
 }
 
-// Funkciju triggera submit register forme. Salje podatke forme na /api/register
+// Funkciju triggera submit register forme. Salje podatke forme na /api/register - session token
 async function APIRegister(firstname, lastname, email, password) {
     const formData = {
         firstname: firstname,
@@ -69,6 +73,7 @@ async function APIRegister(firstname, lastname, email, password) {
     });
 }
 
+//spaja reportove
 async function APIMergeReports(token, problem_id, reportlist) {
     return fetch('/api/advanced/problem/group/' + problem_id, {
         method: 'PATCH',
@@ -78,7 +83,7 @@ async function APIMergeReports(token, problem_id, reportlist) {
     });
 }
 
-
+//vraca sve probleme
 async function APIGetAllProblems() {
     const response = await fetch('/api/public/problem/getAll', {
         method: 'GET',
@@ -94,7 +99,7 @@ async function APIGetAllProblems() {
     const data = await response.json();
     return data;
 }
-
+//vraca sve reportove za odredeni problem
 async function APIGetAllReports(problem_id) {
     const response = await fetch('/api/public/problem/' + problem_id, {
         method: 'GET',
@@ -106,7 +111,7 @@ async function APIGetAllReports(problem_id) {
     const data = await response.json();
     return data.reports;
 }
-
+//vraca probleme i reportove za odredenog sluzbenika
 async function APIGetStaffProblems(citydeptId, token) {
     const response = await fetch(`/api/advanced/problem/${citydeptId}`, {
         method: 'GET',
@@ -119,6 +124,8 @@ async function APIGetStaffProblems(citydeptId, token) {
     const data = await response.json();
     return data;
 }
+
+//azuriraj status problema
 async function APIUpdateProblemStatus(token, problemId, newStatus) {
     const response = await fetch(`/api/advanced/problem/${problemId}`, {
         method: 'PATCH',
@@ -132,6 +139,8 @@ async function APIUpdateProblemStatus(token, problemId, newStatus) {
     const data = await response.json();
     return data;
 }
+
+//vrati problem ovisno o buisness IDu
 async function APIGetProblemIDFromBusinessId(businessId, token) {
     const response = await fetch('/api/public/lookup/' + businessId, {
         method: 'GET',
@@ -145,6 +154,9 @@ async function APIGetProblemIDFromBusinessId(businessId, token) {
     return data;
 }
 
+
+
+//vraca detalje o korisniku
 async function APIWhoAmI(token) {
     const response = await fetch('/api/normal/user/whoAmI', {
         method: 'GET',
@@ -158,6 +170,7 @@ async function APIWhoAmI(token) {
     return data;
 }
 
+//stvara report, baca error ako nemre nac adresu
 async function APICreateReport(token,
     title,
     description,
@@ -200,6 +213,8 @@ async function APICreateReport(token,
         });
     }
 }
+
+//vraca -1 ako nema bliskog reporta ili ProblemID bliskog reporta
 async function APICheckNearbyReport(title,
     description,
     address,
@@ -237,7 +252,7 @@ async function APICheckNearbyReport(title,
 
 
 }
-
+//vraca statistiku
 async function APIGetStats() {
     const response = await fetch('/api/public/statistics', {
         method: 'GET',
@@ -253,6 +268,9 @@ async function APIGetStats() {
     const data = await response.json();
     return data;
 }
+
+
+
 export {
     APILogin,
     APIRegister,

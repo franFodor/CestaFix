@@ -6,7 +6,7 @@ const path = require("path")
 const app = express();
 
 
-// Proxy
+// Proxy za Deploy
 
 app.use(
     "/api",

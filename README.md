@@ -18,14 +18,15 @@ Ključni obrasci uporabe
 * Provjera statistike statusa prijava oštećenja
 
 # Tehnologije
-* Frontend - React
-* Backend - Spring
+* Frontend - JavaScript, React
+* Backend - Java, Spring Boot
 * Baza podataka - PostgreSQL
 * Deployment - Render
 
 # Instalacija
-Kako bi se *pokrenula* stranica potrebno je (za sada) ući i na [frontend](https://cestafix-fe.onrender.com) stranicu i na [backend](https://backend-j8o6.onrender.com) stranicu. 
-**Napomena**: Render (platforma preko koje smo deployali stranicu) automatski "spin downa" (ugasi) sve stranice (na free verziji) koje se **ne koriste više od 15 minuta** pa zbog toga ako se samo uđe na frontend stranicu **neće** raditi zahtjevi prema backendu. Također učitavanje backend stranice može potrajati čak do par minuta, samo ju pustite da se učitava dok ne dobijete 404 na stranici. Nakon toga se može uredno koristiti frontend stranica uz funkcionalne API zahtjeve prema backendu.
+Kako bi se *pokrenula* stranica potrebno je ući na [frontend](https://cestafix-fe.onrender.com) stranicu. [Backend](https://backend-j8o6.onrender.com) stranicu nije potrebno
+pokretati jer će se pokretanjem frontend stranice poslati GET request koji će probuditi backend aplikacije. Razlog za to je ograničenje platforme Render preko koje smo deployali aplikaciju. 
+Ona automatski ugasi sve stranice (na besplatnoj verziji) koje se ne koriste više od 15 minuta. Također, zbog ograničenja sustava, backend aplikacije se sporo učitava stoga je nekada potrebno malo pričekati da se dohvate podaci iz baze podataka. 
 
 # Članovi tima 
 * Fran Fodor - voditelj<br/>

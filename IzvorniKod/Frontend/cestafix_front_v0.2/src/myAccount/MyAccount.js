@@ -71,7 +71,7 @@ const MyAccount = () => {
               </div>
               <div className="Details">{loggedUser.cityDept.cityDeptName + ""}</div>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }} onClick={() => handleClick("a")}>Uredi Profil</button>
-              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("b")}>Ažuriraj stanje Prijava!</button>
+              <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("b")}>Ažuriraj Status Prijava!</button>
               <button className="confirmButton" style={{ display: "inline-block", width: "fit-content" }}onClick={() => handleClick("c")}>Spoji prijave!</button>
               <button className="confirmButton" style={{display: "inline-block",width: "fit-content",background: "red",}}onClick={() => handleClick("d")}>Pobriši Račun!!!</button>
               <button className="confirmButton"style={{ display: "inline-block", width: "fit-content" }}onClick={() => (window.location.href = "/")}>Povratak</button>

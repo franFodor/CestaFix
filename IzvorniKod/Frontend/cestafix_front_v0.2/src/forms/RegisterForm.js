@@ -3,12 +3,14 @@ import { APIRegister, APIWhoAmI } from '../API.js'
 import Cookies from 'js-cookie'
 import { useState } from 'react'
 
-
+//komponenta koja prikazuje form i implementira Registraciju korisnika
 const RegisterFormComponent = () => {
+    //Gumb Loading circle function
     const [isClicked, setIsClicked] = useState(false);
     const handleClick = () => {
         setIsClicked(!isClicked);
     };
+
     const validatePassword = (password) => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
         return passwordRegex.test(password);
@@ -19,7 +21,7 @@ const RegisterFormComponent = () => {
         return emailRegex.test(email);
     };
 
-
+    //zove se pri predaji forme
     const handleRegister = (event) => {
         handleClick();
         event.preventDefault();
@@ -52,10 +54,10 @@ const RegisterFormComponent = () => {
             divElement.style.color = 'red';
             return;
         }
-
+        //ako su svi frontend tesovi prosli, onda zovi API za registriranje.
         APIRegister(firstname, lastname, email, password).then(response => {
             if (response.status === 403) {
-                
+                //ako je doslo do greske prestani loadati gumb i baci error korisniku
             setIsClicked(false);
                 divElement.innerText = 'Korsnik sa ovim E-Mailom vec postoji!';
                 divElement.style.color = 'red';
@@ -64,6 +66,7 @@ const RegisterFormComponent = () => {
             return response.json();
         })
             .then(respJson => {
+                //inace si loginan
                 if (respJson && respJson.token) {
                     Cookies.set('sessionToken', respJson.token);
                     return APIWhoAmI(respJson.token);
@@ -77,7 +80,7 @@ const RegisterFormComponent = () => {
             });
 
     }
-
+    //return register form
     return (
         <div>
             <h1>Registracija</h1>

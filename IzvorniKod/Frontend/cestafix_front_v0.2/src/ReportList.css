@@ -1,38 +1,38 @@
 .report-list {
    width: 35%;
-   background-color: #f9fafc; /* Light gray background */
-   padding: 20px; /* More padding for better spacing */
+   background-color: #f9fafc; 
+   padding: 20px; 
    box-sizing: border-box;
-   overflow-y: auto; /* Enables vertical scrolling */
-   max-height: 85vh; /* Limits the height to the viewport */
-   border-radius: 5px; /* Rounded corners */
-   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+   overflow-y: auto; 
+   max-height: 85vh; 
+   border-radius: 5px; 
+   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .report-element {
    display: flex;
    justify-content: space-between;
-   background-color: #fff; /* White background */
-   margin-bottom: 20px; /* More space between reports */
-   padding: 20px; /* More padding for better spacing */
+   background-color: #fff; 
+   margin-bottom: 20px; 
+   padding: 20px; 
    list-style-type: none;
-   border-radius: 5px; /* Rounded corners */
-   box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+   border-radius: 5px; 
+   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .report-element:first-child {
-   margin-top: 10px; /* Adjust as needed */
+   margin-top: 10px; 
  }
 
 .report-element .content {
    flex-grow: 1;
-   word-wrap: break-word; /* Ensures text wraps */
+   word-wrap: break-word; 
 }
 
 .report-element .title {
    font-weight: bold;
    margin-top: 0;
-   word-break: break-all; /* Ensures long words don't overflow */
-   color: black; /* Blue title */
+   word-break: break-all;
+   color: black;
 }
 
 .report-element .time-date {

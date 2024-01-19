@@ -3,8 +3,9 @@ import Cookies from 'js-cookie';
 import './EditAccountForm.css'
 import { APIUpdateUser } from '../API';
 
+
+//Prikazuje Formu za mijenjanje podataka o korisniku
 const EditAccountForm = () => {
-    // State for user account details
     const [accountInfo, setAccountInfo] = useState({
         firstname: '',
         lastname: '',
@@ -14,23 +15,22 @@ const EditAccountForm = () => {
         citydept: { citydeptName: '' }
     });
 
-    // States for form inputs and editing
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [editing, setEditing] = useState({ firstName: false, lastName: false, email: false });
     
-    useEffect(() => {
+    useEffect(() => { //svaki put kad se nesto od nize navedenih dependacya promijeni onda ponovo postavi accountInfo
         setAccountInfo(prevState => ({
             ...prevState,
             firstname: firstName,
             lastname: lastName,
             email: email,
-            // Don't store password in accountInfo if it's not needed there
         }));
     }, [firstName, lastName, email]);
     
-    // Load user info from cookie on component mount
+    // gettaj usera iz cookiea kad se prvi put rendera forma
     useEffect(() => {
         const userInfo = Cookies.get('userInfo');
         if (userInfo) {
@@ -42,12 +42,12 @@ const EditAccountForm = () => {
         }
     }, []);
 
-    // Handle field edit
+    // edita se field polje
     const handleEdit = (field) => {
         setEditing({ ...editing, [field]: true });
     };
 
-    // Handle change in form fields
+    // mijenja se odabrano polje
     const handleChange = (e, field) => {
         const { value } = e.target;
         if (field === 'firstName') setFirstName(value);
@@ -55,26 +55,29 @@ const EditAccountForm = () => {
         if (field === 'email') setEmail(value);
     };
 
-    // Handle form submit
+    // zove se pri predaji forme
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Here you would typically make an API call to update the user details
         console.log('Updated Info:', { firstName, lastName, email});
-        
+        //gettaj Usera za UserId
         let userInfo = Cookies.get('userInfo');
         if(userInfo)userInfo = JSON.parse(userInfo);
         let token = Cookies.get("sessionToken");
+        //Updateuser vraca novog usera
 
         let response =await APIUpdateUser(token,
                       userInfo.userId,
                       firstName,
                       lastName
         );
+
+        //postavi novog usera u cookie i refreshaj stranicu
         Cookies.set("userInfo", JSON.stringify(response));
         window.location.href = '/myAccount';
         setEditing({ firstName: false, lastName: false, email: false });
     };
 
+    //vrati formu
     return (
         <div className="main">
             <div className="account-container">

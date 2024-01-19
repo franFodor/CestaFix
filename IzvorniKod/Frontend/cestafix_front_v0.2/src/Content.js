@@ -9,24 +9,28 @@ import './Content.css'
 import { APIGetAllProblems, APIGetProblemIDFromBusinessId } from './API.js'
 import { useParams } from 'react-router-dom';
 
-
+//Rendera Kartu i handlea prikaz reporta ovisno o routu
 const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers }) => {
     
+    //koordinate o parsanom reportu
     const [optionalCoordinates, setOptionalCoordinates] = useState();
+
+        //Daj mi koordinate od parsanog reporta 
     function getProblemCoordinates(businessId, dbMarkers) {
         for (let problem of dbMarkers) {
             for (let report of problem.reports) {
                 if (report.businessId === businessId) {
-
-                    console.log("Koordinate problema su>", { latitude: problem.latitude, longitude: problem.longitude });
+                    //console.log("Koordinate problema su>", { latitude: problem.latitude, longitude: problem.longitude });
                     return [problem.latitude,problem.longitude];
                 }
             }
         }
-        return null; // Return null if no matching business ID was found
+        return null; // Return null ako ne postoji, nebi nikad trebalo 
     }
-    const businessIdActive = useParams();
+    const businessIdActive = useParams(); //dobi ID reporta iz routera
     //console.log(businessIdActive);
+
+    //Otvaranje i zatvaranje ReportForma na ne-reaktovski nacin kako bi se ostvario form persistence
     function closeReport() {
         var div = document.getElementById("OverrideDiv");
         if (div) {
@@ -43,12 +47,11 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         }
     }
 
-
+    //definiraj ponasanje klikanja na marker na mapi
     function handleMarkerClick(markerData) {
         setSelectedMarkerId(markerData.problemId);
         setInit(false);
     }
-
     const [selectedMarkerId, setSelectedMarkerId] = useState(-1);
     const [showReportList, setShowReportlist] = useState(false);
     const [init, setInit] = useState(null);
@@ -62,6 +65,8 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
         iconSize: [35, 35]
     });
 
+
+    //pri prvom renderanju uhvati sve probleme i reportove i postavi opcionalne koordinate na koordinate parsanog problema od reporta
     useEffect(() => {
         const fetchAndPopulateMarkers = async () => {
             const dbMarkers = await APIGetAllProblems();
@@ -79,13 +84,13 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
                 markerJSON: marker
             })));
             if (businessIdActive) {
-                console.log("HGAHAHAHAH",businessIdActive.id);
+                //console.log("I think im going crazyyy--",businessIdActive.id);
             setOptionalCoordinates(getProblemCoordinates(businessIdActive.id, dbMarkers));
             }
         };
         fetchAndPopulateMarkers();
         loadSelectedReport();
-    }, []); // Add optionalCoordinates to the dependency array
+    }, []); 
 
 
 
@@ -124,6 +129,8 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
 
         return null; // This component does not render anything
     };
+
+    //dobi problem od buisness reporta  i njegove koordinate
     async function loadSelectedReport() {
         if (businessIdActive.id) {
             let apiResponse = await APIGetProblemIDFromBusinessId(businessIdActive.id);
@@ -136,10 +143,10 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
     }
 
 
-
+//vraca kartu i listu reportova za odabrani problem, ako postoji parsani marker, centriraj mapu na njega
     return (
         <div className='main flex-grow w-full'>
-            {console.log("JA VIDIM",optionalCoordinates)}
+            {/*console.log("JA VIDIM",optionalCoordinates)*/}
             <MapContainer key={optionalCoordinates}  center={optionalCoordinates ? [parseFloat(optionalCoordinates[0]), parseFloat(optionalCoordinates[1])] : [45.812915, 15.975522]} zoom={optionalCoordinates ? 20: 13} className='w-full h-full'>
 
                 <ClickEventComponent setPickMarkerLatLon={setPickMarkerLatLon} />
@@ -166,12 +173,12 @@ const Content = ({ setPickMarkerLatLon, pickMarkerLatLon, markers, setMarkers })
 
             </MapContainer>
 
-            {/*Iskomentirat cu i objasnik ovo smece kad se oporavim od fixanja ovog buga NE DIRAJ*/}
+            {/*ovo omogucava saveanje nedovrsenog forma pri gasenju pregleda te komunikaciju o odabranom markeru izmedu mape i forme*/}
             <div id="OverrideDiv" style={{ display: 'none' }}>
                 <div id='selectedMarker' style={{ display: 'none' }}>false</div>
                 <ReportPopupComponent onClose={() => { closeReport(); }} pickMarkerLatLon={null} markers={markers} />
             </div>
-
+             {/*Prikazuje listu reportova za ili parsani problem ili odabrani marker na karti*/}
             {selectedMarkerId !== -1 && (showReportList || init) && <ReportListComponent problemID={init || selectedMarkerId} />}
         </div>
     );

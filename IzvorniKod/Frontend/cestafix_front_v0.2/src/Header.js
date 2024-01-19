@@ -6,12 +6,15 @@ import CheckReportComponent from './forms/CheckReportForm.js'
 import StatisticsComponent from './StatisticsComponent.js';
 import { useNavigate, useLocation } from 'react-router-dom';
 
+//vraca header dio stranice
 const Header = ({ pickMarkerLatLon, markers }) => {
   const [isAccountPopupShown, setIsAccountPopupShown] = useState(false);
   const [isStatPopupShown, setIsStatPopupShown] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
+
+  //Omogucava funckionalnost report guba u headeru, ako se aktivira u myAccount prebaci se na kartu
   const handleReportBtn = () => {
 
     if (location.pathname === '/myAccount') {
@@ -22,29 +25,32 @@ const Header = ({ pickMarkerLatLon, markers }) => {
       console.log("showam div,");
       div.style.display = "block";
     }
-  }; // Switcha stanje izmedu true i false
+  }; 
 
 
 
   const handleAccountBtn = () => { setIsAccountPopupShown(!isAccountPopupShown); };
   const handleStatBtn = () => { setIsStatPopupShown(!isStatPopupShown); };
 
+
+  //logouta korisnika, vrati na kartu i refresha stranicu
   const handleLogout = () => {
     navigate("/");
-
     Cookies.remove('sessionToken', { path: '/' });
     Cookies.remove('userInfo', { path: '/' });
     window.location.reload();
 
   }
 
-
+//vraca username od korisnika
   function getUsername() {
     console.log(">>>", Cookies.get('userInfo'));
     let loggedUser = JSON.parse(decodeURIComponent(Cookies.get('userInfo')));
     return loggedUser.firstname;
   }
 
+
+  //vraca html headera
   return (
 
     <header className="header">

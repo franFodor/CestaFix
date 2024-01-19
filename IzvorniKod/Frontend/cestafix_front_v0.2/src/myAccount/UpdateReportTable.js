@@ -3,12 +3,13 @@ import { APIGetStaffProblems, APIUpdateProblemStatus } from "../API";
 import Cookies from "js-cookie";
 import loadingGif from "../images/loading.gif"
 
-
+//prikazuje listu problema sa prijavama i daje opciju azuriranja stanja
 const UpdateReportTable = () => {
   const [problems, setProblems] = useState();
   const [loading, setLoading] = useState(false);
   const [selectedStatuses, setSelectedStatuses] = useState({});
 
+  //dohvati probleme relevantne za sluzbenika
   async function fetchData() {
     const loggedUser = JSON.parse(decodeURIComponent(Cookies.get("userInfo")));
     const token = Cookies.get("sessionToken");
@@ -20,10 +21,12 @@ const UpdateReportTable = () => {
     }
   }
 
+  //dohvati probleme pri prvom renderu
   useEffect(() => {
     fetchData();
   }, []);
 
+  //pravilno updateaj status 
   const handleStatusChange = (problemId, newStatus) => {
     setSelectedStatuses(prevStatuses => ({
       ...prevStatuses,
@@ -31,6 +34,7 @@ const UpdateReportTable = () => {
     }));
   };
 
+  //zove se pri potvrdi izmjena, dohvaca info o sluzbeniku i zove potreban API
   async function commitChanges() {
     const token = Cookies.get('sessionToken');
     for (const problemId in selectedStatuses) {
@@ -50,7 +54,7 @@ const UpdateReportTable = () => {
       }
     }
   }
-
+//vraca prikaz reportova i gumb za potvrdu
   return (
     <>
       {problems && (

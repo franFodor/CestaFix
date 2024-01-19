@@ -117,7 +117,7 @@
 
 	\item[] \begin{packed_item}
 
-		\item[3.a] Odabir već zauzetog korisničkog imena i/ili e-mail adrese, unos korisničkih podataka u neispravnom formatu, nepodudaranje lozinki
+		\item[3.a] Odabir već zauzete e-mail adrese, unos korisničkih podataka u neispravnom formatu, nepodudaranje lozinki
 		\item[] \begin{packed_enum}
 
 			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za registraciju
@@ -139,7 +139,7 @@
 	\item[] \begin{packed_enum}
 
 		\item Korisnik odabire opciju za prijavu
-		\item Korisnik unosi korisničko ime i lozinku te potvrđuje unos
+		\item Korisnik unosi email i lozinku te potvrđuje unos
 		\item Korisnik se preusmjerava na početnu stranicu
 	\end{packed_enum}
 
@@ -147,7 +147,7 @@
 
 	\item[] \begin{packed_item}
 
-		\item[2.a] Neispravni unos korisničkog imena i/ili lozinke
+		\item[2.a] Neispravni unos emaila i/ili lozinke
 		\item[] \begin{packed_enum}
 
 			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na stranicu za prijavu
@@ -168,7 +168,8 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik odabire opciju za odjavu
+		\item Korisnik postavlja pokazivač iznad svojeg imena
+		\item Korisnik odabire opciju za odjavu na padajućem izborniku
 		\item Korisnik se preusmjerava na početnu stranicu
 	\end{packed_enum}
 \end{packed_item}
@@ -266,8 +267,8 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik otvara padajući izbornik
 		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+		\item Korisnik se preusmjerava na stranicu za pregled korisničkog računa
 	\end{packed_enum}
 \end{packed_item}
 
@@ -283,25 +284,12 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik otvara padajući izbornik
 		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
 		\item Korisnik odabire opciju za uređivanje korisničkih podataka
 		\item Korisnik uređuje korisničke podatke i potvrđuje promjene
 		\item Korisnički podaci se ažuriraju u bazi podataka i korisnik se preusmjerava na pregled vlastitog korisničkog računa
 	\end{packed_enum}
 
-	\item  \textbf{Opis mogućih odstupanja:}
-
-	\item[] \begin{packed_item}
-
-		\item[4.a] Odabir već zauzetog korisničkog imena i/ili e-mail adrese, unos korisničkog podatka u neispravnom formatu, nepodudaranje lozinki
-		\item[] \begin{packed_enum}
-
-			\item Sustav obavještava korisnika o neuspjelom unosu i vraća ga na uređivanje korisničkih podataka
-			\item Korisnik mijenja potrebne podatke te završava unos ili odustaje od uređivanja korisničkih podataka
-
-		\end{packed_enum}
-	\end{packed_item}
 \end{packed_item}
 
 
@@ -316,7 +304,6 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik otvara padajući izbornik
 		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
 		\item Korisnik odabire opciju za brisanje korisničkog računa
 		\item Korisnik povrđuje odluku i korisnik se preusmjerava na početnu stranicu
@@ -428,8 +415,8 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik odabire opciju za provjeru statusa prijave oštećenja
-		\item Korisnik odabire prijavu oštećenja za koju želi provjeriti status oštećenja
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+		\item Korisnik odabire opciju za pregled vlastitih prijava oštećenja i provjerava status željene prijave oštećenja
 	\end{packed_enum}
 \end{packed_item}
 
@@ -445,8 +432,9 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Pregled prijave oštećenja
-		\item Korisniku se otvara pregled prijavljeno oštećenje 
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+		\item Korisnik odabire opciju za pregled vlastitih prijava oštećenja
+		\item Korisniku odabire prijavu oštećenja i preusmjerava se na pregled prijavljenog oštećenja
 	\end{packed_enum}
 \end{packed_item}
 
@@ -462,10 +450,10 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik odabire opciju za prikaz popisa prijavljenih oštećenja
-		\item Korisnik odabire prijavu oštećenja
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
+		\item Korisnik odabire opciju za ažuriranje stanja prijava
 		\item Korisnik odabire opciju za promjenu statusa prijave i potvrđuje promjenu
-		\item Status prijave oštećenja se ažurira u bazi podataka i korisnik se preusmjerava na pregled prijave oštećenja
+		\item Status prijave oštećenja se ažurira u bazi podataka i korisnik dobiva potvrdu uspješne promjene
 	\end{packed_enum}
 \end{packed_item}
 
@@ -498,10 +486,10 @@
 
 	\item[] \begin{packed_enum}
 
-		\item Korisnik odabire opciju za prikaz popisa prijavljenih oštećenja
+		\item Korisnik odabire opciju za pregled vlastitog korisničkog računa
 		\item Korisnik odabire opciju za objedinjavanje prijava oštećenja
 		\item Korisnik odabire dvije ili više prijava oštećenja i potvrđuje odabir
-		\item Prijave oštećenja se objedinjuju u bazi podataka i korisnik se preusmjerava na početnu stranicu
+		\item Prijave oštećenja se objedinjuju u bazi podataka i korisnik se učitava novo stanje problema
 	\end{packed_enum}
 
 	\item  \textbf{Opis mogućih odstupanja:}

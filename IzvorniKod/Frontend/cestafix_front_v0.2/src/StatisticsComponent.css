@@ -1,0 +1,44 @@
+.stats-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 5px;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 1.4em;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .section {
+    margin-bottom: 20px;
+  }
+  
+  .section h3 {
+    color: #04AA6D;
+    margin-bottom: 10px;
+  }
+  
+  .label {
+    font-weight: bold;
+    margin-right: 5px;
+    color: #555;
+  }
+  
+  p {
+    color: #555;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  .loading {
+    text-align: center;
+    font-size: 1.2em;
+  }
+  

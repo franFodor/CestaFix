@@ -1,62 +1,64 @@
 package fer.proinz.prijave.controller;
 
+import fer.proinz.prijave.exception.NonExistingUserException;
 import fer.proinz.prijave.model.User;
 import fer.proinz.prijave.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping
 public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/getAllUsers")
+    @Operation(summary = "Get all users")
+    @GetMapping("/advanced/user/getAll")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/get/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable("userId") int userId) {
-        Optional<User> userOptional = userService.getUserById(userId);
-        if(userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @Operation(summary = "Get a user by its id")
+    @GetMapping("/normal/user/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable("userId") int userId)
+            throws NonExistingUserException {
+        return ResponseEntity.ok(userService
+                .getUserById(userId)
+                .orElseThrow(NonExistingUserException::new)
+        );
     }
 
-    @Secured("STAFF")
-    @PostMapping("")
+    @Operation(summary = "Access personal data")
+    @GetMapping("/normal/user/whoAmI")
+    public ResponseEntity<User> getPersonalData() {
+        return ResponseEntity.ok(userService.getPersonalData());
+    }
+
+    @Operation(summary = "Create a user")
+    @PostMapping("/normal/user")
     public ResponseEntity<User> createUser(@RequestBody User user) {
-        User saved = userService.createUser(user);
-        return ResponseEntity
-                .created(URI.create("/user/" + saved.getUserId()))
-                .body(saved);
+        return ResponseEntity.ok(userService.createUser(user));
     }
 
-    @Secured("STAFF")
-    @PutMapping("/{userId}")
-    public User updateUser(
+    @Operation(summary = "Update a user",
+            description = "Users can update only personal data about themselves")
+    @PatchMapping("/advanced/user/{userId}")
+    public ResponseEntity<?> updateUser(
             @PathVariable("userId") int userId,
             @RequestBody User updatedUser
-        ) {
-        return userService.updateUser(userId, updatedUser);
+        ) throws NonExistingUserException {
+        return ResponseEntity.ok(userService.updateUser(userId, updatedUser));
     }
 
-    @Secured("STAFF")
-    @DeleteMapping("/{userId}")
-    public Optional<User> deleteUser(@PathVariable("userId") int userId) {
+    @Operation(summary = "Delete a user")
+    @DeleteMapping("/advanced/user/{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable("userId") int userId)
+            throws NonExistingUserException {
         return userService.deleteUser(userId);
     }
 

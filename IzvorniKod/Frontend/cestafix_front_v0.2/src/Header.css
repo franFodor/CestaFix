@@ -17,7 +17,7 @@
 
 .right {
   order: 1;
-  
+
   justify-content: space-around;
   display: flex;
 }
@@ -26,66 +26,6 @@
   max-width: 100px; 
 }
 
-/*------------------POPUP I FORM ZA LOGIN I REGISTER CSS-------------------*/
-  .popup {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Adds a dimming effect */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000; /* Ensures the popup is on top of other content */
-  }
-  
-  .popup-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    text-align: center;
-    position: relative;
-    color: #333;
-  }
-  
-  .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    color: #333;
-  }
-  
-form {
-  border: 3px solid #f1f1f1;
-}
-
-input[type=text], input[type=password] {
-  width: 100%;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-/* Set a style for all buttons */
-.login-button,.signupbtn {
-  background-color: #04AA6D;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  cursor: pointer;
-  width: 100%;
-}
-.right {
-  display: flex;
-  justify-content: space-around;
-}
 .headerBTN1 {
   position: relative;
   margin: 10px;
@@ -100,10 +40,102 @@ input[type=text], input[type=password] {
 
 .headerBTN1:hover {
   border-color: green; /* Set the border color to green on hover */
+  background-color: #1b1b1b;
 }
 
-
-/* Add padding to containers */
-.container {
+.headerBTNLOGOUT {
+  background-color: rgba(36, 35, 35, 0.637);
+  color: white;
+  padding: 10px;
+  border-radius: 10px; /* This will make the corners of the button rounded */
+  border: 2px solid rgba(36, 35, 35, 0.637);
+  width: calc(100% - 20px); /* This will make the button fill its parent container with a margin of 10px */
+  margin: 10px; /* This is the margin around the button */
+  cursor: pointer;
+  transition: border-color 0.5s; /* Add transition for border-color */
+ }
+ 
+ .headerBTNLOGOUT:hover {
+  border: 2px solid red; /* Set the border color to red on hover */
+  background-color: #ca000081;
+ }
+/* Dropdown Button */
+.dropbtn {
+  background: rgba(15, 15, 15, 0.514);
+  color: white;
   padding: 16px;
+  font-size: 16px;
+  border: none;
+  transition: color 0.5s, border-color 0.5s; /* Add transition for border-color */
+
+ }
+ 
+ /* The container <div> - needed to position the dropdown content */
+ .dropdown {
+  position: relative;
+  display: inline-block;
+ }
+ .dropdown:hover{
+
+  background: rgba(15, 15, 15, 0.514);
+ }
+ 
+ /* Dropdown Content (Hidden by Default) */
+ .dropdown-content {
+  
+  background: rgba(15, 15, 15, 0.514);
+  display: none;
+  width: 100%;
+  position: absolute;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1000;
+
+
+ }
+ 
+ /* Links inside the dropdown */
+ .dropdown-content a {
+  color: black;
+  text-decoration: none;
+  display: block;
+ }
+ 
+ /* Show the dropdown menu on hover */
+ .dropdown:hover .dropdown-content {
+ display: flex;
+ justify-content: center;
+
+ align-items: center;
 }
+ 
+ /* Change the background color of the dropdown button when the dropdown content is shown */
+ .dropdown:hover .dropbtn {
+  background-color: #3e8e41;
+  transition: background-color 0.5s;
+
+}
+
+.reportText{
+  
+  color:black;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+}
+
+.headerBTNSUBMIT{
+  background-color: rgba(36, 35, 35, 0.637);
+  color: white;
+  padding: 10px;
+  border-radius: 10px; /* This will make the corners of the button rounded */
+  border: 2px solid rgba(36, 35, 35, 0.637);
+  width: calc(100% - 20px); /* This will make the button fill its parent container with a margin of 10px */
+  margin: 10px; /* This is the margin around the button */
+  cursor: pointer;
+  transition: border-color 0.5s; /* Add transition for border-color */
+ }
+ 
+ .headerBTNSUBMIT:hover {
+  border: 2px solid #3e8e41; /* Set the border color to red on hover */
+  background-color: rgba(0, 102, 19, 0.417);
+ }

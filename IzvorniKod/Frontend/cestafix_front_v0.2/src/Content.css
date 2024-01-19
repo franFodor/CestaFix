@@ -7,3 +7,8 @@
   height: 80vh;
   width: 100%;
 }
+
+.main {
+    display:flex;
+    flex-direction: row;
+}

@@ -1,0 +1,151 @@
+/* -------------LOGIN+REGISTER FORM---------------- */
+.form > input[type=password], .form > input[type=text] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+ }
+ 
+ .login-button,.signupbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ position: relative;
+ }
+ 
+ .login-button.clicked {
+  opacity: 0.5;
+  
+ }
+ 
+ .login-button.clicked::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: auto;
+  right: 10px;
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 2s linear infinite;
+ }
+
+ 
+ 
+ @keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+ }
+ 
+ .loginContent {
+    width: 300px;
+ }
+ 
+ .registerContent {
+    width: 300px;
+ }
+ 
+ /* -------------REPORT FORM---------------- */
+ 
+ div > input[type=file] {
+    margin-bottom: 15px;
+ }
+ 
+ .reportContent {
+    width: 20%;
+    display: flex;
+ }
+ 
+ textarea {
+    flex-grow: 1;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+ }
+ 
+ .form > div {
+    display: flex;
+    flex-direction: column;
+ }
+ 
+ select {
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+ }
+ 
+ .form > div > input[type=text] {
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+ }
+ 
+ .confirmButton {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+ }
+ #reccomend { 
+   background-color:rgba(172, 172, 172, 0.367);/* Background color when text is selected */
+   color: black; /* Text color when text is selected */
+   width: 90%;
+   align-self:center;
+   font-weight: bolder;
+}
+ /* -------------MERGE CONFIRM DIALOG---------------- */
+ 
+ .mergeConfirmDialog {
+    background-color: white;
+    padding: 20px;
+    margin: 15px 0;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    width: 100%;
+ }
+ 
+ .mergeConfirmDialog h3 {
+    color: #333;
+    margin-bottom: 15px;
+ }
+ 
+ .mergeConfirmDialog p {
+    margin-bottom: 10px;
+    color: #555;
+ }
+ 
+ .mergeConfirmDialog button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+ }
+ 
+ .mergeConfirmDialog button:hover {
+    background-color: #037a54;
+ }
+ 
+
+
+
+

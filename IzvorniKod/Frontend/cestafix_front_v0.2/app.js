@@ -5,17 +5,13 @@ const path = require("path")
 
 const app = express();
 
-// Configuration
-const { PORT } = 3000;
-const { HOST } = process.env;
-const { API_BASE_URL } = process.env;
 
 // Proxy
 
 app.use(
     "/api",
     createProxyMiddleware({
-        target: "https://backend-j8o6.onrender.com/",
+        target: "https://cestafix-be.onrender.com/",
         changeOrigin: true,
     })
 );

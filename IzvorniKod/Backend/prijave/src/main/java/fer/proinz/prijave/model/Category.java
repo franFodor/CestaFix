@@ -1,13 +1,10 @@
 package fer.proinz.prijave.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.sql.Timestamp;
+import lombok.*;
 
 @Data
 @Builder
@@ -22,4 +19,9 @@ public class Category {
     private int categoryId;
 
     private String categoryName;
+
+    @JsonBackReference
+    @ToString.Exclude
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "category")
+    private CityDept cityDept;
 }

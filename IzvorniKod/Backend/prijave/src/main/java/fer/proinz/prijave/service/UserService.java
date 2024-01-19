@@ -1,11 +1,15 @@
 package fer.proinz.prijave.service;
 
-import fer.proinz.prijave.dto.SignUpDto;
+
+import fer.proinz.prijave.exception.NonExistingUserException;
+import fer.proinz.prijave.model.Role;
 import fer.proinz.prijave.model.User;
+import fer.proinz.prijave.repository.ReportRepository;
 import fer.proinz.prijave.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +20,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+
+    private final ReportRepository reportRepository;
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
@@ -26,51 +31,44 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
+    public User getPersonalData() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
-    public User updateUser(int userId, User updatedUser) {
+    public User updateUser(int userId, User updatedUser) throws NonExistingUserException {
         return userRepository.findById(userId)
                 .map(user -> {
-                    if (updatedUser.getUsername() != null) {
-                        user.setUsername(updatedUser.getUsername());
+                    if (updatedUser.getFirstname() != null) {
+                        user.setFirstname(updatedUser.getFirstname());
                     }
-                    if (updatedUser.getEmail() != null) {
-                        user.setEmail(updatedUser.getEmail());
-                    }
-                    if (updatedUser.getPassword() != null) {
-                        user.setPassword(updatedUser.getPassword());
+                    if (updatedUser.getLastname() != null) {
+                        user.setLastname(updatedUser.getLastname());
                     }
                     return userRepository.save(user);
                 })
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(NonExistingUserException::new);
     }
 
-    public Optional<User> deleteUser(int userId) {
-        Optional<User> userOptional = userRepository.findById(userId);
+    public ResponseEntity<String> deleteUser(int userId) throws NonExistingUserException {
+        User user = userRepository
+                .findById(userId)
+                .orElseThrow(NonExistingUserException::new);
+        User authenticatedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if(userOptional.isPresent()) {
+        if (authenticatedUser.getRole() == Role.STAFF || authenticatedUser.getUserId() == userId) {
+            // Find all of user's reports and set the user attribute in them to null (anonymous)
+            reportRepository.findByUser(user)
+                    .forEach(report -> report.setUser(null));
+
             userRepository.deleteById(userId);
-            return userOptional;
+            return ResponseEntity.ok("User with id " + userId + " is deleted.");
         } else {
-            throw new RuntimeException("user with id " + userId + " does not exists!");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You cannot delete other users.");
         }
-    }
-
-    public User registerUser(SignUpDto signUpDto) {
-        if (userRepository.existsByEmail(signUpDto.getEmail())) {
-            throw new IllegalArgumentException("Account with that email already exists!");
-        }
-
-        User registeredUser = User.builder()
-                .username(signUpDto.getUsername())
-                .email(signUpDto.getEmail())
-                .password(passwordEncoder.encode(signUpDto.getPassword()))
-                .role("USER")
-                .build();
-
-        return userRepository.save(registeredUser);
     }
 
 }

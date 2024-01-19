@@ -1,16 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react';
 import Header from './Header';
 import Content from './Content';
 import Footer from './Footer';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import MyAccount from './myAccount/MyAccount';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 
 function App() {
+  const [pickMarkerLatLon, setPickMarkerLatLon] = useState(null);
+  const [markers, setMarkers] = useState([]);
+
   return (
-    <div className='bg-red-900 flex flex-col h-screen'>
-      <Header />
-      <Content />
-      <Footer />
-    </div>
+    <Router>
+      <div className='flex flex-col h-screen'>
+        <Header pickMarkerLatLon={pickMarkerLatLon} markers={markers} />
+        <Routes>
+          <Route path="/myAccount" element={<MyAccount />} />
+          <Route path="/" element={<Content setPickMarkerLatLon={setPickMarkerLatLon} pickMarkerLatLon={pickMarkerLatLon}
+            markers={markers} setMarkers={setMarkers} />} />
+          <Route path="/prijava/:id" element={<Content setPickMarkerLatLon={setPickMarkerLatLon} pickMarkerLatLon={pickMarkerLatLon} markers={markers} setMarkers={setMarkers} />} />        </Routes>
+        <Footer />
+      </div>
+    </Router>
   );
 }
 

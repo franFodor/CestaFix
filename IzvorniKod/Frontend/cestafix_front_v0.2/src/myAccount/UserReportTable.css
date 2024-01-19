@@ -1,0 +1,50 @@
+.updateTable {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background-color: #f9fafc; /* Light gray background */
+    box-sizing: border-box;
+    overflow-y: auto; /* Enables vertical scrolling */
+    max-height: 85vh; /* Limits the height to the viewport */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+    width: 80%; /* Fill the whole div by width */
+   }
+  
+  .naslovni {
+    grid-column: span 2; /* Spans across 2 columns */
+    background-color: #f5f5f5; /* Light gray */
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+  
+  .Report {
+    display: flex;
+    justify-content: space-between;
+    background-color: #fff; /* White background */
+    padding: 20px; /* More padding for better spacing */
+    list-style-type: none;
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Soft shadow */
+  }
+  
+  .Report > div {
+    margin-bottom: 10px;
+  }
+  
+  .Report > div > h2 {
+    margin-top: 0;
+    font-weight: bold;
+    color: black; /* Blue title */
+  }
+  
+  .Report > div > p:last-child {
+    font-weight: bold; /* Make the text bold */
+    color: black; /* Change the text color to red */
+    background-color: lightgray; /* Change the background color to yellow */
+    padding: 5px; /* Add some padding */
+    border-radius: 5px; /* Round the corners */
+  }
+  

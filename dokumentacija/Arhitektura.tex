@@ -289,13 +289,13 @@ Ako su podaci neispravno uneseni, korisniku se omogućuje ponovni upis podataka,
 Dijagram komponenti prikazan je na slici 4.9 te služi za vizualizaciju organizacije i međuovisnosti implementacijskih
 komponenata (interna struktura) te odnos programske potpore prema okolini. Sustavu se pristupa preko web preglednika pomoću sučelja HTTP\_REQUEST
 na kojem se poslužuju datoteke koje pripadaju \textit{frontend} dijelu aplikacije. \textit{Frontend} dio nazvan React Frontend
-sastoji se od komponenti React View, React router, ReactJS, Index.js, Content.js, React leaflet te sučelja REST\_API i MAP\_API.
+sastoji se od komponenti React View, React router, ReactJS, Index.js, App.js, React leaflet te sučelja REST\_API, MAP\_API i HTTP\_REQUEST.
 React View komponenta komunicira s \textit{backendom} preko sučelja REST\_API i razmjenjuje podatke s \textit{backendom} u
 JSON formatu, te ovisno o korisnikovim akcijama osvježava prikaz na stranici. Komponenta React router na temelju URL-a
 odlučuje koja će se stranica prikazati, odnosno datoteka dohvatiti. Komponenta ReactJS je centralna biblioteka za React
 preko koje se dobivaju gotove komponente za prikaz. Komponenta Index.js služi kao početna komponenta unutar koje se nalazi
-organizirana hijerarhija ostalih elemenata za prikaz. Jedan od njih je komponenta Content.js koja služi za ostvarivanje
-prikaza karte. Integraciju interaktivnih karata i manipulaciju geografskih podataka s React aplikacijama omogućava biblioteka
+organizirana hijerarhija ostalih elemenata za prikaz. Jedan od njih je komponenta App.js koja služi za ostvarivanje
+sadržaja aplikacije, te ujedno prikaz karte. Integraciju interaktivnih karata i manipulaciju geografskih podataka s React aplikacijama omogućava biblioteka
 React leaflet prikazana komponentom React leaflet. Sučelje MAP\_API koristi se za razmjenu podataka s vanjskom komponentom
 Openstreetmaps. \textit{Backend} dio nazvan Spring Boot backend sastoji se od komponenti RestController, JPA repository,
 Controller, Service, Model, Repository, DTO te sučelja REST\_API, PSQL, JPA i GEOCODING\_API. Komponenta RestController komunicira

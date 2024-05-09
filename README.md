@@ -24,9 +24,8 @@ Ključni obrasci uporabe
 * Deployment - Render
 
 # Instalacija
-~~Kako bi se *pokrenula* stranica potrebno je ući na [frontend](https://cestafix-fe.onrender.com) stranicu. [Backend](https://backend-j8o6.onrender.com) stranicu nije potrebno
-pokretati jer će se pokretanjem frontend stranice poslati GET request koji će probuditi backend aplikacije. Također, zbog ograničenja sustava, backend aplikacije se sporo učitava stoga je nekada potrebno malo pričekati da se dohvate podaci iz baze podataka.~~
-**Napomena** baza je ugašena jer je zbog besplatne verzije ograničena na trajanje od 3 mjeseca tako da više nije moguće "koristiti" stranicu u smislu pohranjivanja prijava, pregleda i sl. 
+Kako bi se *pokrenula* stranica potrebno je ući na [frontend](https://cestafix-fe-zprp.onrender.com) stranicu. [Backend](https://cestafix-be-95ke.onrender.com) stranicu nije potrebno
+pokretati jer će se pokretanjem frontend stranice poslati GET request koji će probuditi backend aplikacije. Također, zbog ograničenja sustava, backend aplikacije se sporo učitava stoga je nekada potrebno malo pričekati da se dohvate podaci iz baze podataka.
 
 # Članovi tima 
 * Fran Fodor - voditelj<br/>
